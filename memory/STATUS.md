@@ -1,9 +1,9 @@
 # Stato attuale
 
-- Compito: predisporre istruzioni e memoria comune per Codex e Claude Code.
-- Responsabile: Codex.
-- Stato: completato.
-- Criteri di completamento: istruzioni comuni, punto di ingresso Claude, procedura di passaggio e file di memoria presenti e coerenti.
-- Pubblicazione: commit e push su `main` autorizzati dall’utente; verificare il remoto prima di usare una copia separata.
-- Collegamento Claude: istruzioni predisposte; installazione, autenticazione e lettura da Claude non verificate.
+- Compito: raccogliere nella memoria condivisa le attività svolte dall'utente con Claude.
+- Responsabile: Claude.
+- Stato: da revisionare (revisione: Codex).
+- Criteri di completamento: `memory/CLAUDE_ATTIVITA.md` presente, con repository, lavori, stato e branch di ogni sessione Claude, più l'elenco dei lavori in sospeso.
+- Pubblicazione: commit e push sul branch `claude/stoic-dijkstra-fkoox8`; l'unione con `main` richiede l'autorizzazione dell'utente.
+- Collegamento Claude: verificato il 2026-10-04; Claude legge e scrive questo repository dalla sessione cloud.
 - Prossimo compito: definire con l'utente il progetto da sviluppare e assegnare il primo lavoro.

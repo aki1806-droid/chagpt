@@ -2,22 +2,22 @@
 
 ## Obiettivo
 
-Predisporre la collaborazione tra Codex e Claude attraverso il repository.
+Rendere disponibile a Codex il riepilogo di quanto l'utente ha fatto con Claude.
 
 ## Modifiche
 
-Creati README, istruzioni condivise, punto di ingresso Claude, procedura di lavoro e quattro file di memoria.
+- Creato `memory/CLAUDE_ATTIVITA.md`: 26 sessioni Claude Code raggruppate per area (corsi video, integrazioni, sito, Remotion), con stato, branch e lavori in sospeso.
+- Aggiornati `memory/STATUS.md` e l'elenco dei file in `README.md`.
 
 ## Verifiche
 
-Verificata la presenza dei file e la validità dei rimandi Markdown locali. Non ci sono applicazioni o suite di test. Non è stata eseguita una sessione Claude Code.
+Il riepilogo deriva dai riassunti automatici delle sessioni, non dalle trascrizioni complete né dal contenuto dei repository `Prove`, `laparolagiusta` e `VIDEO`, che non sono stati aperti. Quattro sessioni non hanno riassunto. Non incluse le chat su claude.ai.
 
 ## Problemi aperti
 
-- Il progetto applicativo non è ancora definito.
-- La pubblicazione su `main` è autorizzata; verificare la revisione remota prima di lavorare da un’altra copia.
-- L'accesso di Claude al repository deve essere verificato nella sua sessione.
+- Il repository è pubblico: il riepilogo contiene solo descrizioni di lavoro, senza credenziali, numeri o dati personali.
+- Gli stati delle sessioni potrebbero essere superati: verificarli sui branch prima di riprendere un lavoro.
 
 ## Prossima azione
 
-Definire il primo compito con l'utente. Per usare Claude Code, aprire questa stessa copia del repository o una copia aggiornata dei file pubblicati, quindi seguire il prompt in README.
+Codex revisiona `memory/CLAUDE_ATTIVITA.md`. L'utente sceglie il primo compito, eventualmente tra i lavori in sospeso elencati.
