@@ -2,22 +2,20 @@
 
 ## Obiettivo
 
-Predisporre la collaborazione tra Codex e Claude attraverso il repository.
+Consolidare nel repository il contesto disponibile sull’attività dell’utente e condividerlo.
 
 ## Modifiche
 
-Creati README, istruzioni condivise, punto di ingresso Claude, procedura di lavoro e quattro file di memoria.
+Aggiunto `memory/USER_CONTEXT.md` con obiettivi, attività confermate, situazione attuale, preferenze osservabili e informazioni non disponibili. Aggiornati README, ingresso Claude, workflow e stato per includere la nuova memoria.
 
 ## Verifiche
 
-Verificata la presenza dei file e la validità dei rimandi Markdown locali. Non ci sono applicazioni o suite di test. Non è stata eseguita una sessione Claude Code.
+Il precedente commit `12c74e4` è presente su `main` nel remoto. I rimandi locali dei documenti sono stati controllati. Non ci sono applicazioni o suite di test; non è stata eseguita una sessione Claude Code.
 
-## Problemi aperti
+## Limiti
 
-- Il progetto applicativo non è ancora definito.
-- La pubblicazione su `main` è autorizzata; verificare la revisione remota prima di lavorare da un’altra copia.
-- L'accesso di Claude al repository deve essere verificato nella sua sessione.
+La raccolta riguarda questa conversazione, non le altre chat o l’intero account ChatGPT. La condivisione attraverso GitHub non dimostra che Claude abbia già letto i file.
 
 ## Prossima azione
 
-Definire il primo compito con l'utente. Per usare Claude Code, aprire questa stessa copia del repository o una copia aggiornata dei file pubblicati, quindi seguire il prompt in README.
+Nella sessione Claude, aggiornare la copia del repository e leggere tutti i file in `memory/`. L’utente ha inoltre chiesto informazioni sulla creazione di immagini: attendere una descrizione concreta prima di generarne una.

@@ -28,4 +28,4 @@ Dopo la revisione, risolvi eventuali problemi, registra le decisioni durature e 
 
 ## Memoria
 
-`memory/PROJECT.md` contiene il contesto stabile; `memory/STATUS.md` la situazione attuale; `memory/DECISIONS.md` le scelte motivate; `memory/HANDOFF.md` l'ultimo passaggio di consegne. Sostituisci informazioni obsolete invece di accumulare copie dello stesso stato. La cronologia Git conserva le versioni precedenti una volta create le revisioni.
+`memory/USER_CONTEXT.md` contiene il contesto disponibile dell’utente e i suoi limiti; `memory/PROJECT.md` contiene il contesto stabile; `memory/STATUS.md` la situazione attuale; `memory/DECISIONS.md` le scelte motivate; `memory/HANDOFF.md` l'ultimo passaggio di consegne. Sostituisci informazioni obsolete invece di accumulare copie dello stesso stato. La cronologia Git conserva le versioni precedenti una volta create le revisioni.

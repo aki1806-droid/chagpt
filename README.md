@@ -24,6 +24,7 @@ Con copie su macchine diverse, condividi i cambiamenti tramite commit e push, qu
 - `AGENTS.md`: istruzioni comuni per gli assistenti.
 - `CLAUDE.md`: punto di ingresso per Claude Code.
 - `WORKFLOW.md`: procedura di lavoro e revisione.
+- `memory/USER_CONTEXT.md`: contesto dell’utente disponibile e cronologia delle attività confermate.
 - `memory/PROJECT.md`: obiettivi e vincoli duraturi.
 - `memory/STATUS.md`: compito attuale e responsabilità.
 - `memory/DECISIONS.md`: decisioni e motivazioni.
