@@ -32,3 +32,7 @@ Con copie su macchine diverse, condividi i cambiamenti tramite commit e push, qu
 - `memory/CLAUDE_ATTIVITA.md`: riepilogo delle attività svolte con Claude.
 
 La configurazione non richiede API o chiavi nel repository. L'installazione e l'autenticazione di Claude Code sono separate; questi file non stabiliscono una connessione automatica con Claude.
+
+## Passaggio del metodo LPG
+
+Richiesta corrente per Claude: `requests/CLAUDE_LPG_HANDOFF.md`. Contiene gli elementi da consegnare a Codex prima di lavorare sul secondo corso con il metodo del primo.

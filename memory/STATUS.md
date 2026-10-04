@@ -1,10 +1,9 @@
 # Stato attuale
 
-- Compito: consolidare il contesto disponibile di Codex e il riepilogo delle attività Claude.
-- Responsabile: Codex.
-- Stato: completato per la raccolta documentale; stati dei progetti esterni da verificare.
-- Memoria Codex: `memory/USER_CONTEXT.md`, derivata da questa conversazione.
-- Memoria Claude: `memory/CLAUDE_ATTIVITA.md`, arrivata su `main` nel commit `981e131`; deriva da riassunti di sessioni, non da verifiche dei progetti.
-- Pubblicazione: aggiornamento su `main` autorizzato dall’utente; verificare la revisione remota.
-- Collegamento Claude: il contributo remoto riferisce lettura e scrittura dalla sessione cloud; il contributo è presente su `main`. Installazione e autenticazione locali non verificate da Codex.
-- Prossimo compito: scegliere un’attività tra quelle riportate oppure descrivere l’immagine da creare.
+- Compito: raccogliere e pubblicare il metodo originale LPG per consentire a Codex di lavorare sul secondo corso.
+- Responsabile: Claude.
+- Stato: da assegnare alla sessione Claude.
+- Istruzioni: `requests/CLAUDE_LPG_HANDOFF.md`.
+- Criteri di completamento: pacchetto LPG con procedura, MASTER, configurazione, script, asset, campione, fonti e verifiche; lacune esplicite; pubblicazione su `main` verificata.
+- Autorizzazione: l’utente ha richiesto la condivisione di questo passaggio su `main`; nessuna nuova produzione a pagamento autorizzata.
+- Prossimo passo: l’utente avvia Claude con la richiesta; Codex revisiona il pacchetto consegnato prima di produrre il secondo corso.
