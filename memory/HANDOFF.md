@@ -1,28 +1,24 @@
 # Ultimo passaggio di consegne
 
-## Obiettivo
+## Revisione Codex
 
-Trasferire da Claude a Codex il metodo e i materiali realmente usati per il primo corso LPG.
+Aggiornato chagpt da main: contiene `416c543` e il successivo `cc16a7f` (regola del comando per l’altro assistente). Letti istruzioni, memoria, richiesta e tutti gli otto documenti LPG. Prove recuperato in lettura al commit esatto `4ed8a32ef71452ce66b1c67e4084bd84c242c356`, senza modifiche delle fonti.
 
-## Consegnato da Claude
+Rapporto completo: `lpg/REVISIONE_CODEX.md`. Pacchetto utile, ma la procedura non è ancora approvata come riproducibile.
 
-Cartella `lpg/`: `README.md` (indice e «Codex può cominciare?»), `PROCEDURA.md`, `MASTER-E-ISTRUZIONI.md`, `CONFIGURAZIONE.md`, `ASSET.md`, `QUALITA.md`, `PROVENIENZA.md`, `campione/README.md` (lezione 6.1). Collegamento aggiunto nel README generale.
+## Problemi da correggere in Claude
 
-Fonte: `aki1806-droid/Prove`, branch `claude/heygen-video-creation-8gz057`, commit `4ed8a32ef71452ce66b1c67e4084bd84c242c356` (non unito a `main` di Prove). Specifica che comanda: `produzione/MASTER.md` + `produzione/STANDARD.md`; `METODO.md` è superato per il corso.
+1. correggi aggiorna prova.mp3, non riprova.mp3.
+2. fuori posto: 0 può comparire con code mancanti/trascrizione vuota; richiedere copertura e controprove.
+3. Bootstrap Playwright non pinna la versione né installa/verifica Chromium.
+4. Directory, creazione clip/, schema batch, formato chunks e comando pose non sufficientemente operativi.
+5. scene.py usa chiusura 10 s: gestire 15/20 s e formula durata; variante 8.5 richiede audio/file specifici.
+6. carica.py non fallisce con exit code dopo PUT errati: verificare errori e completed prima del montaggio.
 
-## Verifiche
+## Evidenza
 
-Eseguite in locale, senza servizi a pagamento: slide della 6.1 rese con gli script originali (47/47 PNG, caratteri e logo controllati a vista su sei slide); una clip animata (75 fotogrammi); `tagli.py` allinea/applica su audio sintetico (tagli corretti, posa applicata); sintassi di tutti gli script; link locali di `lpg/`; ricerca di segreti nel diff.
-Non eseguite: voce, trascrizione, riprese, caricamento, montaggio, ascolto e visione dei video.
+25 percorsi verificati; JSON 6.1 e colori/filtro coerenti; sintassi di 7 Python e 6 MJS superata. scene.py produce 50 scene con fixture locali. verifica.py con trascrizione vuota produce fuori posto: 0 e senza coda: s02. Render, visione/audio, allineamento sintetico di Claude e servizi reali non ripetuti: vedi rapporto per limiti.
 
-## Problemi aperti
+## Prossima azione
 
-- La copia verbatim degli script e dei documenti in chagpt è stata negata dal controllo dei permessi della sessione Claude: Codex li recupera con un clone pubblico di Prove, oppure l'utente autorizza la copia.
-- Mancano gli MD dei moduli 7–8, le impostazioni fini della voce, i prompt delle singole riprese, le licenze di caratteri, voce, musica e riprese, e la versione di Playwright usata in produzione.
-- I registri si contraddicono sull'avatar nei moduli 1–5: l'utente deve confermare quali versioni sono pubblicate.
-- Le tre correzioni del modulo 8 (foto 8.4, musica 8.5, `s25` della 8.1) restano aperte nelle fonti; il campione 6.1 non le contiene.
-- Gli URL delle riprese in Prove (alcuni firmati) non sono stati riportati e non vanno riusati.
-
-## Prossima azione per Codex
-
-Revisionare `lpg/` contro i criteri di `memory/STATUS.md` e verificare a campione i riferimenti nel clone di Prove. Poi, con gli input dell'utente elencati in `lpg/README.md`, preparare una lezione campione del secondo corso fino al passo 4 di `lpg/PROCEDURA.md`. Ogni passo a pagamento richiede l'autorizzazione dell'utente.
+Claude corregge documentazione e memoria in chagpt, senza modificare Prove o utilizzare servizi a pagamento. Pubblica su main, comunica SHA e verifiche, assegna la nuova revisione a Codex. Non dichiarare il trasferimento completo con prerequisiti irrisolti.

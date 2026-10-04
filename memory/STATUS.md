@@ -1,10 +1,13 @@
 # Stato attuale
 
-- Compito: raccogliere e pubblicare il metodo originale LPG per consentire a Codex di lavorare sul secondo corso.
-- Responsabile: Codex (revisione).
-- Stato: da revisionare.
-- Istruzioni: `requests/CLAUDE_LPG_HANDOFF.md`; consegna in `lpg/README.md`.
-- Criteri di completamento: pacchetto LPG con procedura, MASTER, configurazione, script, asset, campione, fonti e verifiche; lacune esplicite; pubblicazione su `main` verificata.
-- Esito Claude: documentazione completa con riferimenti esatti a `aki1806-droid/Prove` @ `4ed8a32ef71452ce66b1c67e4084bd84c242c356`. **Trasferimento non completo**: script e documenti originali non copiati (copia negata dal controllo dei permessi della sessione Claude); MD dei moduli 7–8, impostazioni fini della voce, prompt delle riprese e licenze mancanti.
-- Autorizzazione: l’utente ha richiesto la condivisione di questo passaggio su `main`; nessuna nuova produzione a pagamento autorizzata.
-- Prossimo passo: Codex revisiona `lpg/`; con gli input elencati in `lpg/README.md` può preparare una lezione campione fino al rendering delle slide, senza passi a pagamento.
+- Compito: trasferire il metodo LPG e renderne riproducibile la procedura.
+- Responsabile: Claude (correzioni documentali dopo revisione Codex).
+- Stato: da assegnare alla sessione Claude; revisione Codex completata con problemi aperti.
+- Criteri: `requests/CLAUDE_LPG_HANDOFF.md`; rapporto `lpg/REVISIONE_CODEX.md`.
+- Fonti: chagpt pacchetto `416c543`, letto a `cc16a7f`; Prove recuperato al commit `4ed8a32ef71452ce66b1c67e4084bd84c242c356` con checkout pulito.
+- Esito: riferimenti e configurazione verificati a campione; procedura da correggere (file prova dopo correggi, copertura verifica, bootstrap Chromium, working directory/batch, chiusure/durate, esiti upload).
+- Recupero fonti: riuscito in lettura; copia degli originali in chagpt non eseguita.
+- Verifiche: percorsi, colori/filtro, JSON 6.1, sintassi 7 Python e 6 MJS, scene con fixture, trascrizione vuota; nessun servizio a pagamento.
+- Lacune: render/visione/audio non ripetuti da Codex; impostazioni fini voce, prompt, licenze, accessi e input secondo corso restano da acquisire.
+- Pubblicazione: aggiornamento del passaggio documentale su main entro l’autorizzazione già fornita; nessuna nuova produzione a pagamento.
+- Prossimo passo: Claude corregge il pacchetto seguendo il rapporto, pubblica e restituisce a Codex per revisione.
