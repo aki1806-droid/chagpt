@@ -16,3 +16,9 @@
 - Scelta: assegnare ogni compito a un responsabile e passarlo all'altro per revisione.
 - Motivo: evitare modifiche concorrenti sugli stessi file.
 - Limite: il file di stato non impedisce tecnicamente l'accesso simultaneo.
+
+## Comando per l'altro assistente
+
+- Scelta: dopo ogni azione, l'assistente che ha lavorato fornisce all'utente il testo da incollare nella chat dell'altro assistente.
+- Motivo: richiesta esplicita dell'utente (2026-10-04), che fa da tramite fra le due chat.
+- Conseguenza: ogni risposta che chiude un'azione termina con un blocco «Da incollare in Codex» (o «in Claude»), autosufficiente e con i file da leggere.
