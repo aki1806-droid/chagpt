@@ -36,3 +36,5 @@ La configurazione non richiede API o chiavi nel repository. L'installazione e l'
 ## Passaggio del metodo LPG
 
 Richiesta corrente per Claude: `requests/CLAUDE_LPG_HANDOFF.md`. Contiene gli elementi da consegnare a Codex prima di lavorare sul secondo corso con il metodo del primo.
+
+Pacchetto consegnato da Claude: [`lpg/README.md`](lpg/README.md). È l'indice del metodo, della configurazione, della procedura e delle fonti, con le lacune ancora aperte.
