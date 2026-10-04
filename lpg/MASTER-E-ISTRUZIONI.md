@@ -42,9 +42,10 @@ Quali versioni siano quelle pubblicate per i moduli 1–5 va confermato dall'ute
 ## Struttura del corso e delle lezioni
 
 - Un modulo = cinque lezioni. Ogni lezione dura circa 6:00 (fra 5:59 e 6:39 nel modulo 8).
-- Una lezione = copertina (3 s) + 47–48 blocchi + chiusura (10 s; 15 s per la chiusura di modulo; 20 s per la fine del corso) = **50 scene**, che è il limite di HeyGen.
+- Una lezione = copertina (3 s) + 47–48 blocchi + chiusura = **50 scene**, che è il limite di HeyGen. La chiusura è prescritta a 10 s, 15 s per la fine di un modulo e 20 s per la fine del corso. Lo script generico implementa solo 10 s, e le misure dei registri mostrano 10 s anche a fine modulo (vedi `PROCEDURA.md` 8.2).
 - Un blocco = una scena = una slide o una ripresa = un mp3. 100–150 caratteri, un concetto.
-- Circa tre riprese generate per lezione; dai sei diagrammi in su per lezione.
+- Circa tre riprese generate per lezione.
+- **Diagrammi:** MASTER passo 4 chiede «dai sei diagrammi in su» per una lezione da 48 blocchi. Il conteggio, come lo fanno i registri, riguarda i diagrammi parametrici di `figure_corso.mjs` (curva, flusso, strati, pila…) e le infografiche, non tabelle, grafici `chart`, `swap` o elenchi. La 6.1 ne ha **tre** (`strati`, `pila`, `flusso`: «Tre slide di sola scrittura sono diventate disegni»), la 6.5 sei. Quindi la 6.1 **non** rispetta la soglia: è un campione di formato e di procedura, non un modello per questa metrica. La soglia è stata scritta dopo, a partire dal modulo 7 (STANDARD §3).
 
 ## Convenzioni dei nomi
 
@@ -60,10 +61,10 @@ Quali versioni siano quelle pubblicate per i moduli 1–5 va confermato dall'ute
 ## Formati degli intermedi (dal campione 6.1)
 
 - `blocchi.json`: lista di `{"id": "sNN", "text": "..."}`. Il testo parlato **non usa vocali accentate**: si scrive con l'apostrofo (`perche'`). Le accentate restano nelle slide.
-- `chunks.json`: `{"A": [blocchi della prima traccia], "B": [blocchi della seconda]}`.
+- `chunks.json`: `{"A": ["s02", …], "B": [… , "s49"]}`, cioè liste di **ID stringa** (non oggetti blocco), che concatenate danno tutti i blocchi in ordine. Nella 6.1 A ha 16 ID (`s02`–`s17`, 1.743 caratteri), B 32 (`s18`–`s49`, 3.452). Controllo in `PROCEDURA.md` 2.
 - `slides.json`: lista di slide con `file` (`cNN`), `layout` e i campi del layout. Facoltativi `theme` e `ciclo`.
 - `media.json`: `{"sNN": {"tipo": "foto"|"video", "cosa": "...", "url": "..."}}` per i blocchi che sono riprese.
-- `pose.json` (moduli 7–8): `{"sNN": secondi}`, cioè i blocchi da allungare con `apad`.
+- `pose.json` (moduli 7–8): `{"sNN": secondi}`, JSON valido, cioè i blocchi da allungare con `apad`; si passa con `tagli.py applica "$LEZ" "$(cat "$LEZ/pose.json")"`.
 
 ## Regole editoriali
 

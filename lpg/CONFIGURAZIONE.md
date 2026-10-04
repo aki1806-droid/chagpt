@@ -32,6 +32,7 @@ Valori della fase finale (moduli 6–8), con la fonte. «Mancante» vuol dire ch
 | incorporamento | woff2 come data URI in `fonts_corso.css` generato da `fonts_embed.py` (Chromium non raggiunge Google Fonts e non dà errore) | STANDARD §6 |
 | logo | monogramma in alto a sinistra su ogni slide, stessa coordinata; negativo su fondo scuro; logo esteso solo su copertina e chiusura | STANDARD §3 e §6 |
 | layout | `cover`, `closing`, `statement`, `quote`, `list`, `memo`, `number`, `cards`, `table`, `chart`, `swap`, `figure`; 15 diagrammi; 4 infografiche | intestazione di `script/slide_corso.mjs` |
+| ambiente di rendering | Playwright fissato a 1.56.1 con Chromium build 1194 (141.0.7390.37), installato in un'area di lavoro fuori da Prove: PROCEDURA 1.2. La versione usata in produzione non è registrata | PROCEDURA 1.2 |
 | risoluzione delle slide | 1920×1080, `deviceScaleFactor` 1 | `script/cards_corso.mjs` |
 | clip animate | 25 fps, 3 s per slide (argomento facoltativo), o `ciclo: N` secondi per le cicliche | `script/clips_corso.mjs` |
 | codifica delle clip | `ffmpeg -framerate 25 -i frames/cNN/f%04d.png -c:v libx264 -pix_fmt yuv420p -crf 19 cNN.mp4` | `registri/corso-2-1-luca-ward.md` |
@@ -59,7 +60,7 @@ Valori della fase finale (moduli 6–8), con la fonte. «Mancante» vuol dire ch
 | slide ciclica | come sopra con `mode: "loop"` | `script/scene.py` |
 | ripresa video | scena `video` da URL, `mode: "loop"`, muta | `script/scene.py` |
 | ripresa foto | scena `image` da URL con l'audio del blocco | `script/scene.py` |
-| copertina e chiusura | clip mute ancorate a tracce di silenzio da 3 s e 10 s; gli id degli asset di silenzio sono costanti in `scene.py` e valgono solo nell'account HeyGen dell'utente | `script/scene.py` |
+| copertina e chiusura | clip mute ancorate a tracce di silenzio. **Implementazione:** `scene.py` usa sempre 3 s (`SIL3`) e 10 s (`SIL10`), ID scritti nel codice e validi solo nell'account HeyGen del primo corso. **Prescrizione:** 15 s per le chiusure di modulo (STANDARD §3), 20 s per la fine del corso. **Misura:** nei registri delle lezioni 5.5, 6.5 e 7.5 (fine modulo) la durata supera la somma dei blocchi di 11,8–11,9 s, come nelle lezioni ordinarie: la chiusura da 15 s non risulta applicata. Solo la 8.5 ha la chiusura da 20 s, tramite `copioni/8-5-scene85.py`. Come sostituire gli ID: PROCEDURA 7.1 e 8 | `script/scene.py`, registri |
 | caricamento | `create_asset_upload_batch` → PUT con gli header restituiti → `complete_asset_batch` → `get_asset_batch` fino a `completed`; dimensione dichiarata esatta | MASTER passo 6, `script/carica.py` |
 | frame rate e codec finali | **non impostati**: li decide HeyGen | — |
 

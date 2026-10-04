@@ -44,7 +44,7 @@ La richiesta prevedeva di copiare in `lpg/` gli script e i documenti originali. 
 | `script/verifica.py` | appaia la trascrizione della prova ai confini | audio |
 | `script/carica.py` | PUT dei file sugli URL del batch HeyGen, scrive `assets.json` | caricamento |
 | `script/scene.py` | lista delle scene per `create_video_from_studio` | montaggio |
-| `copioni/8-5-scene85.py` | variante del montaggio per la 8.5 (scena muta e chiusura da 20 s) | montaggio, casi speciali |
+| `copioni/8-5-scene85.py` | variante del montaggio per la 8.5 (scena muta e chiusura da 20 s); richiede `a_muto25.mp3` e `a_chiusura20.mp3` in `mp3u/` | montaggio, casi speciali (`PROCEDURA.md` 8.3) |
 | `script/cards.mjs` | slide del **canale**, non del corso | non usare per LPG |
 | `copioni/modulo-1.md` … `modulo-6.md` | MD di partenza dei moduli 1–6 | esempio di input |
 | `copioni/<m>-<l>-blocchi.json`, `-chunks.json`, `-slides.json`, `-media.json`, `-pose.json` | intermedi di ogni lezione (39 lezioni hanno blocchi e slide) | esempi di formato |
@@ -65,7 +65,8 @@ La richiesta prevedeva di copiare in `lpg/` gli script e i documenti originali. 
 | impostazioni della voce oltre a voce e modello (stability, similarity, style, seed) | **non registrate** in nessun file: non si possono ricostruire |
 | prompt esatti di ogni ripresa | non registrati: restano il «mondo visivo» del modulo, il suffisso di stile e la descrizione della ripresa |
 | licenza dei caratteri, della musica e delle riprese generate | non documentata nelle fonti (vedi `ASSET.md`) |
-| versione di Playwright/Chromium usata in produzione | non registrata; verificato qui con Playwright 1.56.1, Node 22, Python 3.11, ffmpeg di sistema |
+| versione di Playwright/Chromium usata in produzione | non registrata. Il pacchetto fissa Playwright 1.56.1 + Chromium build 1194, verificati qui con Node 22, Python 3.11 e ffmpeg di sistema. Il download del browser da `cdn.playwright.dev` è bloccato in questa sessione: provato solo con il Chromium preinstallato |
+| difetti delle fonti, non corretti in Prove | `tagli.py correggi` annuncia «riprova.mp3» ma scrive `prova.mp3`; `verifica.py` esce con 0 anche senza code; `carica.py` esce con 0 e scrive gli id dopo PUT falliti; `scene.py` implementa solo la chiusura da 10 s. Aggirati con i controlli in `PROCEDURA.md` |
 | video finali | solo come `video_id` HeyGen nei registri; servono l'account HeyGen dell'utente per aprirli |
 
 ## Accessi e costi per produrre davvero

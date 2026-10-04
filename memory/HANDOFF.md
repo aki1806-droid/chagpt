@@ -1,24 +1,53 @@
 # Ultimo passaggio di consegne
 
-## Revisione Codex
+## Obiettivo
 
-Aggiornato chagpt da main: contiene `416c543` e il successivo `cc16a7f` (regola del comando per l’altro assistente). Letti istruzioni, memoria, richiesta e tutti gli otto documenti LPG. Prove recuperato in lettura al commit esatto `4ed8a32ef71452ce66b1c67e4084bd84c242c356`, senza modifiche delle fonti.
+Correggere il pacchetto LPG sui sei problemi della revisione Codex (`lpg/REVISIONE_CODEX.md`).
 
-Rapporto completo: `lpg/REVISIONE_CODEX.md`. Pacchetto utile, ma la procedura non è ancora approvata come riproducibile.
+## Modifiche di Claude (solo documentazione e memoria)
 
-## Problemi da correggere in Claude
+- `lpg/PROCEDURA.md` riscritta:
+  - variabili `$PROVE`, `$WS`, `$LEZ` e directory corrente per ogni script;
+  - bootstrap in un'area di lavoro fuori da Prove, con `playwright@1.56.1`, Chromium build 1194 (download o browser preinstallato) e prova di avvio;
+  - controllo degli intermedi (`chunks.json` come liste di ID);
+  - comandi di slide e clip con `mkdir`;
+  - ciclo dei tagli su `prova.mp3`;
+  - controllo di copertura che esce con 1;
+  - banda misurata prima delle pose;
+  - `pose.json` valido;
+  - silenzi del proprio account;
+  - generatore di `batch_in.json`;
+  - controllo degli errori su `carica.log` e item `completed`;
+  - sostituzione degli ID in una copia di `scene.py`;
+  - chiusure 10/15/20 s come prescrizione, implementazione e misura;
+  - variante `copioni/8-5-scene85.py`;
+  - formula della durata con le durate reali.
+- Aggiornati `QUALITA.md`, `CONFIGURAZIONE.md`, `MASTER-E-ISTRUZIONI.md` (anche come si contano i diagrammi: la 6.1 ne ha tre, sotto la soglia di sei), `PROVENIENZA.md` (difetti delle fonti), `campione/README.md` (`pose.json` ricostruito dal registro, verifiche), `README.md`.
 
-1. correggi aggiorna prova.mp3, non riprova.mp3.
-2. fuori posto: 0 può comparire con code mancanti/trascrizione vuota; richiedere copertura e controprove.
-3. Bootstrap Playwright non pinna la versione né installa/verifica Chromium.
-4. Directory, creazione clip/, schema batch, formato chunks e comando pose non sufficientemente operativi.
-5. scene.py usa chiusura 10 s: gestire 15/20 s e formula durata; variante 8.5 richiede audio/file specifici.
-6. carica.py non fallisce con exit code dopo PUT errati: verificare errori e completed prima del montaggio.
+## Verifiche (2026-10-04, senza servizi a pagamento)
 
-## Evidenza
+- Bootstrap: `playwright@1.56.1` installato. `npx playwright install chromium` **fallito** (403 `cdn.playwright.dev`). Avvio riuscito con il Chromium 141.0.7390.37 preinstallato.
+- 6.1: 47 PNG; clip `c01`, `c33`, `c99` codificate (h264, 1920×1080, 25 fps, 3 s).
+- Traccia sintetica della 6.1:
+  - 46 confini;
+  - copertura 46/46 e «fuori posto: 0» con la trascrizione simulata;
+  - con la trascrizione vuota, `verifica.py` esce con 0 e il controllo di copertura con 1;
+  - `correggi` riscrive `prova.mp3` e non crea `riprova.mp3`;
+  - banda 48/48 e pose 22/22.
+- Server PUT locale:
+  - con due 403, `carica.py` esce con 0 e scrive 97 id, mentre il controllo ferma la procedura;
+  - con tutti 200, `errori []`.
+- `scene.py` con i silenzi sostituiti: 50 scene.
+- I quattro blocchi Python di `PROCEDURA.md` eseguiti alla lettera: tutti riusciti.
+- Link locali verificati; Prove senza modifiche.
 
-25 percorsi verificati; JSON 6.1 e colori/filtro coerenti; sintassi di 7 Python e 6 MJS superata. scene.py produce 50 scene con fixture locali. verifica.py con trascrizione vuota produce fuori posto: 0 e senza coda: s02. Render, visione/audio, allineamento sintetico di Claude e servizi reali non ripetuti: vedi rapporto per limiti.
+## Problemi aperti
 
-## Prossima azione
+- In un ambiente nuovo serve `cdn.playwright.dev` raggiungibile, oppure un Chromium 1194 già installato.
+- Mai provati: voce, scribe, upload e montaggio reali; chiusura da 15 s; variante 8.5. La causa dello scarto di circa 1,2 s fra durata attesa e render non è documentata.
+- La durata delle chiusure di modulo va decisa con l'utente: 15 s prescritti contro 10 s misurati.
+- Restano: impostazioni fini della voce, prompt, licenze, MD dei moduli 7–8, input del secondo corso, versioni pubblicate dei moduli 1–5.
 
-Claude corregge documentazione e memoria in chagpt, senza modificare Prove o utilizzare servizi a pagamento. Pubblica su main, comunica SHA e verifiche, assegna la nuova revisione a Codex. Non dichiarare il trasferimento completo con prerequisiti irrisolti.
+## Prossima azione per Codex
+
+Revisionare la revisione 2 di `lpg/`, ripetendo a campione i comandi di `PROCEDURA.md` su Prove @ `4ed8a32`. Se approvata, preparare una lezione campione del secondo corso fino a §3 con gli input dell'utente. Nessun servizio a pagamento senza autorizzazione.
