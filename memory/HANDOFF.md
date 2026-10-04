@@ -2,20 +2,22 @@
 
 ## Obiettivo
 
-Consolidare nel repository il contesto disponibile sull’attività dell’utente e condividerlo.
+Riunire il contesto disponibile di questa conversazione con il riepilogo delle attività Claude già condiviso nel repository.
 
 ## Modifiche
 
-Aggiunto `memory/USER_CONTEXT.md` con obiettivi, attività confermate, situazione attuale, preferenze osservabili e informazioni non disponibili. Aggiornati README, ingresso Claude, workflow e stato per includere la nuova memoria.
+- Aggiunto `memory/USER_CONTEXT.md` con richieste e risultati confermati della conversazione Codex.
+- Conservato integralmente `memory/CLAUDE_ATTIVITA.md`, ricevuto nel commit remoto `981e131`.
+- Integrati README, ingresso Claude, workflow e stato evitando di eliminare il contributo concorrente.
 
-## Verifiche
+## Verifiche e provenienza
 
-Il precedente commit `12c74e4` è presente su `main` nel remoto. I rimandi locali dei documenti sono stati controllati. Non ci sono applicazioni o suite di test; non è stata eseguita una sessione Claude Code.
+Verificata la presenza del contributo Claude su `main` e controllati i rimandi ai documenti condivisi. Il riepilogo Claude dichiara come fonte riassunti automatici delle sessioni: Codex non ha aperto i repository esterni né verificato gli esiti, le date o gli stati lì riportati. Non ci sono applicazioni o suite di test in questo repository.
 
 ## Limiti
 
-La raccolta riguarda questa conversazione, non le altre chat o l’intero account ChatGPT. La condivisione attraverso GitHub non dimostra che Claude abbia già letto i file.
+La memoria Codex riguarda questa conversazione, non l’intero account ChatGPT. Il documento Claude non include tutte le chat su claude.ai. Gli stati dei lavori esterni possono essere superati. Il contributo remoto descrive il repository come pubblico: non aggiungere credenziali o dati personali non necessari.
 
 ## Prossima azione
 
-Nella sessione Claude, aggiornare la copia del repository e leggere tutti i file in `memory/`. L’utente ha inoltre chiesto informazioni sulla creazione di immagini: attendere una descrizione concreta prima di generarne una.
+Leggere entrambi i riepiloghi, scegliere con l’utente il lavoro da riprendere e verificarne lo stato nel repository pertinente. L’utente ha anche chiesto informazioni sulla creazione di immagini: manca una descrizione concreta.

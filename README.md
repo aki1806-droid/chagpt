@@ -29,5 +29,6 @@ Con copie su macchine diverse, condividi i cambiamenti tramite commit e push, qu
 - `memory/STATUS.md`: compito attuale e responsabilità.
 - `memory/DECISIONS.md`: decisioni e motivazioni.
 - `memory/HANDOFF.md`: ultimo passaggio di consegne.
+- `memory/CLAUDE_ATTIVITA.md`: riepilogo delle attività svolte con Claude.
 
 La configurazione non richiede API o chiavi nel repository. L'installazione e l'autenticazione di Claude Code sono separate; questi file non stabiliscono una connessione automatica con Claude.

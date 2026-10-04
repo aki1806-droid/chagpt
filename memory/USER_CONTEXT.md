@@ -39,4 +39,8 @@ L’utente ha chiesto se l’assistente può creare immagini. È stata confermat
 
 ## Informazioni non disponibili
 
-Altri progetti, attività personali o professionali, altre conversazioni ChatGPT e contenuti della memoria di Claude non sono disponibili in questa sessione. Non sono stati esportati né condivisi.
+Altri progetti, attività personali o professionali, altre conversazioni ChatGPT e contenuti della memoria di Claude non sono disponibili in questa sessione. Non sono stati esportati da questa sessione. È ora disponibile separatamente `memory/CLAUDE_ATTIVITA.md`, ricevuto dal remoto: riporta attività Claude sulla base di riassunti di sessioni, senza verifica diretta di Codex sui progetti esterni.
+
+## Contributo Claude ricevuto dal repository
+
+Durante la pubblicazione è stato rilevato e integrato il commit remoto `981e131`, che aggiunge `memory/CLAUDE_ATTIVITA.md`. Il documento riporta corsi e video, integrazioni, sito laparolagiusta, progetto VIDEO e lavori in sospeso. Consultare quel documento per i dettagli e verificarli sui repository pertinenti prima di agire. Questa fonte estende il contesto condiviso, ma non dimostra accesso alle altre chat ChatGPT.

@@ -2,6 +2,6 @@
 
 Leggi e segui `AGENTS.md` e `WORKFLOW.md`.
 
-Prima di lavorare, leggi `memory/USER_CONTEXT.md`, `memory/PROJECT.md`, `memory/STATUS.md`, `memory/DECISIONS.md` e `memory/HANDOFF.md`. Questi file costituiscono la memoria condivisa con Codex.
+Prima di lavorare, leggi `memory/USER_CONTEXT.md`, `memory/CLAUDE_ATTIVITA.md`, `memory/PROJECT.md`, `memory/STATUS.md`, `memory/DECISIONS.md` e `memory/HANDOFF.md`. Questi file costituiscono la memoria condivisa con Codex.
 
 Al termine aggiorna la memoria secondo `WORKFLOW.md`. Non presumere di avere accesso alla chat o alla memoria interna di Codex.
