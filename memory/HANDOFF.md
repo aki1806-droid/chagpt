@@ -1,53 +1,23 @@
 # Ultimo passaggio di consegne
 
-## Obiettivo
+## Seconda revisione Codex (2026-10-05)
 
-Correggere il pacchetto LPG sui sei problemi della revisione Codex (`lpg/REVISIONE_CODEX.md`).
+Aggiornato chagpt ad af4954b. Confrontati tutti i documenti LPG con Prove al commit 4ed8a32ef71452ce66b1c67e4084bd84c242c356, senza modificarlo. Rapporto completo: `lpg/REVISIONE_CODEX_2.md`.
 
-## Modifiche di Claude (solo documentazione e memoria)
+Le correzioni precedenti sono sostanzialmente recepite, ma restano tre falsi positivi riprodotti:
 
-- `lpg/PROCEDURA.md` riscritta:
-  - variabili `$PROVE`, `$WS`, `$LEZ` e directory corrente per ogni script;
-  - bootstrap in un'area di lavoro fuori da Prove, con `playwright@1.56.1`, Chromium build 1194 (download o browser preinstallato) e prova di avvio;
-  - controllo degli intermedi (`chunks.json` come liste di ID);
-  - comandi di slide e clip con `mkdir`;
-  - ciclo dei tagli su `prova.mp3`;
-  - controllo di copertura che esce con 1;
-  - banda misurata prima delle pose;
-  - `pose.json` valido;
-  - silenzi del proprio account;
-  - generatore di `batch_in.json`;
-  - controllo degli errori su `carica.log` e item `completed`;
-  - sostituzione degli ID in una copia di `scene.py`;
-  - chiusure 10/15/20 s come prescrizione, implementazione e misura;
-  - variante `copioni/8-5-scene85.py`;
-  - formula della durata con le durate reali.
-- Aggiornati `QUALITA.md`, `CONFIGURAZIONE.md`, `MASTER-E-ISTRUZIONI.md` (anche come si contano i diagrammi: la 6.1 ne ha tre, sotto la soglia di sei), `PROVENIENZA.md` (difetti delle fonti), `campione/README.md` (`pose.json` ricostruito dal registro, verifiche), `README.md`.
+1. code.json=[] con 46 confini passa come COPERTURA 46/46: manca controllo cardinalità prima di zip.
+2. durate.json={} passa come BANDA 0/0: mancano completezza e validità delle durate rispetto ai blocchi.
+3. Processo che stampa errori [] e termina con 1 viene accettato dalla pipeline tee/grep senza controllo dell’esito del processo.
 
-## Verifiche (2026-10-04, senza servizi a pagamento)
+## Verifiche riuscite
 
-- Bootstrap: `playwright@1.56.1` installato. `npx playwright install chromium` **fallito** (403 `cdn.playwright.dev`). Avvio riuscito con il Chromium 141.0.7390.37 preinstallato.
-- 6.1: 47 PNG; clip `c01`, `c33`, `c99` codificate (h264, 1920×1080, 25 fps, 3 s).
-- Traccia sintetica della 6.1:
-  - 46 confini;
-  - copertura 46/46 e «fuori posto: 0» con la trascrizione simulata;
-  - con la trascrizione vuota, `verifica.py` esce con 0 e il controllo di copertura con 1;
-  - `correggi` riscrive `prova.mp3` e non crea `riprova.mp3`;
-  - banda 48/48 e pose 22/22.
-- Server PUT locale:
-  - con due 403, `carica.py` esce con 0 e scrive 97 id, mentre il controllo ferma la procedura;
-  - con tutti 200, `errori []`.
-- `scene.py` con i silenzi sostituiti: 50 scene.
-- I quattro blocchi Python di `PROCEDURA.md` eseguiti alla lettera: tutti riusciti.
-- Link locali verificati; Prove senza modifiche.
+Playwright 1.56.1 installato con cache nell’area scrivibile; intermedi 6.1; allinea/correggi su toni e silenzi, 46 confini; trascrizione vuota respinta dal controllo normale; copertura piena con testo simulato; banda 48/48 e pose 22/22; batch 97 file; server PUT locale con due 403 respinto e con tutti 200 accettato; sed/scene.py producono 50 scene. I test negativi sono descritti nel rapporto. Server locale fermato.
 
-## Problemi aperti
+## Blocchi e verifiche mancanti
 
-- In un ambiente nuovo serve `cdn.playwright.dev` raggiungibile, oppure un Chromium 1194 già installato.
-- Mai provati: voce, scribe, upload e montaggio reali; chiusura da 15 s; variante 8.5. La causa dello scarto di circa 1,2 s fra durata attesa e render non è documentata.
-- La durata delle chiusure di modulo va decisa con l'utente: 15 s prescritti contro 10 s misurati.
-- Restano: impostazioni fini della voce, prompt, licenze, MD dei moduli 7–8, input del secondo corso, versioni pubblicate dei moduli 1–5.
+Chromium 1194 non scaricabile (403 su CDN e mirror); prova avvio fallita. Google Fonts bloccato con CONNECT 403. Nessuna replica PNG/clip con browser/font diversi. Servizi reali, ascolto e montato, chiusura 15 s e variante 8.5 non provati. Restano le lacune originali e gli input del secondo corso.
 
-## Prossima azione per Codex
+## Prossima azione per Claude
 
-Revisionare la revisione 2 di `lpg/`, ripetendo a campione i comandi di `PROCEDURA.md` su Prove @ `4ed8a32`. Se approvata, preparare una lezione campione del secondo corso fino a §3 con gli input dell'utente. Nessun servizio a pagamento senza autorizzazione.
+Correggere i tre controlli in chagpt e le precisazioni P/S/V del rapporto; ripetere test positivi e negativi senza modificare Prove o usare servizi a pagamento. Pubblicare su main senza force push, dare SHA e lacune, riassegnare la revisione a Codex. Non dichiarare il trasferimento o il workflow completi.
