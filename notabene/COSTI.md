@@ -22,7 +22,11 @@ Modello predefinito `claude-opus-5-5`: 4 $ per milione di token in ingresso, 20 
 | Registrazione Plaud di 45 minuti | circa 0,05 $ |
 | Registrazione Plaud di 90 minuti o più | circa 0,08 $ (oltre i 60.000 caratteri il testo viene tagliato) |
 
-Una nota viene ricatalogata solo se il file cambia.
+Una nota viene ricatalogata solo se il file cambia (anche quando la modifichi o la sostituisci dall'app).
+
+### Chat "Chiedi all'archivio"
+
+Ogni domanda fa due chiamate a Claude: una breve per trovare le parole chiave e sinonimi, una per rispondere leggendo fino a 8 note pertinenti (riassunti ed estratti). Costo indicativo: **3–6 centesimi di dollaro per domanda**. Con 10 domande al giorno in due: circa 10–15 $ al mese. Con `claude-haiku-4-5` circa un quarto.
 
 ## Scenari
 
@@ -30,6 +34,7 @@ Una nota viene ricatalogata solo se il file cambia.
 |---|---|---|
 | Archivio iniziale: 300 file, di cui 30 registrazioni | 8–12 $ una tantum | 2–3 $ |
 | Uso normale in due: 80 note + 20 registrazioni al mese | circa 3 $ al mese | meno di 1 $ al mese |
+| Chat: 10 domande al giorno in due | circa 10–15 $ al mese | circa 3–4 $ al mese |
 | Uso intenso: 200 note + 40 registrazioni al mese | circa 6–7 $ al mese | circa 2 $ al mese |
 
 Con Haiku i riassunti sono un po' meno accurati. Per cambiare modello basta la proprietà `CLAUDE_MODEL` nelle impostazioni dello script.

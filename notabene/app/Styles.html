@@ -250,4 +250,41 @@ textarea.input{min-height:150px;resize:vertical;line-height:1.5}
 }
 @media (max-width:480px){ .stats .stat .v{font-size:24px} .welcome{padding:18px} }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* Pulsanti di pericolo, selezione multipla, caricamento massivo */
+.btn.danger{color:var(--c7);border-color:color-mix(in srgb, var(--c7) 40%, var(--line))}
+.btn.danger:hover{background:color-mix(in srgb, var(--c7) 10%, var(--surface))}
+#selbtn.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.card.selecting{padding-left:calc(var(--pad) + 30px)}
+.card .tick{position:absolute;left:12px;top:calc(var(--pad) + 6px);width:20px;height:20px;border-radius:6px;border:2px solid var(--line-2);display:grid;place-items:center;background:var(--surface)}
+.card.picked{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.card.picked .tick{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.card .tick .i{width:14px;height:14px;stroke-width:2.6}
+.grid.list .card.selecting{padding-left:calc(var(--pad) + 34px)}
+.grid.list .card .tick{top:50%;transform:translateY(-50%)}
+.selbar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:30;background:var(--surface);border:1px solid var(--line-2);box-shadow:var(--shadow);border-radius:calc(var(--r) + 4px);padding:8px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;width:max-content;max-width:calc(100% - 32px)}
+.selbar #selcount{padding:0 8px;font-weight:600;font-size:14px;max-width:46ch}
+.uplist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;max-height:280px;overflow:auto}
+.uplist li{display:flex;justify-content:space-between;gap:10px;font-size:13.5px;padding:6px 10px;border-radius:var(--r-s);background:var(--surface-2)}
+.uplist .nm{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.uplist .st{flex:none;color:var(--muted)}
+.uplist li.done .st{color:var(--ok)} .uplist li.err .st{color:var(--c7)} .uplist li.run .st{color:var(--accent)}
+
+/* Chat */
+.drawer.chat{width:min(620px,100%)}
+.drawer.chat .db{flex:1;gap:12px}
+.chatempty{display:flex;flex-direction:column;gap:12px;color:var(--muted)}
+.chatempty p{margin:0}
+.msg{max-width:92%;padding:10px 14px;border-radius:14px;line-height:1.55;overflow-wrap:anywhere}
+.msg.me{align-self:flex-end;background:var(--accent);color:var(--accent-ink);border-bottom-right-radius:4px;white-space:pre-wrap}
+.msg.ai{align-self:flex-start;background:var(--surface-2);border:1px solid var(--line);border-bottom-left-radius:4px}
+.msg.wait{color:var(--muted);animation:pulse 1.2s infinite}
+@keyframes pulse{50%{opacity:.45}}
+.cite{border:none;background:var(--accent-soft);color:var(--accent);font-weight:700;font-size:11px;border-radius:5px;padding:0 5px;margin:0 1px;vertical-align:1px;font-family:var(--mono)}
+.sources{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+.src{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--line);background:var(--surface);border-radius:var(--r-s);padding:3px 8px;font-size:12.5px;max-width:100%;text-align:left;color:var(--fg)}
+.src b{font-family:var(--mono);color:var(--muted)}
+.src.cited{border-color:var(--accent-line)} .src.cited b{color:var(--accent)}
+.chatin{display:flex;gap:8px;align-items:flex-end;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);background:var(--surface)}
+.chatin textarea{min-height:44px;max-height:160px;resize:vertical}
 </style>

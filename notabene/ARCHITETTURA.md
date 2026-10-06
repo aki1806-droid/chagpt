@@ -30,6 +30,9 @@ Plaud ──► routine Claude giornaliera (connettori Plaud + Drive) ──► 
 - **Privacy**: ogni sezione personale sta nel Drive del proprietario; l'app esegue come chi accede, quindi Drive stesso impedisce di vedere le note altrui. Risolve il problema della versione precedente.
 - **Sincronizzazione**: pulsante "Aggiorna" e attivatore orario per utente; massimo 4,5 minuti per esecuzione (limite Apps Script 6 minuti), il resto alla volta successiva.
 - **Ricerca**: metadati filtrati nel browser all'istante; testo completo cercato sul foglio indice.
+- **Chat** (`askArchive`): Claude espande la domanda in parole chiave; le note visibili all'utente sono ordinate per pertinenza (titolo, etichette, riassunto, testo, con radici semplici); le prime 8 con estratti vanno a Claude, che risponde citando [n]. Nessun indice vettoriale: con migliaia di note valutare embedding.
+- **Gestione file**: elimina (cestino di Drive, solo il proprietario del file), modifica del testo per Google Doc e file di testo (il Doc diventa testo semplice), sostituzione del contenuto per gli altri file, rinomina su Drive quando cambia il titolo, selezione multipla per spostare o eliminare.
+- **Caricamento massivo**: più file caricati uno alla volta (`uploadRaw`), poi catalogati con cicli di `syncNow`.
 - **Limiti noti**: file caricati dall'app fino a 20 MB; testo indicizzato fino a 45.000 caratteri per nota; con migliaia di note la ricerca sul foglio rallenta (valutare in seguito un indice dedicato).
 
 - **Personalizzazione**: tema, colore principale, caratteri, sfondo, angoli, spaziatura, dimensione testo, sezioni della pagina iniziale, vista, ordine, colori delle categorie; per nota titolo, categoria, etichette, colore e stella. Le impostazioni sono salvate per utente (UserProperties).

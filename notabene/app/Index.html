@@ -29,6 +29,11 @@
   <symbol id="i-t-txt" viewBox="0 0 24 24"><path d="M4 6h16M4 10h16M4 14h10M4 18h7"/></symbol>
   <symbol id="i-share" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><circle cx="17" cy="9" r="2.4"/><path d="M15.5 14.5A5 5 0 0 1 21 20"/></symbol>
   <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M8.5 10.5h7M8.5 13.5h4.5"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 5 5L20 7"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="M4 12 20 4l-6 16-3-7z"/></symbol>
   <symbol id="i-pen" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></symbol>
 </svg>
 
@@ -36,11 +41,12 @@
   <div class="brand">Notabene <span class="nb">NB</span></div>
   <label class="search" for="q">
     <svg class="i"><use href="#i-search"/></svg>
-    <input id="q" type="search" placeholder="Cerca in titoli, testi, trascrizioni, etichette…" autocomplete="off">
+    <input id="q" type="search" placeholder="Cerca, oppure fai una domanda e premi Invio…" autocomplete="off">
     <kbd>/</kbd>
   </label>
   <div class="actions">
     <button class="btn icon mfilters" id="mf" aria-expanded="false" aria-label="Filtri"><svg class="i"><use href="#i-filter"/></svg></button>
+    <button class="btn" id="ask" title="Chiedi all'archivio"><svg class="i"><use href="#i-chat"/></svg><span class="hide-s">Chiedi</span></button>
     <button class="btn icon" id="sync" aria-label="Aggiorna dalle cartelle Drive" title="Aggiorna dalle cartelle Drive"><svg class="i"><use href="#i-sync"/></svg></button>
     <button class="btn icon" id="custom" aria-label="Personalizza" title="Personalizza"><svg class="i"><use href="#i-palette"/></svg></button>
     <button class="btn primary" id="up"><svg class="i"><use href="#i-plus"/></svg><span class="hide-s">Nuova nota</span></button>
@@ -76,6 +82,7 @@
             <button data-v="compatta" aria-label="Compatta" title="Compatta"><svg class="i"><use href="#i-compact"/></svg></button>
             <button data-v="lista" aria-label="Lista" title="Lista"><svg class="i"><use href="#i-list"/></svg></button>
           </div>
+          <button class="btn" id="selbtn"><svg class="i"><use href="#i-check"/></svg>Seleziona</button>
           <select class="btn" id="sort" aria-label="Ordina">
             <option value="recenti">Più recenti</option>
             <option value="vecchie">Più vecchie</option>
@@ -87,6 +94,14 @@
       <div class="grid" id="grid"><div class="loading">Caricamento delle note…</div></div>
     </main>
   </div>
+</div>
+<div class="selbar" id="selbar" hidden>
+  <span id="selcount">0 selezionate</span>
+  <button class="btn" data-sel="all">Seleziona tutte</button>
+  <button class="btn" data-sel="team"><svg class="i"><use href="#i-share"/></svg>Condividi</button>
+  <button class="btn" data-sel="mie"><svg class="i"><use href="#i-lock"/></svg>Rendi personali</button>
+  <button class="btn danger" data-sel="del"><svg class="i"><use href="#i-trash"/></svg>Elimina</button>
+  <button class="btn ghost" data-sel="exit">Fine</button>
 </div>
 <div id="layer"></div>
 
@@ -103,7 +118,7 @@ const DEFAULTS = {
 };
 let P = Object.assign({}, DEFAULTS);
 let NOTES = [], ME = "", BOOT = {};
-let S = {scope:"mie", cat:null, type:null, tag:null, q:"", open:null, hits:{}};
+let S = {scope:"mie", cat:null, type:null, tag:null, q:"", open:null, hits:{}, sel:null, chat:[]};
 const $ = s => document.querySelector(s);
 const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const fmtD = d => d ? new Date(d+"T12:00:00").toLocaleDateString("it-IT",{day:"numeric",month:"short",year:"numeric"}) : "";
@@ -210,7 +225,7 @@ function renderHero(){
       <div><div class="date">${esc(today)}</div>
       <h1>${greeting()}${P.nome?", "+esc(P.nome):""}</h1></div>
       <p>${rev ? `Hai <b>${rev}</b> ${rev===1?"nota da rivedere":"note da rivedere"}: l'AI non era sicura di categoria o etichette.` : "Tutte le note sono catalogate. Cerca, filtra o aggiungine una nuova."}</p>
-      <div class="row"><button class="btn" data-act="new">${icon("i-plus")}Nuova nota</button>${rev?`<button class="btn" data-act="review">Rivedi ora</button>`:""}<button class="btn" data-act="custom">${icon("i-palette")}Personalizza</button></div>
+      <div class="row"><button class="btn" data-act="ask">${icon("i-chat")}Chiedi all'archivio</button><button class="btn" data-act="new">${icon("i-plus")}Nuova nota</button>${rev?`<button class="btn" data-act="review">Rivedi ora</button>`:""}<button class="btn" data-act="custom">${icon("i-palette")}Personalizza</button></div>
     </div>` : "") + (P.statistiche ? `<div class="stats">
       <button class="stat" data-act="all"><span class="k">Note in archivio</span><span class="v">${NOTES.length}</span><span class="s">${NOTES.length - team} personali · ${team} condivise</span></button>
       <div class="stat"><span class="k">Ultimi 7 giorni</span><span class="v">${week}</span><span class="s">note aggiunte</span></div>
@@ -227,7 +242,9 @@ function card(n){
   const T = TYPES[n.tipo] || TYPES.altro;
   const hit = S.hits[n.id] ? `<div class="snippet">${hl(S.hits[n.id])}</div>` : "";
   const st = n.stato==="da rivedere"?'<span class="pill rev">Da rivedere</span>':n.stato==="confermata"?'<span class="pill ok">Confermata</span>':'<span class="pill ai">AI</span>';
-  return `<article class="card ${P.schedeColorate?"tinted":""}" style="--band:${noteColor(n)}" data-open="${esc(n.id)}" tabindex="0">
+  const picked = S.sel && S.sel.has(n.id);
+  return `<article class="card ${P.schedeColorate?"tinted":""} ${S.sel?"selecting":""} ${picked?"picked":""}" style="--band:${noteColor(n)}" data-open="${esc(n.id)}" tabindex="0">
+    ${S.sel?`<span class="tick" aria-hidden="true">${picked?icon("i-check"):""}</span>`:""}
     <div class="meta"><span class="type">${icon("i-t-"+(n.tipo==="altro"?"txt":n.tipo))}${T.l}</span><span>${fmtD(n.data)}</span></div>
     <button class="star ${n.preferita?"on":""}" data-star="${esc(n.id)}" aria-label="${n.preferita?"Togli dall'evidenza":"Metti in evidenza"}">${icon("i-star")}</button>
     <h4>${hl(n.titolo)}</h4>
@@ -259,13 +276,40 @@ function openNote(id){
       <div><div class="lbl5">Colore della nota</div>
         <div class="swatches">${swatch("", n.colore===""||n.colore==null, "Colore della categoria", "data-ncol")}${[0,1,2,3,4,5,6,7,8].map(i=>swatch(i, String(n.colore)===String(i), "Colore "+(i+1), "data-ncol")).join("")}</div></div>
       <dl class="box kv"><dt>Sezione</dt><dd>${n.sezione==="team"?"Condivisa con il team":"Personale, solo tu"}</dd><dt>Proprietario</dt><dd>${esc(n.autore)}</dd><dt>Percorso</dt><dd>${esc(n.percorso)}</dd></dl>
-      <div class="box"><div class="lbl5">Testo completo</div><div class="full" id="full"><button class="btn" data-text>Mostra il testo</button></div></div>
+      <div class="box" id="textbox"><div class="lbl5">Testo completo</div><div class="full" id="full"><button class="btn" data-text>Mostra il testo</button></div></div>
+      <div class="box"><div class="lbl5">Modifica il file su Drive</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          ${editable(n) ? `<button class="btn" data-edit>${icon("i-pen")}Modifica il testo</button>` : `<button class="btn" data-replace>${icon("i-upload")}Sostituisci il file</button><input type="file" id="repfile" hidden>`}
+          <button class="btn danger" data-askdel>${icon("i-trash")}Elimina</button>
+        </div>
+        <div id="delconfirm" hidden style="margin-top:10px;display:flex;flex-direction:column;gap:8px">
+          <span>Il file andrà nel cestino di Google Drive: potrai recuperarlo da lì per 30 giorni.</span>
+          <div style="display:flex;gap:8px"><button class="btn danger" data-del>${icon("i-trash")}Sì, elimina</button><button class="btn ghost" data-nodel>Annulla</button></div>
+        </div>
+      </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
         <button class="btn" data-move>${icon(n.sezione==="team"?"i-lock":"i-share")}${n.sezione==="team"?"Rendi personale":"Condividi con il team"}</button>
         ${n.stato!=="confermata"?`<button class="btn" data-ok>Conferma catalogazione</button>`:""}
         <a class="btn primary" href="${esc(n.url)}" target="_blank" rel="noopener">Apri in Drive</a>
       </div>
     </div></section>`;
+}
+function editable(n){ return n.mime ? (n.mime === "application/vnd.google-apps.document" || /^text\//.test(n.mime)) : ["txt","plaud"].includes(n.tipo); }
+function replaceNote(updated){
+  const i = NOTES.findIndex(x=>x.id===updated.id);
+  if (i !== -1) NOTES[i] = Object.assign({}, NOTES[i], updated);
+  render(); openNote(updated.id);
+}
+async function startEdit(n){
+  const box = $("#textbox"); box.innerHTML = `<div class="lbl5">Modifica il testo</div><p style="margin:0;color:var(--muted)">Caricamento…</p>`;
+  try {
+    const text = await api("getEditableText", n.id);
+    box.innerHTML = `<div class="lbl5">Modifica il testo</div>
+      <textarea class="input" id="edtext" style="min-height:320px;font-size:14px">${esc(text)}</textarea>
+      <p style="margin:6px 0 0;color:var(--muted);font-size:12.5px">${n.mime==="application/vnd.google-apps.document"?"Salvando, il documento Google diventa testo semplice: grassetti ed elenchi formattati si perdono. ":""}Dopo il salvataggio l'AI aggiorna riassunto ed etichette.</p>
+      <div style="display:flex;gap:8px;margin-top:8px"><button class="btn primary" data-savetext>${icon("i-check")}Salva su Drive</button><button class="btn ghost" data-canceledit>Annulla</button></div>`;
+    $("#edtext").focus();
+  } catch(e){ fail(e); openNote(n.id); }
 }
 function swatch(v, on, label, attr){
   return `<button class="sw ${v===""?"none":""} ${on?"on":""}" style="--c:${v===""?"transparent":`var(--c${v})`}" ${attr}="${v}" aria-label="${esc(label)}" title="${esc(label)}"></button>`;
@@ -318,10 +362,11 @@ function openCustom(){
 function upload(){
   $("#layer").innerHTML = `<div class="scrim" data-close></div><div class="modal"><div class="panel" role="dialog" aria-label="Nuova nota">
     <h2>Nuova nota</h2>
-    <div class="seg" id="upmode"><button data-m="file" class="on">Carica un file</button><button data-m="scrivi">Scrivi</button></div>
-    <div id="m-file"><div class="drop" id="drop"><input type="file" id="file" hidden>
-      <div>Trascina qui un file oppure</div><button class="btn" id="pick">Scegli dal dispositivo</button>
-      <div style="font-size:13px">Documenti, PDF, foto, audio. Massimo 20 MB.</div></div></div>
+    <div class="seg" id="upmode"><button data-m="file" class="on">Carica file</button><button data-m="scrivi">Scrivi</button></div>
+    <div id="m-file"><div class="drop" id="drop"><input type="file" id="file" multiple hidden>
+      <div>Trascina qui uno o più file, anche decine insieme</div><button class="btn" id="pick">${icon("i-upload")}Scegli dal dispositivo</button>
+      <div style="font-size:13px">Documenti, PDF, foto, audio. Massimo 20 MB per file.</div></div>
+      <ul class="uplist" id="uplist" hidden></ul></div>
     <div id="m-scrivi" hidden style="display:flex;flex-direction:column;gap:10px">
       <input class="input" id="wtitle" placeholder="Titolo (facoltativo)">
       <textarea class="input" id="wtext" placeholder="Scrivi la nota. L'AI la catalogherà da sola."></textarea>
@@ -339,10 +384,10 @@ function upload(){
     document.querySelectorAll("#upmode button").forEach(x=>x.classList.toggle("on", x===b));
     $("#m-file").hidden = b.dataset.m!=="file"; $("#m-scrivi").hidden = b.dataset.m!=="scrivi"; if(b.dataset.m==="scrivi") $("#wtext").focus(); };
   $("#pick").onclick=()=>f.click();
-  f.onchange=()=>f.files[0]&&sendFile(f.files[0]);
+  f.onchange=()=>f.files.length&&sendFiles([...f.files]);
   d.ondragover=e=>{e.preventDefault();d.classList.add("over")};
   d.ondragleave=()=>d.classList.remove("over");
-  d.ondrop=e=>{e.preventDefault();d.classList.remove("over");e.dataTransfer.files[0]&&sendFile(e.dataTransfer.files[0])};
+  d.ondrop=e=>{e.preventDefault();d.classList.remove("over");e.dataTransfer.files.length&&sendFiles([...e.dataTransfer.files])};
   $("#wsave").onclick=()=>{
     const text=$("#wtext").value.trim(); if(!text) return toast("Scrivi qualcosa prima di salvare.");
     const title=($("#wtitle").value.trim() || text.split("\n")[0].slice(0,60)).replace(/[\\/:*?"<>|]/g,"-");
@@ -351,6 +396,37 @@ function upload(){
   };
 }
 function scopeChoice(){ return document.querySelector('input[name="v"]:checked').value; }
+function readB64(file){
+  return new Promise((ok, ko) => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(",")[1]); r.onerror = () => ko(new Error("Non riesco a leggere " + file.name)); r.readAsDataURL(file); });
+}
+/** Un file: caricato e catalogato subito. Più file: caricati uno alla volta, poi catalogati con la sincronizzazione. */
+async function sendFiles(files){
+  if (files.length === 1) return sendFile(files[0]);
+  const scope = scopeChoice();
+  const list = $("#uplist"); list.hidden = false; $("#drop").hidden = true; $("#upmode").hidden = true;
+  list.innerHTML = files.map((f,i)=>`<li id="up${i}"><span class="nm">${esc(f.name)}</span><span class="st">In attesa</span></li>`).join("");
+  let ok = 0;
+  for (let i = 0; i < files.length; i++) {
+    const li = $("#up"+i), st = li.querySelector(".st");
+    if (files[i].size > 20*1024*1024) { st.textContent = "Troppo grande (oltre 20 MB)"; li.className = "err"; continue; }
+    st.textContent = "Caricamento…"; li.className = "run";
+    try { await api("uploadRaw", files[i].name, files[i].type, await readB64(files[i]), scope); st.textContent = "Caricato"; li.className = "done"; ok++; }
+    catch(e){ st.textContent = String(e.message || e); li.className = "err"; }
+  }
+  $("#upmsg").hidden = false;
+  $("#upmsg").textContent = `${ok} file su ${files.length} caricati. Ora l'AI li cataloga: può richiedere qualche minuto.`;
+  S.scope = scope; S.cat = S.type = S.tag = null;
+  await catalogAll();
+}
+async function catalogAll(){
+  for (let round = 0; round < 12; round++) {
+    let r; try { r = await api("syncNow"); } catch(e){ fail(e); break; }
+    if (r.restanti < 0) { await new Promise(res=>setTimeout(res, 15000)); continue; }
+    const msg = $("#upmsg"); if (msg) msg.textContent = r.restanti ? `Catalogate ${r.fatti} note, ne restano ${r.restanti}…` : "Catalogazione completata.";
+    if (!r.restanti) break;
+  }
+  await load(); toast("Caricamento massivo completato");
+}
 function sendFile(file){
   if (file.size > 20*1024*1024) return toast("Il file supera 20 MB: caricalo direttamente nella cartella Drive.");
   const r = new FileReader();
@@ -365,6 +441,75 @@ async function sendData(name, type, b64){
     NOTES.unshift(n); S.scope = scope; S.cat=S.type=S.tag=null;
     closeLayer(); render(); toast("Nota salvata e catalogata"); openNote(n.id);
   } catch(e){ $("#upmsg").hidden = true; fail(e); }
+}
+
+/* ---------- Chat con l'archivio ---------- */
+const SUGGEST = ["Cosa si è deciso nell'ultima riunione?", "Quali scadenze ci sono questo mese?", "Riassumi le note sugli incentivi", "Chi ha parlato di ferie estive?"];
+function openChat(first){
+  S.open = null;
+  $("#layer").innerHTML = `<div class="scrim" data-close></div>
+  <section class="drawer chat" role="dialog" aria-label="Chiedi all'archivio">
+    <div class="dh"><strong style="font-family:var(--display);font-size:20px;display:flex;gap:8px;align-items:center">${icon("i-chat")}Chiedi all'archivio</strong>
+      <div style="display:flex;gap:4px">${S.chat.length?`<button class="btn ghost" data-newchat>Nuova chat</button>`:""}<button class="btn icon ghost" data-close aria-label="Chiudi">${icon("i-close")}</button></div></div>
+    <div class="db" id="chatlog">${chatLog()}</div>
+    <form class="chatin" id="chatform"><textarea class="input" id="chatq" rows="1" placeholder="Fai una domanda sulle tue note…"></textarea>
+      <button class="btn primary icon" aria-label="Invia">${icon("i-send")}</button></form>
+  </section>`;
+  const q = $("#chatq"); q.focus();
+  if (first) ask(first);
+}
+function chatLog(){
+  if (!S.chat.length) return `<div class="chatempty"><p>Chiedi qualsiasi cosa sulle tue note personali e su quelle condivise: l'AI cerca le note pertinenti, risponde e ti indica le fonti.</p>
+    <div class="chips">${SUGGEST.map(s=>`<button class="chip" data-suggest="${esc(s)}">${esc(s)}</button>`).join("")}</div></div>`;
+  return S.chat.map(m => m.ruolo === "utente" ? `<div class="msg me">${esc(m.testo)}</div>` :
+    m.attesa ? `<div class="msg ai wait">Cerco nelle note…</div>` :
+    `<div class="msg ai">${fmtAnswer(m.testo, m.fonti)}${m.fonti && m.fonti.length ? `<div class="sources">${m.fonti.filter(f=>f.citata).concat(m.fonti.filter(f=>!f.citata)).slice(0,6).map(f=>`<button class="src ${f.citata?"cited":""}" data-src="${esc(f.id)}"><b>${f.n}</b>${esc(f.titolo)}</button>`).join("")}</div>` : ""}</div>`).join("");
+}
+function fmtAnswer(t, fonti){
+  let s = esc(t).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/\n/g, "<br>");
+  return s.replace(/\[(\d+)\]/g, (m, n) => { const f = (fonti||[]).find(x=>x.n===Number(n)); return f ? `<button class="cite" data-src="${esc(f.id)}" title="${esc(f.titolo)}">${n}</button>` : m; });
+}
+async function ask(question){
+  question = question.trim(); if (!question) return;
+  const history = S.chat.filter(m=>!m.attesa).map(m=>({ruolo:m.ruolo, testo:m.testo}));
+  S.chat.push({ruolo:"utente", testo:question}, {ruolo:"ai", attesa:true});
+  const log = $("#chatlog"); if (log) { log.innerHTML = chatLog(); log.scrollTop = log.scrollHeight; }
+  try {
+    const r = await api("askArchive", question, history);
+    S.chat[S.chat.length-1] = {ruolo:"ai", testo:r.risposta, fonti:r.fonti};
+  } catch(e){
+    S.chat[S.chat.length-1] = {ruolo:"ai", testo:"Non sono riuscito a rispondere: " + (e.message || e), fonti:[]};
+  }
+  const log2 = $("#chatlog"); if (log2) { log2.innerHTML = chatLog(); log2.scrollTop = log2.scrollHeight; }
+}
+
+/* ---------- Selezione multipla ---------- */
+function setSelecting(on){
+  S.sel = on ? new Set() : null;
+  $("#selbar").hidden = !on; $("#selbtn").classList.toggle("on", on);
+  updateSelbar(); render();
+}
+function updateSelbar(){ if (S.sel) $("#selcount").textContent = S.sel.size + (S.sel.size===1?" selezionata":" selezionate"); }
+async function bulk(action){
+  const ids = [...S.sel]; if (!ids.length) return toast("Seleziona prima qualche nota.");
+  if (action === "del" && !$("#selbar").dataset.confirm) {
+    $("#selbar").dataset.confirm = "1";
+    $("#selcount").textContent = `Eliminare ${ids.length} note? Vanno nel cestino di Drive (recuperabili per 30 giorni). Premi di nuovo Elimina per confermare.`;
+    return;
+  }
+  delete $("#selbar").dataset.confirm;
+  let ok = 0, ko = 0;
+  for (const id of ids) {
+    const n = NOTES.find(x=>x.id===id); if (!n) continue;
+    $("#selcount").textContent = `Elaborazione ${ok+ko+1} di ${ids.length}…`;
+    try {
+      if (action === "del") { await api("deleteNote", id); NOTES = NOTES.filter(x=>x.id!==id); }
+      else if (n.sezione !== action) { await api("moveNote", id, action); n.sezione = action; }
+      ok++;
+    } catch(e){ ko++; }
+  }
+  toast(`${ok} note ${action==="del"?"eliminate":"spostate"}` + (ko?`, ${ko} non riuscite (file di altre persone o errori)`:""));
+  setSelecting(false);
 }
 
 /* ---------- Avvio ---------- */
@@ -412,6 +557,8 @@ $("#side").addEventListener("click",e=>{
   render();
 });
 function onCards(e){
+  if (S.sel) { const c=e.target.closest("[data-open]"); if(!c) return; const id=c.dataset.open;
+    S.sel.has(id) ? S.sel.delete(id) : S.sel.add(id); delete $("#selbar").dataset.confirm; updateSelbar(); render(); return; }
   const st=e.target.closest("[data-star]"); if(st){ e.stopPropagation(); return toggleStar(st.dataset.star); }
   const c=e.target.closest("[data-open]"); if(c) openNote(c.dataset.open);
 }
@@ -422,6 +569,7 @@ $("#hero").addEventListener("click",e=>{
   const b=e.target.closest("[data-act]"); if(!b) return;
   const a=b.dataset.act;
   if(a==="new") upload();
+  if(a==="ask") openChat();
   if(a==="custom") openCustom();
   if(a==="all"){ S.scope="tutte"; S.cat=S.type=S.tag=null; render(); }
   if(a==="plaud"){ S.scope="tutte"; S.cat=S.tag=null; S.type="plaud"; render(); $("#grid").scrollIntoView({behavior:"smooth"}); }
@@ -429,6 +577,14 @@ $("#hero").addEventListener("click",e=>{
     const first = NOTES.find(n=>n.stato==="da rivedere"); if(first) openNote(first.id); }
 });
 $("#up").onclick=upload;
+$("#ask").onclick=()=>{ const q = S.q.trim().length > 2 ? S.q : ""; if (q) { $("#q").value=""; S.q=""; S.hits={}; render(); } openChat(q); };
+$("#q").addEventListener("keydown",e=>{ if(e.key==="Enter" && S.q.trim().length > 2){ e.preventDefault(); const q=S.q; e.target.value=""; S.q=""; S.hits={}; render(); openChat(q); } });
+$("#selbtn").onclick=()=>setSelecting(!S.sel);
+$("#selbar").addEventListener("click",e=>{ const b=e.target.closest("[data-sel]"); if(!b) return; const a=b.dataset.sel;
+  if(a==="exit") return setSelecting(false);
+  if(a==="all"){ NOTES.filter(inScope).filter(matches).forEach(n=>S.sel.add(n.id)); updateSelbar(); return render(); }
+  if(a!=="del") delete $("#selbar").dataset.confirm;
+  bulk(a); });
 $("#custom").onclick=openCustom;
 $("#sync").onclick=async()=>{
   const b=$("#sync"); b.disabled=true; toast("Aggiornamento in corso…");
@@ -447,6 +603,10 @@ document.addEventListener("click",e=>{ if(!e.target.closest("#menu,#av")) $("#me
 
 $("#layer").addEventListener("click",async e=>{
   if(e.target.closest("[data-close]")) return closeLayer();
+  // Chat
+  const sug = e.target.closest("[data-suggest]"); if (sug) return ask(sug.dataset.suggest);
+  const src = e.target.closest("[data-src]"); if (src) { if (NOTES.some(x=>x.id===src.dataset.src)) openNote(src.dataset.src); else toast("Nota non trovata: premi Aggiorna."); return; }
+  if (e.target.closest("[data-newchat]")) { S.chat = []; return openChat(); }
   // Personalizza
   const pc = e.target.closest("[data-pref] [data-v]");
   if (pc) { const key = pc.closest("[data-pref]").dataset.pref; const v = pc.dataset.v; P[key] = key==="testo" ? Number(v) : v; savePrefs(); render(); return openCustom(); }
@@ -459,6 +619,17 @@ $("#layer").addEventListener("click",async e=>{
   // Nota
   const n=NOTES.find(x=>x.id===S.open); if(!n) return;
   const st=e.target.closest("[data-star]"); if(st) return toggleStar(n.id);
+  if(e.target.closest("[data-askdel]")){ $("#delconfirm").hidden = false; return; }
+  if(e.target.closest("[data-nodel]")){ $("#delconfirm").hidden = true; return; }
+  if(e.target.closest("[data-del]")){
+    try { await api("deleteNote", n.id); NOTES = NOTES.filter(x=>x.id!==n.id); closeLayer(); render(); toast("Nota spostata nel cestino di Drive"); } catch(err){ fail(err); }
+    return; }
+  if(e.target.closest("[data-edit]")) return startEdit(n);
+  if(e.target.closest("[data-canceledit]")) return openNote(n.id);
+  if(e.target.closest("[data-savetext]")){ const b=e.target.closest("[data-savetext]"); b.disabled=true; b.textContent="Salvataggio e catalogazione…";
+    try { replaceNote(await api("saveNoteText", n.id, $("#edtext").value)); toast("Salvato su Drive"); } catch(err){ b.disabled=false; b.textContent="Salva su Drive"; fail(err); }
+    return; }
+  if(e.target.closest("[data-replace]")){ $("#repfile").click(); return; }
   const nc=e.target.closest("[data-ncol]");
   if(nc){ n.colore = nc.dataset.ncol===""?"":Number(nc.dataset.ncol); render(); openNote(n.id); save(n,{colore:n.colore}); return; }
   const rm=e.target.closest("[data-rmtag]");
@@ -470,7 +641,13 @@ $("#layer").addEventListener("click",async e=>{
     try { await api("moveNote", n.id, to); n.sezione=to; render(); openNote(n.id); toast(to==="team"?"Ora la vede tutto il team":"Ora la vedi solo tu"); } catch(err){ fail(err); }
   }
 });
-$("#layer").addEventListener("change",e=>{
+$("#layer").addEventListener("submit",e=>{ if(e.target.id==="chatform"){ e.preventDefault(); const q=$("#chatq"); const v=q.value; q.value=""; ask(v); } });
+$("#layer").addEventListener("change",async e=>{
+  if (e.target.id==="repfile" && e.target.files[0]) { const f=e.target.files[0]; const n=NOTES.find(x=>x.id===S.open); if(!n) return;
+    if (f.size > 20*1024*1024) return toast("Il file supera 20 MB.");
+    toast("Sostituzione e catalogazione in corso…");
+    try { replaceNote(await api("replaceFile", n.id, f.name, f.type, await readB64(f))); toast("File sostituito su Drive"); } catch(err){ fail(err); }
+    return; }
   if (e.target.matches("[data-tog]")) { P[e.target.dataset.tog] = e.target.checked; savePrefs(); render(); return; }
   if (e.target.id==="pnome") { P.nome = e.target.value.trim(); savePrefs(); $("#av").textContent=(P.nome||ME).slice(0,2).toUpperCase(); render(); toast("Nome salvato"); return; }
   const n=NOTES.find(x=>x.id===S.open); if(!n) return;
@@ -478,12 +655,13 @@ $("#layer").addEventListener("change",e=>{
   if (e.target.id==="cat") { const v=e.target.value.trim(); if(v && v!==n.categoria){ n.categoria=v; render(); openNote(n.id); save(n,{categoria:v}); toast("Categoria aggiornata"); } }
 });
 $("#layer").addEventListener("keydown",e=>{
+  if(e.target.id==="chatq" && e.key==="Enter" && !e.shiftKey){ e.preventDefault(); $("#chatform").requestSubmit(); return; }
   const n=NOTES.find(x=>x.id===S.open);
   if(e.key==="Enter" && (e.target.id==="ttl"||e.target.id==="cat"||e.target.id==="pnome")) { e.target.blur(); return; }
   if(n && e.target.id==="addtag" && e.key==="Enter"){ const v=e.target.value.trim().toLowerCase();
     if(v && !n.etichette.includes(v)){ n.etichette.push(v); render(); openNote(n.id); save(n,{etichette:n.etichette}); setTimeout(()=>$("#addtag")?.focus(),0);} }
 });
-document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeLayer(); if(e.key==="/" && !["INPUT","TEXTAREA","SELECT"].includes(document.activeElement.tagName)){ e.preventDefault(); $("#q").focus(); } });
+document.addEventListener("keydown",e=>{ if(e.key==="Escape"){ if(S.sel && !S.open && !$("#layer").innerHTML) setSelecting(false); closeLayer(); } if(e.key==="/" && !["INPUT","TEXTAREA","SELECT"].includes(document.activeElement.tagName)){ e.preventDefault(); $("#q").focus(); } });
 
 try { const saved = JSON.parse(store("nb-prefs") || "null"); if (saved) P = Object.assign({}, DEFAULTS, saved); } catch(e){}
 S.scope = P.sezione;

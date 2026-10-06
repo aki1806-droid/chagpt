@@ -16,7 +16,8 @@
     ["Nota vocale: idee corso anticorruzione","audio","mie","Idee",["anticorruzione","corsi"],d(2),"Modulo extra con casi pratici anonimizzati e un quiz finale di dieci domande.","ai",false,""]
   ];
   let id = 0;
-  const notes = N.map(r => ({ id:"demo"+(++id), titolo:r[0], tipo:r[1], sezione:r[2], categoria:r[3], etichette:r[4], data:r[5], riassunto:r[6], stato:r[7], preferita:r[8], colore:r[9],
+  const MIME = {doc:"application/vnd.google-apps.document", plaud:"application/vnd.google-apps.document", txt:"text/plain", pdf:"application/pdf", img:"image/jpeg", audio:"audio/mp4"};
+  const notes = N.map(r => ({ id:"demo"+(++id), mime:MIME[r[1]], titolo:r[0], tipo:r[1], sezione:r[2], categoria:r[3], etichette:r[4], data:r[5], riassunto:r[6], stato:r[7], preferita:r[8], colore:r[9],
     url:"https://drive.google.com/", autore:r[2]==="team"&&id%2?"collega@gmail.com":"tu@gmail.com",
     percorso:(r[2]==="team"?"Notabene Condivise/":"Notabene Personale/")+(r[1]==="plaud"?"Plaud/":"")+r[0] }));
   let prefs = null;
@@ -25,10 +26,23 @@
       personal: notes.filter(n=>n.sezione==="mie"), team: notes.filter(n=>n.sezione==="team") }),
     savePrefs: p => { prefs = p; return true; },
     updateNote: () => true,
+    deleteNote: id => { const i = notes.findIndex(n=>n.id===id); if (i !== -1) notes.splice(i,1); return true; },
+    getEditableText: id => { const n = notes.find(x=>x.id===id); return n.titolo + "\n\n" + n.riassunto + "\n\n(Nel prototipo il testo è di esempio.)"; },
+    saveNoteText: (id, text) => { const n = notes.find(x=>x.id===id); n.riassunto = "Riassunto aggiornato dall'AI dopo la modifica: " + text.slice(0, 120); n.stato = "ai"; return Object.assign({}, n); },
+    replaceFile: id => { const n = notes.find(x=>x.id===id); n.riassunto = "Riassunto del nuovo file, scritto dall'AI."; return Object.assign({}, n); },
+    uploadRaw: () => new Promise(ok => setTimeout(() => ok(true), 400)),
+    askArchive: q => new Promise(ok => setTimeout(() => {
+      const words = q.toLowerCase().split(/\W+/).filter(w => w.length > 3);
+      const hits = notes.map(n => ({ n, s: words.filter(w => (n.titolo + " " + n.riassunto + " " + n.etichette.join(" ")).toLowerCase().includes(w.slice(0, -1))).length })).filter(x => x.s).sort((a,b)=>b.s-a.s).slice(0,4);
+      const fonti = (hits.length ? hits : notes.slice(0,3).map(n=>({n}))).map((x,i)=>({ n:i+1, id:x.n.id, titolo:x.n.titolo, citata:i<2 }));
+      const a = fonti[0] && notes.find(n=>n.id===fonti[0].id);
+      ok({ risposta: hits.length ? `Secondo le tue note, ${a.riassunto.charAt(0).toLowerCase() + a.riassunto.slice(1)} [1]` + (fonti[1] ? `\n\nC'è anche un collegamento con «${fonti[1].titolo}» [2].` : "") + "\n\n(Risposta di esempio: nell'app vera la scrive Claude leggendo le note.)"
+        : "Non ho trovato note che parlino di questo. Prova con altre parole. (Risposta di esempio.)", fonti });
+    }, 900)),
     moveNote: () => true,
     searchText: q => notes.filter(n => n.tipo==="plaud" && "incentivi delibera allegati dec".includes(q.toLowerCase().split(/\s+/)[0])).map(n => ({id:n.id, estratto:"…per la liquidazione è obbligatoria una delibera annuale di ogni servizio proponente, con gli allegati che indicano chi ha fatto cosa…"})),
     getNoteText: () => "Esempio di testo completo. Nell'app reale qui compare il testo estratto dal file o la trascrizione Plaud.",
-    syncNow: () => ({ fatti:0, restanti:0 }),
+    syncNow: () => new Promise(ok => setTimeout(() => ok({ fatti:0, restanti:0 }), 600)),
     installSync: () => true,
     uploadNote: (name, type, b64, scope) => ({ id:"demo"+(++id), titolo:name.replace(/\.[^.]+$/,""), tipo:/^audio/.test(type)?"audio":/pdf/.test(type)?"pdf":/^image/.test(type)?"img":/^text/.test(type)?"txt":"doc",
       sezione:scope, categoria:"Da classificare", etichette:["nuova"], data:new Date().toISOString().slice(0,10), stato:"da rivedere", preferita:false, colore:"",
