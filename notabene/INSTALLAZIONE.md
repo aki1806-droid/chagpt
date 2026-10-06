@@ -45,7 +45,7 @@ Email autorizzate, cartella condivisa e scelta di Claude sono già scritte nel c
 ## 5. Primo accesso (tu e Giovanna)
 
 1. Apri l'URL. Google mostra "Google non ha verificato questa app": è normale per un'app privata. Clicca **Avanzate** → **Vai a Notabene** → **Consenti**.
-2. Solo tu: nel riquadro in alto incolla la chiave di Claude e premi **Salva chiave**. La chiave resta sul server e non viene mostrata a nessuno.
+2. Solo tu: nel riquadro in alto incolla la chiave di Claude e premi **Salva chiave**. L'app la verifica con Anthropic prima di salvarla; resta sul server e non viene mostrata a nessuno. Per cambiarla in seguito: **Personalizza** → **Chiave di Claude**, oppure Impostazioni progetto → Proprietà script → `ANTHROPIC_API_KEY`.
 3. Premi **Attiva l'aggiornamento ogni ora**: l'app controllerà da sola le cartelle.
 4. Premi **Aggiorna** (frecce circolari in alto) per catalogare subito i file già presenti.
 5. Sul telefono: apri l'URL nel browser → **Aggiungi a schermata Home**. L'accesso resta memorizzato finché resti collegato a Google.

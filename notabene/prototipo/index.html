@@ -593,6 +593,9 @@ function openCustom(){
         ${cats.length ? cats.map(c=>`<div class="catrow"><span class="nm" style="display:flex;gap:8px;align-items:center"><span class="dot" style="background:${catColor(c)}"></span>${esc(c)}</span>
           <div class="swatches" data-catcol="${esc(c)}">${[0,1,2,3,4,5,6,7,8,9].map(i=>`<button class="sw ${P.catColors[c]===i?"on":""}" style="--c:var(--c${i})" data-v="${i}" aria-label="Colore ${i+1}"></button>`).join("")}</div></div>`).join("") : `<span style="color:var(--muted);font-size:14px">Le categorie compariranno dopo la prima catalogazione.</span>`}
       </div>
+      ${BOOT.isAdmin ? `<div class="field"><span>Chiave di Claude (solo amministratore)</span>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><input class="input" id="newkey" type="password" placeholder="${BOOT.aiEnabled ? "Chiave salvata. Incolla qui una nuova chiave per sostituirla" : "sk-ant-…"}" autocomplete="off" style="flex:1 1 220px">
+        <button class="btn primary" data-savekey>Verifica e salva</button></div></div>` : ""}
       <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" data-reset>Ripristina le impostazioni iniziali</button></div>
       <p style="margin:0;color:var(--muted);font-size:13px">Le impostazioni sono personali: valgono solo per il tuo account, su ogni dispositivo.</p>
     </div></section>`;
@@ -670,7 +673,7 @@ function banner(){
   if (!BOOT.syncInstalled) msgs.push(`I file nuovi su Drive vengono letti quando premi Aggiorna. <button class="btn" id="auto">Attiva l'aggiornamento ogni ora</button>`);
   $("#banner").innerHTML = msgs.map(m=>`<div class="banner"><span>${m}</span></div>`).join("");
   $("#banner").hidden = !msgs.length;
-  const k = $("#savekey"); if (k) k.onclick = async () => { try { await api("setApiKey", $("#apikey").value); BOOT.aiEnabled = true; banner(); toast("Chiave salvata: premi Aggiorna per catalogare le note"); } catch(e){ fail(e); } };
+  const k = $("#savekey"); if (k) k.onclick = async () => { k.disabled = true; try { await api("setApiKey", $("#apikey").value); BOOT.aiEnabled = true; banner(); toast("Chiave verificata e salvata: premi Aggiorna per catalogare le note"); } catch(e){ k.disabled = false; fail(e); } };
   const a = $("#auto"); if (a) a.onclick = async () => { try { await api("installSync"); BOOT.syncInstalled = true; banner(); toast("Aggiornamento automatico attivo"); } catch(e){ fail(e); } };
 }
 
@@ -736,6 +739,9 @@ $("#layer").addEventListener("click",async e=>{
   if (pc) { const key = pc.closest("[data-pref]").dataset.pref; const v = pc.dataset.v; P[key] = key==="testo" ? Number(v) : v; savePrefs(); render(); return openCustom(); }
   const cc = e.target.closest("[data-catcol] [data-v]");
   if (cc) { P.catColors = Object.assign({}, P.catColors, {[cc.closest("[data-catcol]").dataset.catcol]: Number(cc.dataset.v)}); savePrefs(); render(); return openCustom(); }
+  if (e.target.closest("[data-savekey]")) { const b = e.target.closest("[data-savekey]"); b.disabled = true; b.textContent = "Verifica…";
+    try { await api("setApiKey", $("#newkey").value); BOOT.aiEnabled = true; banner(); $("#newkey").value = ""; toast("Chiave verificata e salvata"); }
+    catch(err){ fail(err); } finally { b.disabled = false; b.textContent = "Verifica e salva"; } return; }
   if (e.target.closest("[data-reset]")) { P = Object.assign({}, DEFAULTS, {nome:P.nome}); savePrefs(); render(); toast("Impostazioni ripristinate"); return openCustom(); }
   // Nota
   const n=NOTES.find(x=>x.id===S.open); if(!n) return;

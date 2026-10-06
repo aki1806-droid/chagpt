@@ -80,6 +80,14 @@ function setApiKey(key) {
   if (!isAdmin_(u.email)) throw new Error('Solo l\'amministratore può impostare la chiave.');
   key = String(key || '').trim();
   if (!/^sk-ant-/.test(key)) throw new Error('La chiave di Claude inizia con "sk-ant-". Controlla di averla copiata tutta.');
+  // Verifica la chiave con una richiesta gratuita all'elenco dei modelli.
+  const res = UrlFetchApp.fetch('https://api.anthropic.com/v1/models?limit=1', {
+    method: 'get', muteHttpExceptions: true,
+    headers: { 'x-api-key': key, 'anthropic-version': '2023-06-01' }
+  });
+  const code = res.getResponseCode();
+  if (code === 401 || code === 403) throw new Error('Chiave non valida: Anthropic l\'ha rifiutata. Creane una nuova su console.anthropic.com.');
+  if (code !== 200) throw new Error('Non riesco a verificare la chiave (errore ' + code + '). Riprova tra poco.');
   PropertiesService.getScriptProperties().setProperty('ANTHROPIC_API_KEY', key);
   return true;
 }
