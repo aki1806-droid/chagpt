@@ -2,7 +2,7 @@
 
 ## Notabene, grafica personalizzabile e Plaud (Claude, 2026-10-06)
 
-Riscritti `notabene/app/Index.html` e `Styles.html` (benvenuto, statistiche, in evidenza, viste griglia/compatta/lista, ordinamento, pannello Personalizza, nota rapida scritta); `Code.gs` ora salva preferenze per utente, stella e colore per nota. Prototipo generato con `notabene/prototipo/build.py` e ripubblicato. Creati `notabene/COSTI.md` e la routine giornaliera Plaud (senza connettori: va completata dall'utente). La condivisione della cartella con Giovanna è stata rifiutata dall'utente: la fa lui. Revisione Codex utile su Code.gs e sul prompt della routine (in `mcp`/claude.ai, non nel repository).
+Riscritti `notabene/app/Index.html` e `Styles.html` (benvenuto, statistiche, in evidenza, viste griglia/compatta/lista, ordinamento, pannello Personalizza, nota rapida scritta); `Code.gs` ora salva preferenze per utente, stella e colore per nota. Prototipo generato con `notabene/prototipo/build.py` e ripubblicato. Creati `notabene/COSTI.md` e la routine giornaliera Plaud (senza connettori: va completata dall'utente). La condivisione della cartella con Giovanna è stata rifiutata dall'utente, che la farà personalmente. Revisione Codex utile su Code.gs e sul prompt della routine (salvato in claude.ai, non nel repository).
 
 ## Trasferimento LPG
 
