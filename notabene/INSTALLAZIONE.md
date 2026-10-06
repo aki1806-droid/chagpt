@@ -33,7 +33,7 @@ In Drive, tasto destro su **Notabene Condivise** → Condividi → aggiungi `gio
 2. **Billing**: carica un piccolo credito (bastano pochi dollari, vedi `COSTI.md`). Se vuoi, imposta un limite di spesa mensile.
 3. **API Keys** → **Create Key** → nome `Notabene` → copia la chiave (inizia con `sk-ant-`). La incollerai nell'app al punto 5.
 
-Email autorizzate, cartella condivisa e scelta di Claude sono già scritte nel codice (`CONFIG` in `Code.gs`): non devi impostare altro.
+Email autorizzate, cartella condivisa e modelli di Claude (Haiku per catalogare, Sonnet per la chat) sono già scritti nel codice (`CONFIG` in `Code.gs`): non devi impostare altro.
 
 ## 4. Pubblica l'app
 

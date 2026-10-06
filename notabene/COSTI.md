@@ -1,4 +1,4 @@
-# Notabene: stima dei costi (6 ottobre 2026)
+# Notabene: stima dei costi (aggiornata il 6 ottobre 2026)
 
 Stime indicative, non preventivi. Prezzi API Anthropic in dollari, IVA esclusa.
 
@@ -9,38 +9,43 @@ Stime indicative, non preventivi. Prezzi API Anthropic in dollari, IVA esclusa.
 | App (Google Apps Script) | 0 | Con Gmail: ogni esecuzione dura al massimo 6 minuti; gli aggiornamenti automatici hanno circa 90 minuti al giorno per persona |
 | Archivio (Google Drive) | 0 | 15 GB per account, condivisi con Gmail e Foto. I testi occupano pochissimo |
 | Lettura di PDF e foto (OCR di Drive) | 0 | Il testo viene estratto da Google, non dall'AI |
-| Importazione Plaud giornaliera | 0 in più | Usa il tuo abbonamento Claude e ne consuma parte dei limiti d'uso. Le trascrizioni restano quelle del tuo piano Plaud |
+| Importazione Plaud giornaliera | 0 in più | Usa il tuo abbonamento Claude e ne consuma parte dei limiti d'uso |
 
-## L'unico costo: Claude per catalogare
+## Claude: due modelli
 
-Modello predefinito `claude-opus-5-5`: 4 $ per milione di token in ingresso, 20 $ per milione in uscita. Un token corrisponde a circa 4 caratteri di testo italiano. Per ogni nota l'AI legge il testo (al massimo 60.000 caratteri) e scrive titolo, riassunto, categoria ed etichette.
+| Uso | Modello | Prezzo per milione di token (ingresso / uscita) |
+|---|---|---|
+| Catalogare (titolo, riassunto, categoria, etichette) | `claude-haiku-4-5` | 1 $ / 5 $ |
+| Chat "Chiedi all'archivio" | `claude-sonnet-5-5` | 2 $ / 10 $ |
+
+Un token corrisponde a circa 4 caratteri di testo italiano. Per cambiare modello: proprietà dello script `CLAUDE_MODEL_CATALOGO` o `CLAUDE_MODEL_CHAT` (per esempio `claude-opus-5-5` per la massima qualità, al doppio del prezzo di Sonnet).
+
+### Catalogazione con Haiku
 
 | Tipo di nota | Costo per nota |
 |---|---|
-| Nota breve, foto di appunti (1 pagina) | circa 0,02 $ |
-| Documento o PDF di 10 pagine | circa 0,04 $ |
-| Registrazione Plaud di 45 minuti | circa 0,05 $ |
-| Registrazione Plaud di 90 minuti o più | circa 0,08 $ (oltre i 60.000 caratteri il testo viene tagliato) |
+| Nota breve, foto di appunti (1 pagina) | circa 0,3 centesimi |
+| Documento o PDF di 10 pagine | circa 0,8 centesimi |
+| Registrazione Plaud di 45 minuti | circa 1,2 centesimi |
+| Registrazione Plaud di 90 minuti o più | circa 2 centesimi (oltre i 60.000 caratteri il testo viene tagliato) |
 
-Una nota viene ricatalogata solo se il file cambia (anche quando la modifichi o la sostituisci dall'app).
+Una nota viene ricatalogata solo se il file cambia.
 
-### Chat "Chiedi all'archivio"
+### Chat con Sonnet
 
-La chat è un agente: per ogni domanda Claude fa da 2 a 8 passaggi (cerca nell'indice, cerca su Drive dentro i file, legge i file pertinenti, risponde). Ogni passaggio rilegge la conversazione, ma la parte già inviata viene letta dalla cache a un ventesimo del prezzo. Costo indicativo: **5–15 centesimi di dollaro per domanda**, di più se legge molti file lunghi. Con 10 domande al giorno in due: circa **20–40 $ al mese**. Con `claude-sonnet-5-5` circa la metà, con `claude-haiku-4-5` circa un quarto (risposte meno accurate).
+Per ogni domanda l'agente fa da 2 a 8 passaggi (cerca nell'indice, cerca su Drive, legge i file, risponde). La parte di conversazione già inviata viene riletta dalla cache a un decimo del prezzo. Costo indicativo: **3–8 centesimi per domanda**, di più se legge molti file lunghi.
 
 ## Scenari
 
-| Scenario | Claude Opus 5.5 | Con `claude-haiku-4-5` (circa 4 volte meno) |
-|---|---|---|
-| Archivio iniziale: 300 file, di cui 30 registrazioni | 8–12 $ una tantum | 2–3 $ |
-| Uso normale in due: 80 note + 20 registrazioni al mese | circa 3 $ al mese | meno di 1 $ al mese |
-| Chat: 10 domande al giorno in due | circa 20–40 $ al mese | circa 5–10 $ al mese |
-| Uso intenso: 200 note + 40 registrazioni al mese | circa 6–7 $ al mese | circa 2 $ al mese |
-
-Con Haiku i riassunti sono un po' meno accurati. Per cambiare modello basta la proprietà `CLAUDE_MODEL` nelle impostazioni dello script.
+| Scenario | Costo |
+|---|---|
+| Archivio iniziale: 300 file, di cui 30 registrazioni | 1–2 $ una tantum |
+| Catalogazione, uso normale in due: 80 note + 20 registrazioni al mese | meno di 1 $ al mese |
+| Chat: 10 domande al giorno in due | circa 10–20 $ al mese |
+| Chat: 3 domande al giorno in due | circa 3–6 $ al mese |
 
 ## Come tenere i costi sotto controllo
 
-- In <https://console.anthropic.com> il credito è prepagato: quando finisce, la catalogazione si ferma e le note restano salvate come "Da rivedere". Non ci sono addebiti a sorpresa.
+- In <https://console.anthropic.com> il credito è prepagato: quando finisce, catalogazione e chat si fermano e le note restano salvate. Non ci sono addebiti a sorpresa.
 - Nella console puoi impostare un limite di spesa mensile e ricevere avvisi.
-- Il costo per nota si può verificare dopo le prime 20–30 note, nella pagina "Usage" della console.
+- Il costo reale si vede dopo i primi giorni, nella pagina "Usage" della console.

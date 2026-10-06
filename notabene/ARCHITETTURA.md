@@ -48,7 +48,7 @@ File: `app/` (codice), `INSTALLAZIONE.md` (guida), `COSTI.md` (stime), `prototip
 
 ## Decisioni prese il 2026-10-06
 
-- AI: Claude (`claude-opus-5-5`, effort basso), modello cambiabile con `CLAUDE_MODEL`.
+- AI: Claude. Catalogazione con `claude-haiku-4-5` (senza effort né fallback, non supportati), chat-agente con `claude-sonnet-5-5` (effort medium, fallback lato server). Modelli cambiabili con `CLAUDE_MODEL_CATALOGO` e `CLAUDE_MODEL_CHAT`.
 - Collega autorizzata: giovanna.vullo87@gmail.com.
 - Plaud (regola A, 6/10): registrazioni dal 1° ottobre 2026 complete (max 3 al giorno), arretrato solo riassunto (max 15 al giorno).
 

@@ -11,7 +11,7 @@
  * La chiave di Claude si inserisce dall'app (solo l'amministratore) oppure in
  * Impostazioni progetto → Proprietà script:
  *  ANTHROPIC_API_KEY  chiave per Claude
- *  CLAUDE_MODEL       facoltativa, predefinito claude-opus-5-5
+ *  CLAUDE_MODEL_CATALOGO, CLAUDE_MODEL_CHAT  facoltative, vedi CONFIG
  *  GEMINI_API_KEY     chiave per Gemini (Google AI Studio)
  *  GEMINI_MODEL       facoltativa, predefinito gemini-2.5-flash
  */
@@ -20,8 +20,16 @@ const CONFIG = {
   ADMIN_EMAIL: 'aki1806@gmail.com',
   ALLOWED_EMAILS: 'aki1806@gmail.com,giovanna.vullo87@gmail.com',
   SHARED_FOLDER_ID: '1ftFYAyeAeXgesIb81stFxU2ts6dACHrz',
-  AI_PROVIDER: 'claude'
+  AI_PROVIDER: 'claude',
+  // Modelli Claude: uno economico per catalogare, uno più capace per la chat.
+  // Si possono cambiare con le proprietà dello script omonime.
+  CLAUDE_MODEL_CATALOGO: 'claude-haiku-4-5',
+  CLAUDE_MODEL_CHAT: 'claude-sonnet-5-5'
 };
+
+// Modelli che accettano il parametro effort e i fallback lato server in caso di rifiuto.
+const EFFORT_MODELS = /^claude-(opus-5|opus-4-[5-8]|sonnet-5|fable-5|mythos-5)/;
+const FALLBACK_MODELS = /^claude-(opus-5|sonnet-5-5|fable-5-1)/;
 
 const PERSONAL_FOLDER_NAME = 'Notabene Personale';
 const INDEX_NAME = '_Notabene Indice';
@@ -417,7 +425,7 @@ function askArchive(question, history, opts) {
       if (Array.isArray(tail.content)) tail.content.push(note);
       else tail.content = [{ type: 'text', text: tail.content }, note];
     }
-    const data = claudeRequest_(body);
+    const data = claudeRequest_(body, 'chat');
     if (data.stop_reason === 'refusal') { answer = 'Non posso rispondere a questa domanda.'; break; }
     messages.push({ role: 'assistant', content: data.content });
     const uses = (data.content || []).filter(b => b.type === 'tool_use');
@@ -774,23 +782,33 @@ function callClaude_(prompt) {
     max_tokens: 4000,
     output_config: { effort: 'low', format: { type: 'json_schema', schema: AI_SCHEMA } },
     messages: [{ role: 'user', content: prompt }]
-  });
+  }, 'catalogo');
   const text = claudeText_(data);
   return text ? JSON.parse(text) : null;
 }
 
-/** Chiamata alla Messages API di Claude con modello, chiave e fallback dell'app. */
-function claudeRequest_(body) {
+/**
+ * Chiamata alla Messages API di Claude. uso = 'catalogo' o 'chat' sceglie il modello.
+ * Toglie effort e fallback per i modelli che non li accettano (per esempio Haiku 4.5).
+ */
+function claudeRequest_(body, uso) {
+  const model = prop_(uso === 'chat' ? 'CLAUDE_MODEL_CHAT' : 'CLAUDE_MODEL_CATALOGO');
+  body = Object.assign({ model: model }, body);
+  if (!EFFORT_MODELS.test(model) && body.output_config) {
+    delete body.output_config.effort;
+    if (!Object.keys(body.output_config).length) delete body.output_config;
+  }
+  const headers = { 'x-api-key': prop_('ANTHROPIC_API_KEY'), 'anthropic-version': '2023-06-01' };
+  if (FALLBACK_MODELS.test(model)) {
+    body.fallbacks = 'default';
+    headers['anthropic-beta'] = 'server-side-fallback-2026-07-01';
+  }
   const res = UrlFetchApp.fetch('https://api.anthropic.com/v1/messages', {
     method: 'post',
     contentType: 'application/json',
     muteHttpExceptions: true,
-    headers: {
-      'x-api-key': prop_('ANTHROPIC_API_KEY'),
-      'anthropic-version': '2023-06-01',
-      'anthropic-beta': 'server-side-fallback-2026-07-01'
-    },
-    payload: JSON.stringify(Object.assign({ model: prop_('CLAUDE_MODEL', 'claude-opus-5-5'), fallbacks: 'default' }, body))
+    headers: headers,
+    payload: JSON.stringify(body)
   });
   const code = res.getResponseCode();
   const data = JSON.parse(res.getContentText());
