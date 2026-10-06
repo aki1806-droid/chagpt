@@ -4,7 +4,7 @@
 
 - Compito: web app per catalogare e cercare note su Google Drive, con AI, Plaud, sezione personale e condivisa, due utenti Gmail (aki1806, giovanna.vullo87).
 - Responsabile: Claude.
-- Stato: in corso. App Apps Script in `notabene/app/` con grafica personalizzabile; guida `notabene/INSTALLAZIONE.md`; costi `notabene/COSTI.md`. AI scelta: Claude. Importazione Plaud: routine trig_01JadYR5ovSYPuzcvBgdHzLw alle 6:46, legata a questa sessione Claude (session_01G4MBAHofPJo5ZufnrbHWCS) perché le routine in sessioni nuove non ricevono i connettori; la vecchia trig_01LDZxvtUM75egEvXHCrEo27 è disattivata.
+- Stato: in corso. App Apps Script in `notabene/app/` con grafica personalizzabile; guida `notabene/INSTALLAZIONE.md`; costi `notabene/COSTI.md`. AI scelta: Claude. Importazione Plaud (regola A: dal 1/10/2026 complete max 3/giorno, arretrato solo riassunto max 15/giorno): routine trig_01JadYR5ovSYPuzcvBgdHzLw alle 6:46, legata a questa sessione Claude (session_01G4MBAHofPJo5ZufnrbHWCS) perché le routine in sessioni nuove non ricevono i connettori; la vecchia trig_01LDZxvtUM75egEvXHCrEo27 è disattivata.
 - Verifiche: sintassi di Code.gs, Index.html, manifest; prototipo renderizzato con Chromium a 1360 e 400 px (nessun errore, nessuno scorrimento orizzontale). App non ancora installata su Google.
 - Configurazione ora nel codice (`CONFIG` in Code.gs); la chiave Claude si inserisce dall'app (solo l'amministratore). Installazione impossibile da Claude: il connettore Drive non crea progetti Apps Script e non c'è accesso all'account Google.
 - Azioni dell'utente: condividere la cartella con Giovanna, installare l'app (10 minuti), creare la chiave API.

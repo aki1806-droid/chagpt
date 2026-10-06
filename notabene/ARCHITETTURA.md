@@ -30,7 +30,7 @@ Plaud ──► routine Claude giornaliera (connettori Plaud + Drive) ──► 
 - **Privacy**: ogni sezione personale sta nel Drive del proprietario; l'app esegue come chi accede, quindi Drive stesso impedisce di vedere le note altrui. Risolve il problema della versione precedente.
 - **Sincronizzazione**: pulsante "Aggiorna" e attivatore orario per utente; massimo 4,5 minuti per esecuzione (limite Apps Script 6 minuti), il resto alla volta successiva.
 - **Ricerca**: metadati filtrati nel browser all'istante; testo completo cercato sul foglio indice.
-- **Chat** (`askArchive`): Claude espande la domanda in parole chiave; le note visibili all'utente sono ordinate per pertinenza (titolo, etichette, riassunto, testo, con radici semplici); le prime 8 con estratti vanno a Claude, che risponde citando [n]. Nessun indice vettoriale: con migliaia di note valutare embedding.
+- **Chat** (`askArchive`): agente Claude con strumenti `cerca_note` (indice), `cerca_drive` (ricerca a testo pieno di Drive dentro i file, limitata alle cartelle Notabene o, su richiesta, a tutto il Drive dell'utente) e `leggi_file` (testo a blocchi da 15.000 caratteri, con OCR, Fogli e Presentazioni). Massimo 8 passaggi e 4,5 minuti; ultimo passaggio con `tool_choice: none`; cache dei prompt attiva. Risponde citando [n].
 - **Gestione file**: elimina (cestino di Drive, solo il proprietario del file), modifica del testo per Google Doc e file di testo (il Doc diventa testo semplice), sostituzione del contenuto per gli altri file, rinomina su Drive quando cambia il titolo, selezione multipla per spostare o eliminare.
 - **Caricamento massivo**: più file caricati uno alla volta (`uploadRaw`), poi catalogati con cicli di `syncNow`.
 - **Limiti noti**: file caricati dall'app fino a 20 MB; testo indicizzato fino a 45.000 caratteri per nota; con migliaia di note la ricerca sul foglio rallenta (valutare in seguito un indice dedicato).
@@ -50,7 +50,7 @@ File: `app/` (codice), `INSTALLAZIONE.md` (guida), `COSTI.md` (stime), `prototip
 
 - AI: Claude (`claude-opus-5-5`, effort basso), modello cambiabile con `CLAUDE_MODEL`.
 - Collega autorizzata: giovanna.vullo87@gmail.com.
-- Plaud: routine giornaliera alle 6:46 (ora italiana), trascrizione completa, massimo 6 registrazioni per esecuzione.
+- Plaud (regola A, 6/10): registrazioni dal 1° ottobre 2026 complete (max 3 al giorno), arretrato solo riassunto (max 15 al giorno).
 
 ## Aperto
 

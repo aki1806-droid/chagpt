@@ -289,6 +289,9 @@ textarea.input{min-height:150px;resize:vertical;line-height:1.5}
 .src{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--line);background:var(--surface);border-radius:var(--r-s);padding:3px 8px;font-size:12.5px;max-width:100%;text-align:left;color:var(--fg)}
 .src b{font-family:var(--mono);color:var(--muted)}
 .src.cited{border-color:var(--accent-line)} .src.cited b{color:var(--accent)}
+.chatscope{padding:8px 18px;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--muted)}
+a.cite{text-decoration:none;display:inline-block}
+a.src{text-decoration:none}
 .chatin{display:flex;gap:8px;align-items:flex-end;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);background:var(--surface)}
 .chatin textarea{min-height:44px;max-height:160px;resize:vertical}
 </style>
@@ -789,6 +792,7 @@ function openChat(first){
   <section class="drawer chat" role="dialog" aria-label="Chiedi all'archivio">
     <div class="dh"><strong style="font-family:var(--display);font-size:20px;display:flex;gap:8px;align-items:center">${icon("i-chat")}Chiedi all'archivio</strong>
       <div style="display:flex;gap:4px">${S.chat.length?`<button class="btn ghost" data-newchat>Nuova chat</button>`:""}<button class="btn icon ghost" data-close aria-label="Chiudi">${icon("i-close")}</button></div></div>
+    <label class="toggle chatscope"><span>Cerca anche fuori da Notabene, in tutto il mio Drive</span><input type="checkbox" id="ovunque" ${S.ovunque?"checked":""}></label>
     <div class="db" id="chatlog">${chatLog()}</div>
     <form class="chatin" id="chatform"><textarea class="input" id="chatq" rows="1" placeholder="Fai una domanda sulle tue note…"></textarea>
       <button class="btn primary icon" aria-label="Invia">${icon("i-send")}</button></form>
@@ -797,15 +801,15 @@ function openChat(first){
   if (first) ask(first);
 }
 function chatLog(){
-  if (!S.chat.length) return `<div class="chatempty"><p>Chiedi qualsiasi cosa sulle tue note personali e su quelle condivise: l'AI cerca le note pertinenti, risponde e ti indica le fonti.</p>
+  if (!S.chat.length) return `<div class="chatempty"><p>Chiedi qualsiasi cosa: l'AI cerca nelle note e dentro i file su Drive, legge quelli pertinenti, risponde e ti indica le fonti. Una ricerca approfondita può richiedere fino a un minuto.</p>
     <div class="chips">${SUGGEST.map(s=>`<button class="chip" data-suggest="${esc(s)}">${esc(s)}</button>`).join("")}</div></div>`;
   return S.chat.map(m => m.ruolo === "utente" ? `<div class="msg me">${esc(m.testo)}</div>` :
-    m.attesa ? `<div class="msg ai wait">Cerco nelle note…</div>` :
-    `<div class="msg ai">${fmtAnswer(m.testo, m.fonti)}${m.fonti && m.fonti.length ? `<div class="sources">${m.fonti.filter(f=>f.citata).concat(m.fonti.filter(f=>!f.citata)).slice(0,6).map(f=>`<button class="src ${f.citata?"cited":""}" data-src="${esc(f.id)}"><b>${f.n}</b>${esc(f.titolo)}</button>`).join("")}</div>` : ""}</div>`).join("");
+    m.attesa ? `<div class="msg ai wait">Cerco nelle note e dentro i file su Drive…</div>` :
+    `<div class="msg ai">${fmtAnswer(m.testo, m.fonti)}${m.fonti && m.fonti.length ? `<div class="sources">${m.fonti.filter(f=>f.citata).concat(m.fonti.filter(f=>!f.citata)).slice(0,8).map(f=>NOTES.some(x=>x.id===f.id) ? `<button class="src ${f.citata?"cited":""}" data-src="${esc(f.id)}"><b>${f.n}</b>${esc(f.titolo)}</button>` : `<a class="src ${f.citata?"cited":""}" href="${esc(f.url)}" target="_blank" rel="noopener"><b>${f.n}</b>${esc(f.titolo)} ↗</a>`).join("")}</div>` : ""}</div>`).join("");
 }
 function fmtAnswer(t, fonti){
   let s = esc(t).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/\n/g, "<br>");
-  return s.replace(/\[(\d+)\]/g, (m, n) => { const f = (fonti||[]).find(x=>x.n===Number(n)); return f ? `<button class="cite" data-src="${esc(f.id)}" title="${esc(f.titolo)}">${n}</button>` : m; });
+  return s.replace(/\[(\d+)\]/g, (m, n) => { const f = (fonti||[]).find(x=>x.n===Number(n)); if (!f) return m; return NOTES.some(x=>x.id===f.id) ? `<button class="cite" data-src="${esc(f.id)}" title="${esc(f.titolo)}">${n}</button>` : `<a class="cite" href="${esc(f.url)}" target="_blank" rel="noopener" title="${esc(f.titolo)}">${n}</a>`; });
 }
 async function ask(question){
   question = question.trim(); if (!question) return;
@@ -813,7 +817,7 @@ async function ask(question){
   S.chat.push({ruolo:"utente", testo:question}, {ruolo:"ai", attesa:true});
   const log = $("#chatlog"); if (log) { log.innerHTML = chatLog(); log.scrollTop = log.scrollHeight; }
   try {
-    const r = await api("askArchive", question, history);
+    const r = await api("askArchive", question, history, {ovunque: !!S.ovunque});
     S.chat[S.chat.length-1] = {ruolo:"ai", testo:r.risposta, fonti:r.fonti};
   } catch(e){
     S.chat[S.chat.length-1] = {ruolo:"ai", testo:"Non sono riuscito a rispondere: " + (e.message || e), fonti:[]};
@@ -981,6 +985,7 @@ $("#layer").addEventListener("click",async e=>{
 });
 $("#layer").addEventListener("submit",e=>{ if(e.target.id==="chatform"){ e.preventDefault(); const q=$("#chatq"); const v=q.value; q.value=""; ask(v); } });
 $("#layer").addEventListener("change",async e=>{
+  if (e.target.id==="ovunque") { S.ovunque = e.target.checked; return; }
   if (e.target.id==="repfile" && e.target.files[0]) { const f=e.target.files[0]; const n=NOTES.find(x=>x.id===S.open); if(!n) return;
     if (f.size > 20*1024*1024) return toast("Il file supera 20 MB.");
     toast("Sostituzione e catalogazione in corso…");

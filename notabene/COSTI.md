@@ -26,7 +26,7 @@ Una nota viene ricatalogata solo se il file cambia (anche quando la modifichi o 
 
 ### Chat "Chiedi all'archivio"
 
-Ogni domanda fa due chiamate a Claude: una breve per trovare le parole chiave e sinonimi, una per rispondere leggendo fino a 8 note pertinenti (riassunti ed estratti). Costo indicativo: **3–6 centesimi di dollaro per domanda**. Con 10 domande al giorno in due: circa 10–15 $ al mese. Con `claude-haiku-4-5` circa un quarto.
+La chat è un agente: per ogni domanda Claude fa da 2 a 8 passaggi (cerca nell'indice, cerca su Drive dentro i file, legge i file pertinenti, risponde). Ogni passaggio rilegge la conversazione, ma la parte già inviata viene letta dalla cache a un ventesimo del prezzo. Costo indicativo: **5–15 centesimi di dollaro per domanda**, di più se legge molti file lunghi. Con 10 domande al giorno in due: circa **20–40 $ al mese**. Con `claude-sonnet-5-5` circa la metà, con `claude-haiku-4-5` circa un quarto (risposte meno accurate).
 
 ## Scenari
 
@@ -34,7 +34,7 @@ Ogni domanda fa due chiamate a Claude: una breve per trovare le parole chiave e 
 |---|---|---|
 | Archivio iniziale: 300 file, di cui 30 registrazioni | 8–12 $ una tantum | 2–3 $ |
 | Uso normale in due: 80 note + 20 registrazioni al mese | circa 3 $ al mese | meno di 1 $ al mese |
-| Chat: 10 domande al giorno in due | circa 10–15 $ al mese | circa 3–4 $ al mese |
+| Chat: 10 domande al giorno in due | circa 20–40 $ al mese | circa 5–10 $ al mese |
 | Uso intenso: 200 note + 40 registrazioni al mese | circa 6–7 $ al mese | circa 2 $ al mese |
 
 Con Haiku i riassunti sono un po' meno accurati. Per cambiare modello basta la proprietà `CLAUDE_MODEL` nelle impostazioni dello script.
