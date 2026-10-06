@@ -1,5 +1,11 @@
 # Ultimo passaggio di consegne
 
+## Notabene, fase 1 (Claude, 2026-10-06)
+
+Creati `notabene/prototipo/index.html` (prototipo cliccabile: ricerca, filtri AI, schede, dettaglio con trascrizione Plaud, caricamento simulato, accesso Google simulato con "Ricordami", cambio dashboard fra utenti di esempio) e `notabene/ARCHITETTURA.md`. Verificato solo che lo script sia sintatticamente valido. Prossima azione: raccogliere le risposte dell'utente sulle decisioni aperte, poi avviare la fase 2. Revisione Codex facoltativa sul documento di architettura.
+
+## Trasferimento LPG
+
 ## Seconda revisione Codex (2026-10-05)
 
 Aggiornato chagpt ad af4954b. Confrontati tutti i documenti LPG con Prove al commit 4ed8a32ef71452ce66b1c67e4084bd84c242c356, senza modificarlo. Rapporto completo: `lpg/REVISIONE_CODEX_2.md`.

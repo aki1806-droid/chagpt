@@ -1,5 +1,16 @@
 # Stato attuale
 
+## Notabene (app archivio note) — nuovo, 2026-10-06
+
+- Compito: web app per catalogare, archiviare e cercare note, collegata a una cartella Google Drive, con AI, Plaud e team.
+- Responsabile: Claude.
+- Stato: in corso. Fase 1 (prototipo grafico con dati simulati) fatta: `notabene/prototipo/index.html`, pubblicato come artifact privato.
+- Proposta tecnica: `notabene/ARCHITETTURA.md`.
+- Criteri prossima fase: risposte dell'utente sulle decisioni aperte del documento, poi accesso Google, sezioni personale/condivisa e lettura Drive.
+- Verifiche: solo controllo di sintassi dello script del prototipo. Nessun servizio reale collegato.
+
+## Trasferimento LPG
+
 - Compito: trasferire il metodo LPG e rendere affidabile la procedura.
 - Responsabile: Claude (correzioni dopo seconda revisione Codex).
 - Stato: da assegnare alla sessione Claude; seconda revisione completata con problemi aperti.

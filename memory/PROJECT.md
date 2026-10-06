@@ -14,6 +14,6 @@ Il repository era inizialmente vuoto. Non è ancora stato definito un prodotto o
 - Nessuna credenziale nei file.
 - Nessuna integrazione API necessaria per questo flusso.
 
-## Da definire
+## Primo progetto applicativo
 
-Obiettivo applicativo e primo compito di sviluppo.
+Notabene: app web per l'archivio note dell'utente e del suo team (vedi `notabene/ARCHITETTURA.md`). Note in una cartella Google Drive, catalogazione con AI, registrazioni Plaud, sezione personale e condivisa, accesso memorizzato. Volume iniziale: centinaia di file, poi migliaia.
