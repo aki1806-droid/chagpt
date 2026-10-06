@@ -229,7 +229,8 @@ function renderHero(){
     </div>` : "") + (P.statistiche ? `<div class="stats">
       <button class="stat" data-act="all"><span class="k">Note in archivio</span><span class="v">${NOTES.length}</span><span class="s">${NOTES.length - team} personali · ${team} condivise</span></button>
       <div class="stat"><span class="k">Ultimi 7 giorni</span><span class="v">${week}</span><span class="s">note aggiunte</span></div>
-      <button class="stat" data-act="plaud"><span class="k">${icon("i-t-plaud")}Registrazioni Plaud</span><span class="v">${plaud}</span><span class="s">importate ogni mattina</span></button>
+      <div class="stat"><span class="k">${icon("i-t-plaud")}Registrazioni Plaud</span><span class="v">${plaud}</span>
+        <span class="s" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:2px"><button class="btn" data-act="plaud">Vedi</button>${BOOT.isAdmin?`<button class="btn" data-act="plaudimport">${icon("i-sync")}Importa ora</button>`:""}</span></div>
       <button class="stat ${rev?"warn":""}" data-act="review"><span class="k">Da rivedere</span><span class="v">${rev}</span><span class="s">${rev?"tocca per vederle":"nessuna"}</span></button>
     </div>` : "");
 }
@@ -352,7 +353,10 @@ function openCustom(){
       </div>
       ${BOOT.isAdmin ? `<div class="field"><span>Chiave di Claude (solo amministratore)</span>
         <div style="display:flex;gap:8px;flex-wrap:wrap"><input class="input" id="newkey" type="password" placeholder="${BOOT.aiEnabled ? "Chiave salvata. Incolla qui una nuova chiave per sostituirla" : "sk-ant-…"}" autocomplete="off" style="flex:1 1 220px">
-        <button class="btn primary" data-savekey>Verifica e salva</button></div></div>` : ""}
+        <button class="btn primary" data-savekey>Verifica e salva</button></div></div>
+      <div class="field"><span>Token della routine Plaud (solo amministratore)</span>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><input class="input" id="plaudtoken" type="password" placeholder="${BOOT.plaudReady ? "Token salvato. Incolla qui un nuovo token per sostituirlo" : "Da claude.ai/code/routines → Notabene Plaud → Modifica → API"}" autocomplete="off" style="flex:1 1 220px">
+        <button class="btn primary" data-savetoken>Salva</button></div></div>` : ""}
       <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" data-reset>Ripristina le impostazioni iniziali</button></div>
       <p style="margin:0;color:var(--muted);font-size:13px">Le impostazioni sono personali: valgono solo per il tuo account, su ogni dispositivo.</p>
     </div></section>`;
@@ -513,6 +517,16 @@ async function bulk(action){
   setSelecting(false);
 }
 
+/* ---------- Importazione Plaud ---------- */
+async function importPlaud(){
+  if (!BOOT.plaudReady) { toast("Prima inserisci il token della routine Plaud in Personalizza."); return openCustom(); }
+  try {
+    await api("importPlaud");
+    toast("Importazione Plaud avviata: tra qualche minuto i nuovi documenti saranno su Drive. Poi premi Aggiorna.");
+    setTimeout(() => { $("#sync").click(); }, 6 * 60 * 1000);
+  } catch(e){ fail(e); }
+}
+
 /* ---------- Avvio ---------- */
 async function load(){
   try {
@@ -570,6 +584,7 @@ $("#hero").addEventListener("click",e=>{
   const b=e.target.closest("[data-act]"); if(!b) return;
   const a=b.dataset.act;
   if(a==="new") upload();
+  if(a==="plaudimport") importPlaud();
   if(a==="ask") openChat();
   if(a==="custom") openCustom();
   if(a==="all"){ S.scope="tutte"; S.cat=S.type=S.tag=null; render(); }
@@ -596,10 +611,10 @@ $("#mf").onclick=()=>{const o=$("#side").classList.toggle("open"); $("#mf").setA
 $("#av").onclick=()=>{
   const m=$("#menu"); m.hidden=!m.hidden;
   m.innerHTML=`<div class="lbl">Connesso come</div><div style="padding:2px 10px 8px;font-weight:600;overflow-wrap:anywhere">${esc(ME)}</div>
-  <button data-m="custom">${icon("i-palette")}Personalizza</button><button data-m="sync">${icon("i-sync")}Aggiorna dalle cartelle</button>
+  <button data-m="custom">${icon("i-palette")}Personalizza</button><button data-m="sync">${icon("i-sync")}Aggiorna dalle cartelle</button>${BOOT.isAdmin?`<button data-m="plaud">${icon("i-t-plaud")}Importa da Plaud</button>`:""}
   <div class="lbl">Per cambiare account usa il menu di Google</div>`;
 };
-$("#menu").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; $("#menu").hidden=true; if(b.dataset.m==="custom") openCustom(); if(b.dataset.m==="sync") $("#sync").click(); });
+$("#menu").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; $("#menu").hidden=true; if(b.dataset.m==="custom") openCustom(); if(b.dataset.m==="sync") $("#sync").click(); if(b.dataset.m==="plaud") importPlaud(); });
 document.addEventListener("click",e=>{ if(!e.target.closest("#menu,#av")) $("#menu").hidden=true; });
 
 $("#layer").addEventListener("click",async e=>{
@@ -616,6 +631,7 @@ $("#layer").addEventListener("click",async e=>{
   if (e.target.closest("[data-savekey]")) { const b = e.target.closest("[data-savekey]"); b.disabled = true; b.textContent = "Verifica…";
     try { await api("setApiKey", $("#newkey").value); BOOT.aiEnabled = true; banner(); $("#newkey").value = ""; toast("Chiave verificata e salvata"); }
     catch(err){ fail(err); } finally { b.disabled = false; b.textContent = "Verifica e salva"; } return; }
+  if (e.target.closest("[data-savetoken]")) { try { await api("setPlaudToken", $("#plaudtoken").value); BOOT.plaudReady = true; $("#plaudtoken").value = ""; toast("Token salvato: ora puoi usare Importa da Plaud"); } catch(err){ fail(err); } return; }
   if (e.target.closest("[data-reset]")) { P = Object.assign({}, DEFAULTS, {nome:P.nome}); savePrefs(); render(); toast("Impostazioni ripristinate"); return openCustom(); }
   // Nota
   const n=NOTES.find(x=>x.id===S.open); if(!n) return;

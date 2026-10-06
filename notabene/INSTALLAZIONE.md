@@ -54,6 +54,16 @@ Email autorizzate, cartella condivisa e modelli di Claude (Haiku per catalogare,
 
 La routine "Notabene Plaud" gira ogni mattina alle 6:46 e importa fino a 6 registrazioni al giorno, con riassunto e trascrizione completa, come Google Doc in `Notabene Personale/Plaud`. I titoli iniziano con `[Plaud]`. Le registrazioni già presenti in Plaud arrivano un po' alla volta, a partire dalle più recenti.
 
+### Importare da Plaud quando vuoi, dall'app
+
+Oltre all'importazione delle 6:46 puoi avviarla tu con il pulsante **Importa ora** (riquadro "Registrazioni Plaud") o dal menu del tuo profilo. Serve una volta sola un token:
+
+1. Apri <https://claude.ai/code/routines> → **Notabene Plaud (in questa chat)** → **Modifica**.
+2. Aggiungi un trigger **API** → **Genera token** → copia il token (si vede una sola volta).
+3. Nell'app: **Personalizza** → **Token della routine Plaud** → incolla → **Salva**.
+
+Dopo aver premuto **Importa ora**, i nuovi documenti arrivano su Drive in qualche minuto; l'app preme da sola **Aggiorna** dopo 6 minuti. Solo l'amministratore vede il pulsante. Limite: 30 avvii all'ora.
+
 L'app riconosce le registrazioni importate e le mostra con il tipo "Plaud". Per condividerne una, aprila nell'app e premi **Condividi con il team**.
 
 Le registrazioni senza trascrizione e riassunto in Plaud vengono saltate: prima vanno elaborate nell'app Plaud.

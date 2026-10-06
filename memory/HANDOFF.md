@@ -1,5 +1,9 @@
 # Ultimo passaggio di consegne
 
+## Notabene, importazione Plaud dall'app (Claude, 2026-10-06)
+
+Pulsante "Importa ora" (solo amministratore) che chiama l'API trigger delle routine (`POST https://api.anthropic.com/v1/claude_code/routines/{id}/fire`, header beta `experimental-cc-routine-2026-04-01`, fonte: code.claude.com/docs/en/routines.md) per trig_01JadYR5ovSYPuzcvBgdHzLw; token salvato come PLAUD_ROUTINE_TOKEN da Personalizza. Il token va generato dall'utente in claude.ai/code/routines. Provato solo nel prototipo; chiamata reale non verificata.
+
 ## Notabene, modelli separati (Claude, 2026-10-06)
 
 `claudeRequest_` sceglie il modello per uso (`CLAUDE_MODEL_CATALOGO` = Haiku 4.5, `CLAUDE_MODEL_CHAT` = Sonnet 5.5, in CONFIG) e toglie effort/fallback per i modelli che non li accettano. Test Node: passati (richiesta di catalogazione senza effort né fallback, chat con effort medium e fallback; ciclo dell'agente invariato). `COSTI.md` riscritto. Non verificato con API reali.

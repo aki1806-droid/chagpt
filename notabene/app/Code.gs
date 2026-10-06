@@ -24,7 +24,9 @@ const CONFIG = {
   // Modelli Claude: uno economico per catalogare, uno più capace per la chat.
   // Si possono cambiare con le proprietà dello script omonime.
   CLAUDE_MODEL_CATALOGO: 'claude-haiku-4-5',
-  CLAUDE_MODEL_CHAT: 'claude-sonnet-5-5'
+  CLAUDE_MODEL_CHAT: 'claude-sonnet-5-5',
+  // Routine Claude che importa le registrazioni Plaud (il token si salva dall'app).
+  PLAUD_ROUTINE_ID: 'trig_01JadYR5ovSYPuzcvBgdHzLw'
 };
 
 // Modelli che accettano il parametro effort e i fallback lato server in caso di rifiuto.
@@ -100,6 +102,43 @@ function setApiKey(key) {
   return true;
 }
 
+// ---------- Importazione Plaud su richiesta ----------
+
+/** L'amministratore salva il token della routine Plaud (claude.ai/code/routines → Modifica → API → Genera token). */
+function setPlaudToken(token) {
+  const u = requireUser_();
+  if (!isAdmin_(u.email)) throw new Error('Solo l\'amministratore può impostare il token.');
+  token = String(token || '').trim();
+  if (token.length < 20) throw new Error('Token troppo corto: copialo per intero da claude.ai/code/routines.');
+  PropertiesService.getScriptProperties().setProperty('PLAUD_ROUTINE_TOKEN', token);
+  return true;
+}
+
+/** Avvia subito la routine Claude che importa le nuove registrazioni Plaud nella cartella Plaud. */
+function importPlaud() {
+  const u = requireUser_();
+  if (!isAdmin_(u.email)) throw new Error('Solo l\'amministratore può avviare l\'importazione Plaud.');
+  const token = prop_('PLAUD_ROUTINE_TOKEN');
+  if (!token) throw new Error('Manca il token della routine Plaud: inseriscilo in Personalizza.');
+  const res = UrlFetchApp.fetch('https://api.anthropic.com/v1/claude_code/routines/' + prop_('PLAUD_ROUTINE_ID') + '/fire', {
+    method: 'post',
+    contentType: 'application/json',
+    muteHttpExceptions: true,
+    headers: {
+      'Authorization': 'Bearer ' + token,
+      'anthropic-beta': 'experimental-cc-routine-2026-04-01',
+      'anthropic-version': '2023-06-01'
+    },
+    payload: JSON.stringify({ text: 'Importazione richiesta dall\'app Notabene.' })
+  });
+  const code = res.getResponseCode();
+  if (code === 401 || code === 403) throw new Error('Token della routine non valido o revocato: generane uno nuovo su claude.ai/code/routines.');
+  if (code === 429) throw new Error('Troppe richieste ravvicinate: riprova tra un\'ora.');
+  if (code < 200 || code >= 300) throw new Error('Avvio non riuscito (errore ' + code + ').');
+  const data = JSON.parse(res.getContentText() || '{}');
+  return { url: data.claude_code_session_url || '' };
+}
+
 // ---------- Cartelle e indice ----------
 
 function folderFor_(scope) {
@@ -151,6 +190,7 @@ function getBootstrap() {
     email: u.email,
     aiEnabled: aiReady_(),
     isAdmin: isAdmin_(u.email),
+    plaudReady: isAdmin_(u.email) && !!prop_('PLAUD_ROUTINE_TOKEN'),
     prefs: getPrefs(),
     syncInstalled: ScriptApp.getProjectTriggers().some(t => t.getHandlerFunction() === 'syncAll'),
     personal: listNotes('mie'),

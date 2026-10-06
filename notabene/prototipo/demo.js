@@ -22,7 +22,7 @@
     percorso:(r[2]==="team"?"Notabene Condivise/":"Notabene Personale/")+(r[1]==="plaud"?"Plaud/":"")+r[0] }));
   let prefs = null;
   window.NB_DEMO = {
-    getBootstrap: () => ({ email:"tu@gmail.com", aiEnabled:true, syncInstalled:true, prefs:prefs || {nome:"Achille"},
+    getBootstrap: () => ({ email:"tu@gmail.com", aiEnabled:true, syncInstalled:true, isAdmin:true, plaudReady:true, prefs:prefs || {nome:"Achille"},
       personal: notes.filter(n=>n.sezione==="mie"), team: notes.filter(n=>n.sezione==="team") }),
     savePrefs: p => { prefs = p; return true; },
     updateNote: () => true,
@@ -44,6 +44,8 @@
     getNoteText: () => "Esempio di testo completo. Nell'app reale qui compare il testo estratto dal file o la trascrizione Plaud.",
     syncNow: () => new Promise(ok => setTimeout(() => ok({ fatti:0, restanti:0 }), 600)),
     installSync: () => true,
+    importPlaud: () => ({ url:"" }),
+    setPlaudToken: () => true,
     uploadNote: (name, type, b64, scope) => ({ id:"demo"+(++id), titolo:name.replace(/\.[^.]+$/,""), tipo:/^audio/.test(type)?"audio":/pdf/.test(type)?"pdf":/^image/.test(type)?"img":/^text/.test(type)?"txt":"doc",
       sezione:scope, categoria:"Da classificare", etichette:["nuova"], data:new Date().toISOString().slice(0,10), stato:"da rivedere", preferita:false, colore:"",
       riassunto:"Nell'app reale qui compare il riassunto scritto dall'AI.", url:"https://drive.google.com/", autore:"tu@gmail.com", percorso:(scope==="team"?"Notabene Condivise/":"Notabene Personale/")+name })
