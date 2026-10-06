@@ -51,5 +51,5 @@ File: `app/` (codice), `INSTALLAZIONE.md` (guida), `COSTI.md` (stime), `prototip
 
 ## Aperto
 
-- La routine è senza connettori: l'utente deve aggiungere Plaud e Google Drive dall'interfaccia Routine di claude.ai.
+- La routine Plaud gira dentro la conversazione Claude che ha creato Notabene, dove i connettori sono attivi.
 - Condivisione della cartella con Giovanna: la fa l'utente (ha rifiutato che la facesse Claude).
