@@ -1,13 +1,12 @@
 # Stato attuale
 
-## Notabene (app archivio note) — nuovo, 2026-10-06
+## Notabene (app archivio note) — 2026-10-06
 
-- Compito: web app per catalogare, archiviare e cercare note, collegata a una cartella Google Drive, con AI, Plaud e team.
+- Compito: web app per catalogare e cercare note su Google Drive, con AI, Plaud, sezione personale e condivisa, due utenti Gmail.
 - Responsabile: Claude.
-- Stato: in corso. Fase 1 (prototipo grafico con dati simulati) fatta: `notabene/prototipo/index.html`, pubblicato come artifact privato.
-- Proposta tecnica: `notabene/ARCHITETTURA.md`.
-- Criteri prossima fase: risposte dell'utente sulle decisioni aperte del documento, poi accesso Google, sezioni personale/condivisa e lettura Drive.
-- Verifiche: solo controllo di sintassi dello script del prototipo. Nessun servizio reale collegato.
+- Stato: in corso. App Google Apps Script scritta in `notabene/app/`, guida in `notabene/INSTALLAZIONE.md`. Cartelle create nel Drive di aki (ID nella guida). Una registrazione Plaud importata come prova in `Notabene Personale/Plaud`.
+- Verifiche: solo sintassi di Code.gs, script di Index.html e manifest. App non ancora installata né eseguita su Google.
+- Prossimo passo: l'utente installa seguendo la guida e sceglie l'AI; poi routine Plaud giornaliera.
 
 ## Trasferimento LPG
 

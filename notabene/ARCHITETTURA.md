@@ -1,6 +1,6 @@
 # Notabene: archivio note del team
 
-Proposta del 2026-10-06. Stato: prototipo grafico con dati simulati (`prototipo/index.html`). Nessun servizio reale collegato.
+Proposta del 2026-10-06. Stato: app Apps Script scritta (`app/`), non ancora installata né provata su Google. Prototipo grafico in `prototipo/`.
 
 ## Requisiti dell'utente
 
@@ -12,64 +12,37 @@ Proposta del 2026-10-06. Stato: prototipo grafico con dati simulati (`prototipo/
 - Oggi centinaia di file, in futuro migliaia.
 - Condivisa con il team: ogni persona ha la propria dashboard e un accesso che resta memorizzato. C'è una sezione personale e una condivisa.
 
-## Perché serve un piccolo backend
+## Scelta finale (2026-10-06): solo strumenti Google gratuiti + Claude
 
-La "strada 2" (app web + Drive) resta la base. Però team, sezioni private e AI automatica richiedono un servizio sul server. Una pagina statica non può:
-
-- impedire davvero a un utente di vedere le note personali di un altro;
-- custodire la chiave dell'AI;
-- elaborare i file appena arrivano, anche quando nessuno ha l'app aperta;
-- cercare velocemente fra migliaia di testi estratti.
-
-## Architettura proposta
+Due persone con Gmail normale; richiesta "fare con quello che abbiamo". Niente server né database a pagamento.
 
 ```
-Telefono / PC (app web installabile)
-        │  accesso con Google, sessione ricordata
-        ▼
-Frontend (Next.js) ── API ──► Database Postgres (Supabase)
-                               · note, etichette, categorie, permessi
-                               · ricerca testuale + ricerca per significato
-        ▲                        ▲
-        │                        │
-Elaborazione in background ──────┘
-  · controlla la cartella Drive (notifiche di modifica)
-  · estrae il testo: documenti, PDF, OCR per foto, trascrizione per audio
-  · AI (Claude): riassunto, categoria, etichette
-        │
-        ▼
-Google Drive: cartella "Notabene"
-  ├─ Condivise/            ← visibili a tutto il team
-  └─ Personali/<persona>/  ← visibili in app solo al proprietario
+Telefono / PC ──► Web app Google Apps Script (eseguita come l'utente che accede)
+                    │  accesso Google ricordato; solo email in ALLOWED_EMAILS
+                    ├─ "Notabene Personale" nel Drive di ciascuno  → privata davvero
+                    ├─ "Notabene Condivise" (Drive di aki, condivisa) → team
+                    │     in ogni cartella: foglio "_Notabene Indice"
+                    ├─ estrazione testo: Docs, testo, OCR di Drive per PDF/foto/Word
+                    └─ AI configurabile: Gemini (gratis, ascolta l'audio) o Claude (API a pagamento)
+Plaud ──► Claude (connettore Plaud + Drive) ──► Google Doc "[Plaud] …" in Notabene Personale/Plaud
 ```
 
-- **Accesso**: Google, con sessione ricordata per 30 giorni. Nessuna password da gestire. Solo gli indirizzi autorizzati dall'amministratore possono entrare.
-- **Permessi**: applicati nel database (Row Level Security). Una nota personale è restituita solo al suo proprietario.
-- **Ricerca**: testo completo in italiano, filtri per tipo, data, categoria ed etichetta. In seguito, ricerca per significato (embedding con pgvector).
-- **Plaud**: è il punto da verificare. Va scelto come arrivano le registrazioni nella cartella Drive: esportazione automatica (se disponibile sull'account Plaud), esportazione manuale, oppure trascrizione dell'audio fatta dall'app.
-- **AI**: ogni file elaborato una volta; si rielabora solo quando cambia. Le etichette proposte restano "da rivedere" finché qualcuno non le conferma o finché la confidenza è alta.
+- **Privacy**: ogni sezione personale sta nel Drive del proprietario; l'app esegue come chi accede, quindi Drive stesso impedisce di vedere le note altrui. Risolve il problema della versione precedente.
+- **Sincronizzazione**: pulsante "Aggiorna" e attivatore orario per utente; massimo 4,5 minuti per esecuzione (limite Apps Script 6 minuti), il resto alla volta successiva.
+- **Ricerca**: metadati filtrati nel browser all'istante; testo completo cercato sul foglio indice.
+- **Limiti noti**: file caricati dall'app fino a 20 MB; testo indicizzato fino a 45.000 caratteri per nota; con migliaia di note la ricerca sul foglio rallenta (valutare in seguito un indice dedicato).
 
-## Costi indicativi (da confermare al momento della scelta)
-
-- Hosting e database: piani gratuiti sufficienti per centinaia di file e un piccolo team; piani a pagamento quando si cresce.
-- AI: costo per file elaborato, contenuto per testi brevi. Trascrizione audio e OCR hanno un costo a parte.
-
-## Privacy
-
-Se la cartella "Notabene" sta nel Drive dell'amministratore, l'amministratore può aprire da Drive anche le sottocartelle personali. L'app nasconde le note altrui, ma Drive no. Alternative: un Drive condiviso del team (Google Workspace), oppure note personali conservate nel Drive di ciascun membro. Scelta da fare con l'utente.
+File: `app/` (codice), `INSTALLAZIONE.md` (guida passo per passo), `prototipo/` (demo con dati finti).
 
 ## Fasi
 
-1. Prototipo grafico cliccabile (fatto, dati simulati).
-2. Accesso Google, team, sezioni personale/condivisa, lettura cartella Drive, ricerca.
-3. Elaborazione AI: riassunti, categorie, etichette, OCR.
-4. Plaud e trascrizioni audio.
-5. Ricerca per significato e domande in linguaggio naturale sulle note.
+1. Prototipo grafico (fatto).
+2. App Apps Script con sezioni, ricerca, caricamento, AI (scritta; da installare e provare).
+3. Importazione automatica Plaud tramite Claude (prova manuale riuscita su una registrazione; routine giornaliera da attivare).
+4. Ricerca per significato e domande in linguaggio naturale sulle note.
 
 ## Decisioni aperte
 
-- Account Google normali o Google Workspace per il team? Quante persone?
-- Dove stanno le note personali (vedi Privacy)?
-- Come esportare le registrazioni Plaud verso Drive?
-- Nome e dominio dell'app (`Notabene` è provvisorio).
-- Budget mensile accettabile per AI e hosting.
+- AI: Gemini gratuito o Claude a pagamento.
+- Email del collega per `ALLOWED_EMAILS` e per la condivisione della cartella.
+- Importazione Plaud: frequenza e se includere la trascrizione completa oltre al riassunto.

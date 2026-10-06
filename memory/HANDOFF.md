@@ -1,8 +1,8 @@
 # Ultimo passaggio di consegne
 
-## Notabene, fase 1 (Claude, 2026-10-06)
+## Notabene, app Apps Script (Claude, 2026-10-06)
 
-Creati `notabene/prototipo/index.html` (prototipo cliccabile: ricerca, filtri AI, schede, dettaglio con trascrizione Plaud, caricamento simulato, accesso Google simulato con "Ricordami", cambio dashboard fra utenti di esempio) e `notabene/ARCHITETTURA.md`. Verificato solo che lo script sia sintatticamente valido. Prossima azione: raccogliere le risposte dell'utente sulle decisioni aperte, poi avviare la fase 2. Revisione Codex facoltativa sul documento di architettura.
+Scritti `notabene/app/` (Code.gs, Index.html, Styles.html, appsscript.json) e `notabene/INSTALLAZIONE.md`; aggiornato `notabene/ARCHITETTURA.md`. Create nel Drive di aki le cartelle `Notabene Personale` (con `Plaud`) e `Notabene Condivise`; importato come Google Doc il riassunto Plaud della riunione del 17/09/2026. Verificata solo la sintassi; nessuna esecuzione su Google. Revisione Codex utile su Code.gs: permessi, sincronizzazione con lock, spostamento tra sezioni, chiamate AI.
 
 ## Trasferimento LPG
 

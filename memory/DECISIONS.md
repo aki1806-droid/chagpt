@@ -25,6 +25,6 @@
 
 ## Notabene: architettura
 
-- Scelta (2026-10-06): app web installabile (strada 2) con piccolo backend: Next.js, Supabase (Postgres, permessi per riga, ricerca), elaborazione in background per Drive e AI (Claude), accesso con Google.
-- Motivo: l'utente ha scelto la strada 2 e ha chiesto team, sezioni personali/condivise e catalogazione automatica, che una pagina statica non può garantire in modo sicuro.
-- Limite: le decisioni aperte in `notabene/ARCHITETTURA.md` vanno confermate dall'utente.
+- Scelta (2026-10-06): Google Apps Script eseguito come l'utente che accede; note in Drive (personale nel Drive di ciascuno, condivisa nel Drive di aki); indice in un foglio Google per cartella; AI configurabile Gemini/Claude; Plaud importato da Claude con i connettori.
+- Motivo: due utenti Gmail, richiesta di usare ciò che già hanno, nessun costo fisso; la privacy delle sezioni personali è garantita da Drive.
+- Sostituisce la proposta precedente con Next.js e Supabase.
