@@ -7,15 +7,21 @@
  *  - Sezione condivisa: cartella indicata in SHARED_FOLDER_ID, condivisa tra i membri.
  * In ogni cartella c'è un foglio "_Notabene Indice" con metadati, riassunti ed etichette.
  *
- * Proprietà dello script (Impostazioni progetto → Proprietà script):
- *  ALLOWED_EMAILS     indirizzi autorizzati, separati da virgola (obbligatoria)
- *  SHARED_FOLDER_ID   ID della cartella condivisa (obbligatoria)
- *  AI_PROVIDER        "claude" oppure "gemini" (vuota = nessuna AI)
+ * Configurazione: i valori in CONFIG valgono se la proprietà dello script omonima è vuota.
+ * La chiave di Claude si inserisce dall'app (solo l'amministratore) oppure in
+ * Impostazioni progetto → Proprietà script:
  *  ANTHROPIC_API_KEY  chiave per Claude
  *  CLAUDE_MODEL       facoltativa, predefinito claude-opus-5-5
  *  GEMINI_API_KEY     chiave per Gemini (Google AI Studio)
  *  GEMINI_MODEL       facoltativa, predefinito gemini-2.5-flash
  */
+
+const CONFIG = {
+  ADMIN_EMAIL: 'aki1806@gmail.com',
+  ALLOWED_EMAILS: 'aki1806@gmail.com,giovanna.vullo87@gmail.com',
+  SHARED_FOLDER_ID: '1ftFYAyeAeXgesIb81stFxU2ts6dACHrz',
+  AI_PROVIDER: 'claude'
+};
 
 const PERSONAL_FOLDER_NAME = 'Notabene Personale';
 const INDEX_NAME = '_Notabene Indice';
@@ -55,7 +61,27 @@ function requireUser_() {
 
 function prop_(key, def) {
   const v = PropertiesService.getScriptProperties().getProperty(key);
-  return v == null || v === '' ? (def || '') : v;
+  if (v != null && v !== '') return v;
+  return def != null ? def : (CONFIG[key] || '');
+}
+
+function isAdmin_(email) {
+  return email === prop_('ADMIN_EMAIL').toLowerCase();
+}
+
+function aiReady_() {
+  const p = prop_('AI_PROVIDER').toLowerCase();
+  return (p === 'claude' && !!prop_('ANTHROPIC_API_KEY')) || (p === 'gemini' && !!prop_('GEMINI_API_KEY'));
+}
+
+/** L'amministratore salva la chiave di Claude dall'app. La chiave non torna mai al browser. */
+function setApiKey(key) {
+  const u = requireUser_();
+  if (!isAdmin_(u.email)) throw new Error('Solo l\'amministratore può impostare la chiave.');
+  key = String(key || '').trim();
+  if (!/^sk-ant-/.test(key)) throw new Error('La chiave di Claude inizia con "sk-ant-". Controlla di averla copiata tutta.');
+  PropertiesService.getScriptProperties().setProperty('ANTHROPIC_API_KEY', key);
+  return true;
 }
 
 // ---------- Cartelle e indice ----------
@@ -107,7 +133,8 @@ function getBootstrap() {
   const u = requireUser_();
   return {
     email: u.email,
-    aiEnabled: !!prop_('AI_PROVIDER'),
+    aiEnabled: aiReady_(),
+    isAdmin: isAdmin_(u.email),
     prefs: getPrefs(),
     syncInstalled: ScriptApp.getProjectTriggers().some(t => t.getHandlerFunction() === 'syncAll'),
     personal: listNotes('mie'),
@@ -359,7 +386,7 @@ function aiPrompt_(name, type, text, categories) {
 
 function classify_(name, type, text, file) {
   const provider = prop_('AI_PROVIDER').toLowerCase();
-  if (!provider) return null;
+  if (!provider || !aiReady_()) return null;
   const cats = knownCategories_();
   const body = String(text || '').substr(0, MAX_AI_CHARS);
   if (provider === 'claude') {

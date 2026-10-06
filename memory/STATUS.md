@@ -4,9 +4,10 @@
 
 - Compito: web app per catalogare e cercare note su Google Drive, con AI, Plaud, sezione personale e condivisa, due utenti Gmail (aki1806, giovanna.vullo87).
 - Responsabile: Claude.
-- Stato: in corso. App Apps Script in `notabene/app/` con grafica personalizzabile; guida `notabene/INSTALLAZIONE.md`; costi `notabene/COSTI.md`. AI scelta: Claude. Routine "Notabene Plaud" (trig_01LDZxvtUM75egEvXHCrEo27) ogni giorno alle 6:46, creata senza connettori.
+- Stato: in corso. App Apps Script in `notabene/app/` con grafica personalizzabile; guida `notabene/INSTALLAZIONE.md`; costi `notabene/COSTI.md`. AI scelta: Claude. Routine "Notabene Plaud" (trig_01LDZxvtUM75egEvXHCrEo27) ogni giorno alle 6:46. Prova manuale del 6/10 fallita: connettori Plaud e Drive non abilitati nella routine (nessun file toccato).
 - Verifiche: sintassi di Code.gs, Index.html, manifest; prototipo renderizzato con Chromium a 1360 e 400 px (nessun errore, nessuno scorrimento orizzontale). App non ancora installata su Google.
-- Azioni dell'utente: aggiungere i connettori alla routine, condividere la cartella con Giovanna, installare l'app, creare la chiave API.
+- Configurazione ora nel codice (`CONFIG` in Code.gs); la chiave Claude si inserisce dall'app (solo l'amministratore). Installazione impossibile da Claude: il connettore Drive non crea progetti Apps Script e non c'è accesso all'account Google.
+- Azioni dell'utente: abilitare Plaud e Drive nella routine, condividere la cartella con Giovanna, installare l'app (10 minuti), creare la chiave API.
 
 ## Trasferimento LPG
 

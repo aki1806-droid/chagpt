@@ -377,10 +377,13 @@ async function load(){
 }
 function banner(){
   const msgs = [];
-  if (!BOOT.aiEnabled) msgs.push("La catalogazione AI non è attiva: mancano AI_PROVIDER e la chiave nelle proprietà dello script.");
+  if (!BOOT.aiEnabled) msgs.push(BOOT.isAdmin
+    ? `La catalogazione con Claude non è attiva. Incolla la chiave API: <input class="input" id="apikey" type="password" placeholder="sk-ant-…" style="width:min(320px,100%)" autocomplete="off"> <button class="btn primary" id="savekey">Salva chiave</button>`
+    : "La catalogazione automatica non è ancora attiva: l'amministratore deve inserire la chiave di Claude.");
   if (!BOOT.syncInstalled) msgs.push(`I file nuovi su Drive vengono letti quando premi Aggiorna. <button class="btn" id="auto">Attiva l'aggiornamento ogni ora</button>`);
   $("#banner").innerHTML = msgs.map(m=>`<div class="banner"><span>${m}</span></div>`).join("");
   $("#banner").hidden = !msgs.length;
+  const k = $("#savekey"); if (k) k.onclick = async () => { try { await api("setApiKey", $("#apikey").value); BOOT.aiEnabled = true; banner(); toast("Chiave salvata: premi Aggiorna per catalogare le note"); } catch(e){ fail(e); } };
   const a = $("#auto"); if (a) a.onclick = async () => { try { await api("installSync"); BOOT.syncInstalled = true; banner(); toast("Aggiornamento automatico attivo"); } catch(e){ fail(e); } };
 }
 
