@@ -20,7 +20,7 @@
 const PERSONAL_FOLDER_NAME = 'Notabene Personale';
 const INDEX_NAME = '_Notabene Indice';
 const HEADERS = ['id', 'titolo', 'tipo', 'mime', 'data', 'modificato', 'categoria', 'etichette',
-  'riassunto', 'testo', 'stato', 'url', 'autore', 'percorso'];
+  'riassunto', 'testo', 'stato', 'url', 'autore', 'percorso', 'preferita', 'colore'];
 const MAX_TEXT = 45000;          // limite prudente per una cella di Fogli (50.000)
 const MAX_AI_CHARS = 60000;      // testo massimo inviato all'AI per nota
 const RUN_BUDGET_MS = 4.5 * 60 * 1000; // Apps Script si ferma a 6 minuti
@@ -108,6 +108,7 @@ function getBootstrap() {
   return {
     email: u.email,
     aiEnabled: !!prop_('AI_PROVIDER'),
+    prefs: getPrefs(),
     syncInstalled: ScriptApp.getProjectTriggers().some(t => t.getHandlerFunction() === 'syncAll'),
     personal: listNotes('mie'),
     team: listNotes('team')
@@ -121,6 +122,7 @@ function listNotes(scope) {
     id: o.id, titolo: o.titolo, tipo: o.tipo, data: dateStr_(o.data), categoria: o.categoria,
     etichette: String(o.etichette || '').split(',').map(s => s.trim()).filter(Boolean),
     riassunto: o.riassunto, stato: o.stato, url: o.url, autore: o.autore, percorso: o.percorso,
+    preferita: o.preferita === true || o.preferita === 'TRUE', colore: o.colore === '' ? '' : Number(o.colore),
     sezione: scope
   }));
 }
@@ -159,6 +161,8 @@ function updateNote(id, changes) {
   if (changes.categoria != null) n.categoria = String(changes.categoria).trim();
   if (changes.titolo != null) n.titolo = String(changes.titolo).trim();
   if (changes.conferma) n.stato = 'confermata';
+  if (changes.preferita != null) n.preferita = !!changes.preferita;
+  if (changes.colore != null) n.colore = changes.colore === '' ? '' : Math.max(0, Math.min(9, Number(changes.colore)));
   found.sheet.getRange(n._row, 1, 1, HEADERS.length).setValues([toRow_(n)]);
   return true;
 }
@@ -192,7 +196,10 @@ function uploadNote(name, mimeType, base64, scope) {
   const sheet = indexSheet_(folder);
   const note = processFile_(file, folder.getName());
   sheet.appendRow(toRow_(note));
-  return Object.assign({}, note, { etichette: String(note.etichette).split(',').map(s => s.trim()).filter(Boolean), testo: undefined, sezione: scope });
+  return Object.assign({}, note, {
+    etichette: String(note.etichette).split(',').map(s => s.trim()).filter(Boolean),
+    data: dateStr_(note.data), testo: undefined, modificato: undefined, preferita: false, colore: '', sezione: scope
+  });
 }
 
 /** Avvia subito una sincronizzazione delle due sezioni (pulsante "Aggiorna"). */
@@ -206,6 +213,21 @@ function installSync() {
   requireUser_();
   ScriptApp.getProjectTriggers().filter(t => t.getHandlerFunction() === 'syncAll').forEach(t => ScriptApp.deleteTrigger(t));
   ScriptApp.newTrigger('syncAll').timeBased().everyHours(1).create();
+  return true;
+}
+
+/** Impostazioni grafiche personali, salvate nell'account Google di chi usa l'app. */
+function getPrefs() {
+  requireUser_();
+  const raw = PropertiesService.getUserProperties().getProperty('prefs');
+  return raw ? JSON.parse(raw) : null;
+}
+
+function savePrefs(prefs) {
+  requireUser_();
+  const json = JSON.stringify(prefs || {});
+  if (json.length > 8000) throw new Error('Impostazioni troppo grandi.');
+  PropertiesService.getUserProperties().setProperty('prefs', json);
   return true;
 }
 
@@ -435,7 +457,9 @@ function processFile_(file, path, old) {
     stato: confirmed ? 'confermata' : (ai && ai.sicura ? 'ai' : 'da rivedere'),
     url: file.getUrl(),
     autore: ownerEmail_(file),
-    percorso: path
+    percorso: path,
+    preferita: old ? old.preferita : false,
+    colore: old ? old.colore : ''
   };
 }
 

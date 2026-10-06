@@ -25,6 +25,6 @@
 
 ## Notabene: architettura
 
-- Scelta (2026-10-06): Google Apps Script eseguito come l'utente che accede; note in Drive (personale nel Drive di ciascuno, condivisa nel Drive di aki); indice in un foglio Google per cartella; AI configurabile Gemini/Claude; Plaud importato da Claude con i connettori.
+- Scelta (2026-10-06): Google Apps Script eseguito come l'utente che accede; note in Drive (personale nel Drive di ciascuno, condivisa nel Drive di aki); indice in un foglio Google per cartella; AI Claude via API (scelta dell'utente, Gemini resta alternativa); Plaud importato da Claude con i connettori.
 - Motivo: due utenti Gmail, richiesta di usare ciò che già hanno, nessun costo fisso; la privacy delle sezioni personali è garantita da Drive.
 - Sostituisce la proposta precedente con Next.js e Supabase.

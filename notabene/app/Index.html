@@ -6,69 +6,151 @@
 <title>Notabene</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,500;6..72,700&display=swap">
 <?!= HtmlService.createHtmlOutputFromFile('Styles').getContent(); ?>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-sync" viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.6-4.5L4 8"/><path d="M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.6 4.5L20 16"/><path d="M20 20v-4h-4"/></symbol>
+  <symbol id="i-palette" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.6-.8 1.6-1.6 0-.9-.7-1.4-.7-2.3 0-1 .8-1.6 1.8-1.6H17a4 4 0 0 0 4-4C21 6.6 17 3 12 3z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="14.5" cy="7" r="1"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></symbol>
+  <symbol id="i-compact" viewBox="0 0 24 24"><rect x="3" y="4" width="5" height="5" rx="1"/><rect x="10" y="4" width="5" height="5" rx="1"/><rect x="17" y="4" width="4" height="5" rx="1"/><rect x="3" y="11" width="5" height="5" rx="1"/><rect x="10" y="11" width="5" height="5" rx="1"/><rect x="17" y="11" width="4" height="5" rx="1"/></symbol>
+  <symbol id="i-filter" viewBox="0 0 24 24"><path d="M4 5h16l-6 7v6l-4 2v-8z"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-t-plaud" viewBox="0 0 24 24"><path d="M3 12h2M7 8v8M11 5v14M15 9v6M19 7v10M21 12h0"/></symbol>
+  <symbol id="i-t-audio" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></symbol>
+  <symbol id="i-t-doc" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol>
+  <symbol id="i-t-pdf" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M8.5 16v-4h1.3a1.2 1.2 0 0 1 0 2.4H8.5M13 12v4h1a2 2 0 0 0 0-4z"/></symbol>
+  <symbol id="i-t-img" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="m21 16-5-5-8 8"/></symbol>
+  <symbol id="i-t-txt" viewBox="0 0 24 24"><path d="M4 6h16M4 10h16M4 14h10M4 18h7"/></symbol>
+  <symbol id="i-share" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><circle cx="17" cy="9" r="2.4"/><path d="M15.5 14.5A5 5 0 0 1 21 20"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+  <symbol id="i-pen" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></symbol>
+</svg>
+
 <header class="top">
   <div class="brand">Notabene <span class="nb">NB</span></div>
   <label class="search" for="q">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-    <input id="q" type="search" placeholder="Cerca in titoli, testo, trascrizioni, etichette…" autocomplete="off">
+    <svg class="i"><use href="#i-search"/></svg>
+    <input id="q" type="search" placeholder="Cerca in titoli, testi, trascrizioni, etichette…" autocomplete="off">
+    <kbd>/</kbd>
   </label>
   <div class="actions">
-    <button class="btn mfilters" id="mf" aria-expanded="false">Filtri</button>
-    <button class="btn" id="sync" title="Cerca file nuovi nelle cartelle Drive">Aggiorna</button>
-    <button class="btn primary" id="up"><span aria-hidden="true">+</span> <span class="lbl-up">Carica nota</span></button>
+    <button class="btn icon mfilters" id="mf" aria-expanded="false" aria-label="Filtri"><svg class="i"><use href="#i-filter"/></svg></button>
+    <button class="btn icon" id="sync" aria-label="Aggiorna dalle cartelle Drive" title="Aggiorna dalle cartelle Drive"><svg class="i"><use href="#i-sync"/></svg></button>
+    <button class="btn icon" id="custom" aria-label="Personalizza" title="Personalizza"><svg class="i"><use href="#i-palette"/></svg></button>
+    <button class="btn primary" id="up"><svg class="i"><use href="#i-plus"/></svg><span class="hide-s">Nuova nota</span></button>
     <button class="avatar" id="av" aria-haspopup="true" aria-label="Account"></button>
   </div>
 </header>
 <div class="menu" id="menu" hidden></div>
 
-<div class="wrap">
-  <aside id="side">
-    <div><h3>Categorie</h3><div class="flist" id="cats"></div></div>
-    <div><h3>Tipo di file</h3><div class="flist" id="types"></div></div>
-    <div><h3>Etichette</h3><div class="chips" id="tags"></div></div>
-  </aside>
-  <main>
-    <div id="banner"></div>
-    <div class="head">
-      <h1 id="h1">Le mie note</h1>
-      <div class="seg" id="seg">
-        <button data-s="mie" class="on">Personali</button>
-        <button data-s="team">Condivise</button>
-        <button data-s="tutte">Tutte</button>
+<div class="page">
+  <div id="banner"></div>
+  <section class="hero" id="hero"></section>
+  <section id="pinsec" hidden>
+    <div class="section-h"><h2>In evidenza</h2><span class="hint">Le note con la stella</span></div>
+    <div class="pins" id="pins"></div>
+  </section>
+  <div class="wrap">
+    <aside id="side">
+      <div><h3>Categorie</h3><div class="flist" id="cats"></div></div>
+      <div><h3>Tipo di file</h3><div class="flist" id="types"></div></div>
+      <div><h3>Etichette</h3><div class="chips" id="tags"></div></div>
+    </aside>
+    <main>
+      <div class="toolbar">
+        <div class="left"><h2 id="h2">Le mie note</h2><span class="sub" id="sub"></span></div>
+        <div class="right">
+          <div class="seg" id="seg">
+            <button data-s="mie"><svg class="i"><use href="#i-lock"/></svg>Personali</button>
+            <button data-s="team"><svg class="i"><use href="#i-share"/></svg>Condivise</button>
+            <button data-s="tutte">Tutte</button>
+          </div>
+          <div class="seg icons" id="views">
+            <button data-v="griglia" aria-label="Griglia" title="Griglia"><svg class="i"><use href="#i-grid"/></svg></button>
+            <button data-v="compatta" aria-label="Compatta" title="Compatta"><svg class="i"><use href="#i-compact"/></svg></button>
+            <button data-v="lista" aria-label="Lista" title="Lista"><svg class="i"><use href="#i-list"/></svg></button>
+          </div>
+          <select class="btn" id="sort" aria-label="Ordina">
+            <option value="recenti">Più recenti</option>
+            <option value="vecchie">Più vecchie</option>
+            <option value="titolo">Titolo A–Z</option>
+            <option value="categoria">Categoria</option>
+          </select>
+        </div>
       </div>
-    </div>
-    <p class="sub" id="sub"></p>
-    <div class="grid" id="grid"><div class="loading">Caricamento delle note…</div></div>
-  </main>
+      <div class="grid" id="grid"><div class="loading">Caricamento delle note…</div></div>
+    </main>
+  </div>
 </div>
 <div id="layer"></div>
 
 <script>
+/* ---------- Dati e impostazioni ---------- */
 const TYPES = {
-  plaud:{l:"Plaud", c:"--audio"}, audio:{l:"Audio", c:"--audio"}, doc:{l:"Documento", c:"--doc"},
-  pdf:{l:"PDF", c:"--pdf"}, img:{l:"Foto/scansione", c:"--img"}, txt:{l:"Testo", c:"--txt"}, altro:{l:"Altro", c:"--txt"}
+  plaud:{l:"Plaud", c:"--c4"}, audio:{l:"Audio", c:"--c4"}, doc:{l:"Documento", c:"--c0"},
+  pdf:{l:"PDF", c:"--c1"}, img:{l:"Foto", c:"--c2"}, txt:{l:"Testo", c:"--c9"}, altro:{l:"Altro", c:"--c9"}
 };
+const ACCENTS = [["petrolio","#1d5c6b"],["corallo","#c2513a"],["indaco","#3d55c4"],["bosco","#2f7d4f"],["prugna","#8a3d7e"],["ambra","#9a6200"],["grafite","#34424c"]];
+const DEFAULTS = {
+  nome:"", tema:"auto", accento:"petrolio", font:"moderno", sfondo:"tinta", angoli:"arrotondati", densita:"comoda", testo:15,
+  benvenuto:true, statistiche:true, evidenza:true, schedeColorate:false, sezione:"mie", vista:"griglia", ordine:"recenti", catColors:{}
+};
+let P = Object.assign({}, DEFAULTS);
 let NOTES = [], ME = "", BOOT = {};
 let S = {scope:"mie", cat:null, type:null, tag:null, q:"", open:null, hits:{}};
 const $ = s => document.querySelector(s);
 const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const fmtD = d => d ? new Date(d+"T12:00:00").toLocaleDateString("it-IT",{day:"numeric",month:"short",year:"numeric"}) : "";
-const pref = (k, v) => { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } };
+const store = (k, v) => { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } };
+const icon = (id, cls) => `<svg class="i ${cls||""}"><use href="#${id}"/></svg>`;
 
 function api(fn, ...args) {
+  if (window.NB_DEMO) return Promise.resolve().then(() => window.NB_DEMO[fn](...args));
   return new Promise((ok, ko) => google.script.run.withSuccessHandler(ok).withFailureHandler(ko)[fn](...args));
 }
-function toast(msg){ const t=document.createElement("div"); t.className="toast"; t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),3200); }
+function toast(msg){ document.querySelectorAll(".toast").forEach(t=>t.remove()); const t=document.createElement("div"); t.className="toast"; t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),3000); }
 function fail(e){ toast(String(e && e.message || e)); }
 
+/* ---------- Aspetto ---------- */
+function applyPrefs(){
+  const r = document.documentElement;
+  if (P.tema === "auto") { if (applyPrefs.touched) r.removeAttribute("data-theme"); }
+  else r.setAttribute("data-theme", P.tema);
+  const set = (k, v, def) => v === def ? r.removeAttribute(k) : r.setAttribute(k, v);
+  set("data-accent", P.accento, "petrolio");
+  set("data-font", P.font, "moderno");
+  set("data-bg", P.sfondo, "tinta");
+  set("data-radius", P.angoli, "arrotondati");
+  set("data-density", P.densita, "comoda");
+  r.style.setProperty("--fs", P.testo + "px");
+}
+let saveTimer;
+function savePrefs(){
+  applyPrefs.touched = true;
+  applyPrefs();
+  store("nb-prefs", JSON.stringify(P));
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => api("savePrefs", P).catch(()=>{}), 600);
+}
+function catColor(cat){
+  if (!cat) return "var(--c9)";
+  if (P.catColors[cat] != null) return `var(--c${P.catColors[cat]})`;
+  let h = 0; for (const ch of cat) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  return `var(--c${h % 9})`;
+}
+function noteColor(n){ return n.colore !== "" && n.colore != null ? `var(--c${n.colore})` : catColor(n.categoria); }
+
+/* ---------- Disegno ---------- */
 function hl(text){
   const t = esc(text); if(!S.q.trim()) return t;
-  const words = S.q.trim().split(/\s+/).map(w=>w.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")).filter(Boolean);
-  return t.replace(new RegExp("("+words.map(esc).join("|")+")","gi"),"<mark>$1</mark>");
+  const words = S.q.trim().split(/\s+/).map(w=>esc(w).replace(/[.*+?^${}()|[\]\\]/g,"\\$&")).filter(Boolean);
+  return t.replace(new RegExp("("+words.join("|")+")","gi"),"<mark>$1</mark>");
 }
 function inScope(n){ return S.scope === "tutte" || n.sezione === S.scope; }
 function matches(n){
@@ -82,124 +164,227 @@ function matches(n){
   return q.split(/\s+/).every(w => hay.includes(w));
 }
 function count(list,key){ const m={}; list.forEach(n=>{ (Array.isArray(n[key])?n[key]:[n[key]]).forEach(v=>{ if(v) m[v]=(m[v]||0)+1; })}); return m; }
+const SORTS = {
+  recenti:(a,b)=>String(b.data).localeCompare(String(a.data)),
+  vecchie:(a,b)=>String(a.data).localeCompare(String(b.data)),
+  titolo:(a,b)=>String(a.titolo).localeCompare(String(b.titolo),"it"),
+  categoria:(a,b)=>String(a.categoria).localeCompare(String(b.categoria),"it") || String(b.data).localeCompare(String(a.data))
+};
 
 function render(){
+  renderHero();
   const base = NOTES.filter(inScope);
-  const res = base.filter(matches).sort((a,b)=>String(b.data).localeCompare(String(a.data)));
-  $("#h1").textContent = {mie:"Le mie note", team:"Condivise con il team", tutte:"Tutte le note"}[S.scope];
+  const res = base.filter(matches).sort(SORTS[P.ordine] || SORTS.recenti);
+  $("#h2").textContent = {mie:"Le mie note", team:"Condivise", tutte:"Tutte le note"}[S.scope];
   document.querySelectorAll("#seg button").forEach(b=>b.classList.toggle("on", b.dataset.s===S.scope));
-  const toRev = base.filter(n=>n.stato==="da rivedere").length;
-  $("#sub").innerHTML = `<b>${res.length}</b> di <b>${base.length}</b> note` + (S.q?` per «${esc(S.q)}»`:"") + (toRev?` · <b>${toRev}</b> da rivedere`:"");
+  document.querySelectorAll("#views button").forEach(b=>b.classList.toggle("on", b.dataset.v===P.vista));
+  $("#sort").value = P.ordine;
+  $("#sub").innerHTML = `<b>${res.length}</b> di <b>${base.length}</b>` + (S.q?` per «${esc(S.q)}»`:"");
   const cc = count(base,"categoria"), tc = count(base,"tipo"), gc = count(base,"etichette");
-  $("#cats").innerHTML = `<button class="${!S.cat?"on":""}" data-cat="">Tutte le categorie <span class="n">${base.length}</span></button>` +
-    Object.keys(cc).sort().map(c=>`<button class="${S.cat===c?"on":""}" data-cat="${esc(c)}">${esc(c)} <span class="n">${cc[c]}</span></button>`).join("");
-  $("#types").innerHTML = Object.keys(TYPES).filter(k=>tc[k]).map(k=>`<button class="${S.type===k?"on":""}" data-type="${k}"><span><span class="dot" style="background:var(${TYPES[k].c})"></span>${TYPES[k].l}</span><span class="n">${tc[k]}</span></button>`).join("");
-  $("#tags").innerHTML = Object.entries(gc).sort((a,b)=>b[1]-a[1]).slice(0,20).map(([g])=>`<button class="chip ${S.tag===g?"on":""}" data-tag="${esc(g)}">${esc(g)}</button>`).join("");
-  $("#grid").innerHTML = res.length ? res.map(card).join("") : emptyState(base.length);
+  $("#cats").innerHTML = `<button class="${!S.cat?"on":""}" data-cat=""><span class="nm">Tutte</span><span class="n">${base.length}</span></button>` +
+    Object.keys(cc).sort((a,b)=>a.localeCompare(b,"it")).map(c=>`<button class="${S.cat===c?"on":""}" data-cat="${esc(c)}"><span class="nm"><span class="dot" style="background:${catColor(c)}"></span>${esc(c)}</span><span class="n">${cc[c]}</span></button>`).join("");
+  $("#types").innerHTML = Object.keys(TYPES).filter(k=>tc[k]).map(k=>`<button class="${S.type===k?"on":""}" data-type="${k}"><span class="nm">${icon("i-t-"+(k==="altro"?"txt":k))}${TYPES[k].l}</span><span class="n">${tc[k]}</span></button>`).join("");
+  $("#tags").innerHTML = Object.entries(gc).sort((a,b)=>b[1]-a[1]).slice(0,24).map(([g])=>`<button class="chip ${S.tag===g?"on":""}" data-tag="${esc(g)}">${esc(g)}</button>`).join("");
+  const grid = $("#grid");
+  grid.className = "grid" + (P.vista==="lista"?" list":P.vista==="compatta"?" compact":"");
+  grid.innerHTML = res.length ? res.map(card).join("") : emptyState(base.length);
+  const pins = NOTES.filter(n=>n.preferita).sort(SORTS.recenti);
+  $("#pinsec").hidden = !P.evidenza || !pins.length;
+  $("#pins").innerHTML = pins.map(card).join("");
+}
+function greeting(){
+  const h = new Date().getHours();
+  return h < 6 ? "Buonanotte" : h < 13 ? "Buongiorno" : h < 18 ? "Buon pomeriggio" : "Buonasera";
+}
+function renderHero(){
+  const hero = $("#hero");
+  hero.hidden = !P.benvenuto && !P.statistiche;
+  hero.style.gridTemplateColumns = P.benvenuto && P.statistiche ? "" : "minmax(0,1fr)";
+  const weekAgo = new Date(Date.now() - 7*864e5).toISOString().slice(0,10);
+  const week = NOTES.filter(n => n.data >= weekAgo).length;
+  const rev = NOTES.filter(n => n.stato === "da rivedere").length;
+  const plaud = NOTES.filter(n => n.tipo === "plaud").length;
+  const team = NOTES.filter(n => n.sezione === "team").length;
+  const today = new Date().toLocaleDateString("it-IT",{weekday:"long", day:"numeric", month:"long"});
+  hero.innerHTML = (P.benvenuto ? `<div class="welcome">
+      <div><div class="date">${esc(today)}</div>
+      <h1>${greeting()}${P.nome?", "+esc(P.nome):""}</h1></div>
+      <p>${rev ? `Hai <b>${rev}</b> ${rev===1?"nota da rivedere":"note da rivedere"}: l'AI non era sicura di categoria o etichette.` : "Tutte le note sono catalogate. Cerca, filtra o aggiungine una nuova."}</p>
+      <div class="row"><button class="btn" data-act="new">${icon("i-plus")}Nuova nota</button>${rev?`<button class="btn" data-act="review">Rivedi ora</button>`:""}<button class="btn" data-act="custom">${icon("i-palette")}Personalizza</button></div>
+    </div>` : "") + (P.statistiche ? `<div class="stats">
+      <button class="stat" data-act="all"><span class="k">Note in archivio</span><span class="v">${NOTES.length}</span><span class="s">${NOTES.length - team} personali · ${team} condivise</span></button>
+      <div class="stat"><span class="k">Ultimi 7 giorni</span><span class="v">${week}</span><span class="s">note aggiunte</span></div>
+      <button class="stat" data-act="plaud"><span class="k">${icon("i-t-plaud")}Registrazioni Plaud</span><span class="v">${plaud}</span><span class="s">importate ogni mattina</span></button>
+      <button class="stat ${rev?"warn":""}" data-act="review"><span class="k">Da rivedere</span><span class="v">${rev}</span><span class="s">${rev?"tocca per vederle":"nessuna"}</span></button>
+    </div>` : "");
 }
 function emptyState(total){
-  if (total) return `<div class="empty">Nessuna nota trovata. Prova a togliere un filtro o a cercare un'altra parola.</div>`;
-  return `<div class="empty">Questa sezione è vuota. Carica una nota con «+ Carica nota» oppure mettila nella cartella Drive
-    «${S.scope==="team"?"Notabene Condivise":"Notabene Personale"}» e premi «Aggiorna».</div>`;
+  if (total) return `<div class="empty"><b>Nessun risultato</b>Prova a togliere un filtro o a cercare un'altra parola.</div>`;
+  return `<div class="empty"><b>Sezione vuota</b>Crea una nota con «Nuova nota» oppure mettila nella cartella Drive
+    «${S.scope==="team"?"Notabene Condivise":"Notabene Personale"}» e premi Aggiorna.</div>`;
 }
 function card(n){
   const T = TYPES[n.tipo] || TYPES.altro;
   const hit = S.hits[n.id] ? `<div class="snippet">${hl(S.hits[n.id])}</div>` : "";
-  return `<button class="card" data-open="${esc(n.id)}">
-    <div class="meta"><span class="type"><i style="background:var(${T.c})"></i>${T.l}</span><span>${fmtD(n.data)}</span></div>
+  const st = n.stato==="da rivedere"?'<span class="pill rev">Da rivedere</span>':n.stato==="confermata"?'<span class="pill ok">Confermata</span>':'<span class="pill ai">AI</span>';
+  return `<article class="card ${P.schedeColorate?"tinted":""}" style="--band:${noteColor(n)}" data-open="${esc(n.id)}" tabindex="0">
+    <div class="meta"><span class="type">${icon("i-t-"+(n.tipo==="altro"?"txt":n.tipo))}${T.l}</span><span>${fmtD(n.data)}</span></div>
+    <button class="star ${n.preferita?"on":""}" data-star="${esc(n.id)}" aria-label="${n.preferita?"Togli dall'evidenza":"Metti in evidenza"}">${icon("i-star")}</button>
     <h4>${hl(n.titolo)}</h4>
     <p>${hl(n.riassunto)}</p>${hit}
-    <div class="tags">${n.etichette.map(g=>`<span class="tag">${hl(g)}</span>`).join("")}</div>
-    <div class="foot"><span class="vis">${n.sezione==="team"?"Condivisa":"Personale"} · ${esc(n.categoria)}</span>
-    ${n.stato==="da rivedere"?'<span class="pill rev">Da rivedere</span>':n.stato==="confermata"?'<span class="pill ai">Confermata</span>':'<span class="pill ai">AI</span>'}</div>
-  </button>`;
+    <div class="tags">${n.etichette.slice(0,5).map(g=>`<span class="tag">${hl(g)}</span>`).join("")}</div>
+    <div class="foot"><span class="vis">${icon(n.sezione==="team"?"i-share":"i-lock")}<span class="dot" style="background:${catColor(n.categoria)}"></span>${esc(n.categoria)}</span>${st}</div>
+  </article>`;
 }
 
+/* ---------- Nota aperta ---------- */
 function openNote(id){
   const n = NOTES.find(x=>x.id===id); if(!n) return; S.open=id;
   const T = TYPES[n.tipo] || TYPES.altro;
+  const cats = Object.keys(count(NOTES,"categoria")).sort();
   $("#layer").innerHTML = `<div class="scrim" data-close></div>
-  <section class="drawer" role="dialog" aria-label="${esc(n.titolo)}">
-    <div class="dh"><span class="type" style="font-family:var(--mono);font-size:12px"><i style="background:var(${T.c})"></i>${T.l}</span>
-      <button class="btn ghost" data-close aria-label="Chiudi">✕</button></div>
+  <section class="drawer" role="dialog" aria-label="${esc(n.titolo)}" style="--band:${noteColor(n)}">
+    <div class="band"></div>
+    <div class="dh"><span class="type" style="font-family:var(--mono);font-size:12px">${icon("i-t-"+(n.tipo==="altro"?"txt":n.tipo))}${T.l} · ${fmtD(n.data)}</span>
+      <div style="display:flex;gap:4px"><button class="btn icon ghost star ${n.preferita?"on":""}" style="position:static" data-star="${esc(n.id)}" aria-label="In evidenza">${icon("i-star")}</button>
+      <button class="btn icon ghost" data-close aria-label="Chiudi">${icon("i-close")}</button></div></div>
     <div class="db">
-      <h2>${esc(n.titolo)}</h2>
-      <div class="box"><h5>Riassunto ${n.stato==="da rivedere"?'<span class="pill rev" style="margin-left:6px">Da rivedere</span>':""}</h5><div>${hl(n.riassunto)}</div></div>
-      <div><h5 style="margin:0 0 6px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">Etichette</h5>
+      <input class="ttl" id="ttl" value="${esc(n.titolo)}" aria-label="Titolo">
+      <div class="box"><div class="lbl5">Riassunto ${n.stato==="da rivedere"?'<span class="pill rev">Da rivedere</span>':""}</div><div>${hl(n.riassunto)}</div></div>
+      <div><div class="lbl5">Etichette</div>
         <div class="tags tagedit">${n.etichette.map(g=>`<span class="tag">${esc(g)}<button data-rmtag="${esc(g)}" aria-label="Rimuovi ${esc(g)}">×</button></span>`).join("")}
-        <input class="addtag" id="addtag" placeholder="+ etichetta"></div></div>
-      <div><label for="cat" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">Categoria</label>
-        <input id="cat" class="btn" style="width:100%;text-align:left" value="${esc(n.categoria)}"></div>
-      <dl class="box kv"><dt>Data</dt><dd>${fmtD(n.data)}</dd><dt>Proprietario</dt><dd>${esc(n.autore)}</dd>
-        <dt>Sezione</dt><dd>${n.sezione==="team"?"Condivisa con il team":"Personale, solo tu"}</dd><dt>Percorso</dt><dd>${esc(n.percorso)}</dd></dl>
-      <div class="box"><h5>Testo estratto</h5><div class="full" id="full"><button class="btn" data-text>Mostra il testo</button></div></div>
+        <input class="addtag" id="addtag" placeholder="+ etichetta, Invio"></div></div>
+      <label class="field"><span>Categoria</span>
+        <input id="cat" class="input" list="catlist" value="${esc(n.categoria)}"><datalist id="catlist">${cats.map(c=>`<option value="${esc(c)}">`).join("")}</datalist></label>
+      <div><div class="lbl5">Colore della nota</div>
+        <div class="swatches">${swatch("", n.colore===""||n.colore==null, "Colore della categoria", "data-ncol")}${[0,1,2,3,4,5,6,7,8].map(i=>swatch(i, String(n.colore)===String(i), "Colore "+(i+1), "data-ncol")).join("")}</div></div>
+      <dl class="box kv"><dt>Sezione</dt><dd>${n.sezione==="team"?"Condivisa con il team":"Personale, solo tu"}</dd><dt>Proprietario</dt><dd>${esc(n.autore)}</dd><dt>Percorso</dt><dd>${esc(n.percorso)}</dd></dl>
+      <div class="box"><div class="lbl5">Testo completo</div><div class="full" id="full"><button class="btn" data-text>Mostra il testo</button></div></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn" data-move>${n.sezione==="team"?"Rendi personale":"Condividi con il team"}</button>
-        ${n.stato!=="confermata"?`<button class="btn" data-ok>Conferma etichette</button>`:""}
-        <a class="btn primary" href="${esc(n.url)}" target="_blank" rel="noopener" style="text-decoration:none">Apri in Drive</a>
+        <button class="btn" data-move>${icon(n.sezione==="team"?"i-lock":"i-share")}${n.sezione==="team"?"Rendi personale":"Condividi con il team"}</button>
+        ${n.stato!=="confermata"?`<button class="btn" data-ok>Conferma catalogazione</button>`:""}
+        <a class="btn primary" href="${esc(n.url)}" target="_blank" rel="noopener">Apri in Drive</a>
       </div>
     </div></section>`;
 }
+function swatch(v, on, label, attr){
+  return `<button class="sw ${v===""?"none":""} ${on?"on":""}" style="--c:${v===""?"transparent":`var(--c${v})`}" ${attr}="${v}" aria-label="${esc(label)}" title="${esc(label)}"></button>`;
+}
 function closeLayer(){ $("#layer").innerHTML=""; S.open=null; }
-
-async function save(n, changes){
-  try { await api("updateNote", n.id, changes); } catch(e){ fail(e); }
+function save(n, changes){ return api("updateNote", n.id, changes).catch(fail); }
+function toggleStar(id){
+  const n = NOTES.find(x=>x.id===id); if(!n) return;
+  n.preferita = !n.preferita; render(); if (S.open===id) openNote(id);
+  save(n, {preferita:n.preferita}); toast(n.preferita?"Messa in evidenza":"Tolta dall'evidenza");
 }
 
+/* ---------- Personalizza ---------- */
+function openCustom(){
+  S.open = null;
+  const cats = Object.keys(count(NOTES,"categoria")).sort((a,b)=>a.localeCompare(b,"it"));
+  const ch = (key, opts) => `<div class="choices" data-pref="${key}">${opts.map(([v,l])=>`<button data-v="${v}" class="${String(P[key])===String(v)?"on":""}">${l}</button>`).join("")}</div>`;
+  const tg = (key, label) => `<label class="toggle"><span>${label}</span><input type="checkbox" data-tog="${key}" ${P[key]?"checked":""}></label>`;
+  $("#layer").innerHTML = `<div class="scrim" data-close></div>
+  <section class="drawer" role="dialog" aria-label="Personalizza">
+    <div class="dh"><strong style="font-family:var(--display);font-size:20px">Personalizza</strong>
+      <button class="btn icon ghost" data-close aria-label="Chiudi">${icon("i-close")}</button></div>
+    <div class="db">
+      <label class="field"><span>Il tuo nome nel saluto</span><input class="input" id="pnome" value="${esc(P.nome)}" placeholder="Per esempio Achille"></label>
+      <div class="field"><span>Tema</span>${ch("tema",[["auto","Automatico"],["light","Chiaro"],["dark","Scuro"]])}</div>
+      <div class="field"><span>Colore principale</span><div class="swatches" data-pref="accento">${ACCENTS.map(([k,c])=>`<button class="sw ${P.accento===k?"on":""}" style="--c:${c}" data-v="${k}" aria-label="${k}" title="${k}"></button>`).join("")}</div></div>
+      <div class="field"><span>Caratteri dei titoli</span>${ch("font",[["moderno","Moderno"],["editoriale","Editoriale"],["tecnico","Tecnico"]])}</div>
+      <div class="field"><span>Sfondo</span>${ch("sfondo",[["tinta","Tinta unita"],["aurora","Aurora"],["puntini","Puntini"],["righe","Quaderno"]])}</div>
+      <div class="field"><span>Angoli</span>${ch("angoli",[["squadrati","Squadrati"],["arrotondati","Arrotondati"],["morbidi","Morbidi"]])}</div>
+      <div class="field"><span>Spaziatura</span>${ch("densita",[["compatta","Compatta"],["comoda","Comoda"],["ariosa","Ariosa"]])}</div>
+      <div class="field"><span>Dimensione del testo</span>${ch("testo",[[13,"Piccolo"],[15,"Normale"],[17,"Grande"]])}</div>
+      <div class="field"><span>Pagina iniziale</span>
+        ${tg("benvenuto","Riquadro di benvenuto")}${tg("statistiche","Statistiche")}${tg("evidenza","Note in evidenza")}${tg("schedeColorate","Schede colorate")}</div>
+      <div class="field"><span>Sezione all'apertura</span>${ch("sezione",[["mie","Personali"],["team","Condivise"],["tutte","Tutte"]])}</div>
+      <div class="field"><span>Vista</span>${ch("vista",[["griglia","Griglia"],["compatta","Compatta"],["lista","Lista"]])}</div>
+      <div class="field"><span>Ordine</span>${ch("ordine",[["recenti","Più recenti"],["vecchie","Più vecchie"],["titolo","Titolo"],["categoria","Categoria"]])}</div>
+      <div class="field"><span>Colori delle categorie</span>
+        ${cats.length ? cats.map(c=>`<div class="catrow"><span class="nm" style="display:flex;gap:8px;align-items:center"><span class="dot" style="background:${catColor(c)}"></span>${esc(c)}</span>
+          <div class="swatches" data-catcol="${esc(c)}">${[0,1,2,3,4,5,6,7,8,9].map(i=>`<button class="sw ${P.catColors[c]===i?"on":""}" style="--c:var(--c${i})" data-v="${i}" aria-label="Colore ${i+1}"></button>`).join("")}</div></div>`).join("") : `<span style="color:var(--muted);font-size:14px">Le categorie compariranno dopo la prima catalogazione.</span>`}
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" data-reset>Ripristina le impostazioni iniziali</button></div>
+      <p style="margin:0;color:var(--muted);font-size:13px">Le impostazioni sono personali: valgono solo per il tuo account, su ogni dispositivo.</p>
+    </div></section>`;
+}
+
+/* ---------- Nuova nota ---------- */
 function upload(){
-  $("#layer").innerHTML = `<div class="scrim" data-close></div><div class="modal"><div class="panel" role="dialog" aria-label="Carica nota">
-    <h2>Carica una nota</h2>
-    <div class="drop" id="drop"><input type="file" id="file" hidden>
-      <div>Trascina qui un file oppure <button class="btn" id="pick">scegli dal dispositivo</button></div>
-      <div style="font-size:13px;margin-top:6px">Testo, documenti, PDF, foto, audio. Massimo 20 MB.</div></div>
+  $("#layer").innerHTML = `<div class="scrim" data-close></div><div class="modal"><div class="panel" role="dialog" aria-label="Nuova nota">
+    <h2>Nuova nota</h2>
+    <div class="seg" id="upmode"><button data-m="file" class="on">Carica un file</button><button data-m="scrivi">Scrivi</button></div>
+    <div id="m-file"><div class="drop" id="drop"><input type="file" id="file" hidden>
+      <div>Trascina qui un file oppure</div><button class="btn" id="pick">Scegli dal dispositivo</button>
+      <div style="font-size:13px">Documenti, PDF, foto, audio. Massimo 20 MB.</div></div></div>
+    <div id="m-scrivi" hidden style="display:flex;flex-direction:column;gap:10px">
+      <input class="input" id="wtitle" placeholder="Titolo (facoltativo)">
+      <textarea class="input" id="wtext" placeholder="Scrivi la nota. L'AI la catalogherà da sola."></textarea>
+      <button class="btn primary" id="wsave" style="align-self:flex-end">Salva nota</button></div>
     <div class="radio">
       <label><input type="radio" name="v" value="mie" ${S.scope!=="team"?"checked":""}> <span>Personale<small>La vedi solo tu</small></span></label>
       <label><input type="radio" name="v" value="team" ${S.scope==="team"?"checked":""}> <span>Condivisa<small>La vede tutto il team</small></span></label>
     </div>
-    <p id="upmsg" style="margin:0;color:var(--muted)" hidden>Salvataggio su Drive, lettura del testo e catalogazione in corso…</p>
-    <div style="display:flex;justify-content:flex-end;gap:8px"><button class="btn ghost" data-close>Annulla</button></div>
+    <p id="upmsg" style="margin:0;color:var(--muted)" hidden>Salvataggio su Drive, lettura del testo e catalogazione con l'AI…</p>
+    <div style="display:flex;justify-content:flex-end"><button class="btn ghost" data-close>Annulla</button></div>
   </div></div>`;
+  $("#m-scrivi").hidden = true;
   const f=$("#file"), d=$("#drop");
+  $("#upmode").onclick = e => { const b=e.target.closest("button"); if(!b) return;
+    document.querySelectorAll("#upmode button").forEach(x=>x.classList.toggle("on", x===b));
+    $("#m-file").hidden = b.dataset.m!=="file"; $("#m-scrivi").hidden = b.dataset.m!=="scrivi"; if(b.dataset.m==="scrivi") $("#wtext").focus(); };
   $("#pick").onclick=()=>f.click();
-  f.onchange=()=>f.files[0]&&send(f.files[0]);
+  f.onchange=()=>f.files[0]&&sendFile(f.files[0]);
   d.ondragover=e=>{e.preventDefault();d.classList.add("over")};
   d.ondragleave=()=>d.classList.remove("over");
-  d.ondrop=e=>{e.preventDefault();d.classList.remove("over");e.dataTransfer.files[0]&&send(e.dataTransfer.files[0])};
-}
-function send(file){
-  if (file.size > 20*1024*1024) return toast("Il file supera 20 MB. Caricalo direttamente nella cartella Drive.");
-  const scope = document.querySelector('input[name="v"]:checked').value;
-  $("#upmsg").hidden = false;
-  const r = new FileReader();
-  r.onload = async () => {
-    try {
-      const b64 = String(r.result).split(",")[1];
-      const n = await api("uploadNote", file.name, file.type, b64, scope);
-      NOTES.unshift(n); S.scope = scope; S.cat=S.type=S.tag=null;
-      closeLayer(); render(); toast("Nota salvata e catalogata"); openNote(n.id);
-    } catch(e){ $("#upmsg").hidden = true; fail(e); }
+  d.ondrop=e=>{e.preventDefault();d.classList.remove("over");e.dataTransfer.files[0]&&sendFile(e.dataTransfer.files[0])};
+  $("#wsave").onclick=()=>{
+    const text=$("#wtext").value.trim(); if(!text) return toast("Scrivi qualcosa prima di salvare.");
+    const title=($("#wtitle").value.trim() || text.split("\n")[0].slice(0,60)).replace(/[\\/:*?"<>|]/g,"-");
+    const bytes = new TextEncoder().encode(text); let bin=""; bytes.forEach(b=>bin+=String.fromCharCode(b));
+    sendData(title + ".txt", "text/plain", btoa(bin));
   };
+}
+function scopeChoice(){ return document.querySelector('input[name="v"]:checked').value; }
+function sendFile(file){
+  if (file.size > 20*1024*1024) return toast("Il file supera 20 MB: caricalo direttamente nella cartella Drive.");
+  const r = new FileReader();
+  r.onload = () => sendData(file.name, file.type, String(r.result).split(",")[1]);
   r.readAsDataURL(file);
 }
+async function sendData(name, type, b64){
+  const scope = scopeChoice();
+  $("#upmsg").hidden = false;
+  try {
+    const n = await api("uploadNote", name, type, b64, scope);
+    NOTES.unshift(n); S.scope = scope; S.cat=S.type=S.tag=null;
+    closeLayer(); render(); toast("Nota salvata e catalogata"); openNote(n.id);
+  } catch(e){ $("#upmsg").hidden = true; fail(e); }
+}
 
+/* ---------- Avvio ---------- */
 async function load(){
   try {
     BOOT = await api("getBootstrap");
     ME = BOOT.email;
+    if (BOOT.prefs) { P = Object.assign({}, DEFAULTS, BOOT.prefs); store("nb-prefs", JSON.stringify(P)); applyPrefs(); }
     NOTES = [...BOOT.personal, ...BOOT.team];
-    $("#av").textContent = ME.slice(0,2).toUpperCase();
-    banner();
-    render();
-  } catch(e){ $("#grid").innerHTML = `<div class="empty">Non riesco a leggere le cartelle: ${esc(e.message||e)}</div>`; }
+    $("#av").textContent = (P.nome || ME).slice(0,2).toUpperCase();
+    banner(); render();
+  } catch(e){ $("#grid").innerHTML = `<div class="empty"><b>Non riesco a leggere le cartelle</b>${esc(e.message||e)}</div>`; }
 }
 function banner(){
   const msgs = [];
-  if (!BOOT.aiEnabled) msgs.push("La catalogazione AI non è ancora attiva: mancano le impostazioni AI_PROVIDER e chiave.");
-  if (!BOOT.syncInstalled) msgs.push(`I file nuovi su Drive vengono letti quando premi «Aggiorna». <button class="btn" id="auto">Attiva aggiornamento ogni ora</button>`);
+  if (!BOOT.aiEnabled) msgs.push("La catalogazione AI non è attiva: mancano AI_PROVIDER e la chiave nelle proprietà dello script.");
+  if (!BOOT.syncInstalled) msgs.push(`I file nuovi su Drive vengono letti quando premi Aggiorna. <button class="btn" id="auto">Attiva l'aggiornamento ogni ora</button>`);
   $("#banner").innerHTML = msgs.map(m=>`<div class="banner"><span>${m}</span></div>`).join("");
+  $("#banner").hidden = !msgs.length;
   const a = $("#auto"); if (a) a.onclick = async () => { try { await api("installSync"); BOOT.syncInstalled = true; banner(); toast("Aggiornamento automatico attivo"); } catch(e){ fail(e); } };
 }
 
+/* ---------- Eventi ---------- */
 let searchTimer;
 $("#q").addEventListener("input",e=>{
   S.q=e.target.value; S.hits={}; render();
@@ -210,7 +395,9 @@ $("#q").addEventListener("input",e=>{
     try { const r = await api("searchText", q); if (q !== S.q) return; r.forEach(h => S.hits[h.id] = h.estratto); render(); } catch(e){}
   }, 450);
 });
-$("#seg").addEventListener("click",e=>{const b=e.target.closest("button"); if(!b) return; S.scope=b.dataset.s; pref("nb-scope", S.scope); S.cat=S.type=S.tag=null; render();});
+$("#seg").addEventListener("click",e=>{const b=e.target.closest("button"); if(!b) return; S.scope=b.dataset.s; S.cat=S.type=S.tag=null; render();});
+$("#views").addEventListener("click",e=>{const b=e.target.closest("button"); if(!b) return; P.vista=b.dataset.v; savePrefs(); render();});
+$("#sort").addEventListener("change",e=>{P.ordine=e.target.value; savePrefs(); render();});
 $("#side").addEventListener("click",e=>{
   const b=e.target.closest("button"); if(!b) return;
   if("cat" in b.dataset) S.cat=b.dataset.cat||null;
@@ -218,40 +405,80 @@ $("#side").addEventListener("click",e=>{
   if(b.dataset.tag) S.tag = S.tag===b.dataset.tag?null:b.dataset.tag;
   render();
 });
-$("#grid").addEventListener("click",e=>{const c=e.target.closest("[data-open]"); if(c) openNote(c.dataset.open);});
+function onCards(e){
+  const st=e.target.closest("[data-star]"); if(st){ e.stopPropagation(); return toggleStar(st.dataset.star); }
+  const c=e.target.closest("[data-open]"); if(c) openNote(c.dataset.open);
+}
+$("#grid").addEventListener("click",onCards);
+$("#pins").addEventListener("click",onCards);
+document.addEventListener("keydown",e=>{ if(e.key==="Enter" && e.target.matches && e.target.matches(".card")) openNote(e.target.dataset.open); });
+$("#hero").addEventListener("click",e=>{
+  const b=e.target.closest("[data-act]"); if(!b) return;
+  const a=b.dataset.act;
+  if(a==="new") upload();
+  if(a==="custom") openCustom();
+  if(a==="all"){ S.scope="tutte"; S.cat=S.type=S.tag=null; render(); }
+  if(a==="plaud"){ S.scope="tutte"; S.cat=S.tag=null; S.type="plaud"; render(); $("#grid").scrollIntoView({behavior:"smooth"}); }
+  if(a==="review"){ S.scope="tutte"; S.cat=S.type=S.tag=null; S.q=""; $("#q").value=""; P.ordine="recenti"; render();
+    const first = NOTES.find(n=>n.stato==="da rivedere"); if(first) openNote(first.id); }
+});
 $("#up").onclick=upload;
+$("#custom").onclick=openCustom;
 $("#sync").onclick=async()=>{
-  const b=$("#sync"); b.disabled=true; b.textContent="Aggiornamento…";
+  const b=$("#sync"); b.disabled=true; toast("Aggiornamento in corso…");
   try { const r = await api("syncNow"); toast(r.restanti<0 ? r.messaggio : `${r.fatti} note catalogate` + (r.restanti?`, ${r.restanti} in attesa: premi di nuovo`:"")); await load(); }
-  catch(e){ fail(e); } finally { b.disabled=false; b.textContent="Aggiorna"; }
+  catch(e){ fail(e); } finally { b.disabled=false; }
 };
 $("#mf").onclick=()=>{const o=$("#side").classList.toggle("open"); $("#mf").setAttribute("aria-expanded",o);};
 $("#av").onclick=()=>{
   const m=$("#menu"); m.hidden=!m.hidden;
   m.innerHTML=`<div class="lbl">Connesso come</div><div style="padding:2px 10px 8px;font-weight:600;overflow-wrap:anywhere">${esc(ME)}</div>
+  <button data-m="custom">${icon("i-palette")}Personalizza</button><button data-m="sync">${icon("i-sync")}Aggiorna dalle cartelle</button>
   <div class="lbl">Per cambiare account usa il menu di Google</div>`;
 };
+$("#menu").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; $("#menu").hidden=true; if(b.dataset.m==="custom") openCustom(); if(b.dataset.m==="sync") $("#sync").click(); });
 document.addEventListener("click",e=>{ if(!e.target.closest("#menu,#av")) $("#menu").hidden=true; });
+
 $("#layer").addEventListener("click",async e=>{
   if(e.target.closest("[data-close]")) return closeLayer();
+  // Personalizza
+  const pc = e.target.closest("[data-pref] [data-v]");
+  if (pc) { const key = pc.closest("[data-pref]").dataset.pref; const v = pc.dataset.v; P[key] = key==="testo" ? Number(v) : v; savePrefs(); render(); return openCustom(); }
+  const cc = e.target.closest("[data-catcol] [data-v]");
+  if (cc) { P.catColors = Object.assign({}, P.catColors, {[cc.closest("[data-catcol]").dataset.catcol]: Number(cc.dataset.v)}); savePrefs(); render(); return openCustom(); }
+  if (e.target.closest("[data-reset]")) { P = Object.assign({}, DEFAULTS, {nome:P.nome}); savePrefs(); render(); toast("Impostazioni ripristinate"); return openCustom(); }
+  // Nota
   const n=NOTES.find(x=>x.id===S.open); if(!n) return;
+  const st=e.target.closest("[data-star]"); if(st) return toggleStar(n.id);
+  const nc=e.target.closest("[data-ncol]");
+  if(nc){ n.colore = nc.dataset.ncol===""?"":Number(nc.dataset.ncol); render(); openNote(n.id); save(n,{colore:n.colore}); return; }
   const rm=e.target.closest("[data-rmtag]");
   if(rm){ n.etichette=n.etichette.filter(g=>g!==rm.dataset.rmtag); render(); openNote(n.id); save(n,{etichette:n.etichette}); }
-  if(e.target.closest("[data-ok]")){ n.stato="confermata"; render(); openNote(n.id); save(n,{conferma:true, etichette:n.etichette, categoria:n.categoria}); toast("Etichette confermate"); }
+  if(e.target.closest("[data-ok]")){ n.stato="confermata"; render(); openNote(n.id); save(n,{conferma:true, etichette:n.etichette, categoria:n.categoria}); toast("Catalogazione confermata"); }
   if(e.target.closest("[data-text]")){ $("#full").textContent="Caricamento…"; try { $("#full").textContent = (await api("getNoteText", n.id)) || "Nessun testo estratto."; } catch(err){ fail(err); } }
   if(e.target.closest("[data-move]")){
     const to = n.sezione==="team"?"mie":"team";
     try { await api("moveNote", n.id, to); n.sezione=to; render(); openNote(n.id); toast(to==="team"?"Ora la vede tutto il team":"Ora la vedi solo tu"); } catch(err){ fail(err); }
   }
 });
-$("#layer").addEventListener("keydown",e=>{
+$("#layer").addEventListener("change",e=>{
+  if (e.target.matches("[data-tog]")) { P[e.target.dataset.tog] = e.target.checked; savePrefs(); render(); return; }
+  if (e.target.id==="pnome") { P.nome = e.target.value.trim(); savePrefs(); $("#av").textContent=(P.nome||ME).slice(0,2).toUpperCase(); render(); toast("Nome salvato"); return; }
   const n=NOTES.find(x=>x.id===S.open); if(!n) return;
-  if(e.target.id==="addtag" && e.key==="Enter"){ const v=e.target.value.trim().toLowerCase();
-    if(v && !n.etichette.includes(v)){ n.etichette.push(v); render(); openNote(n.id); save(n,{etichette:n.etichette}); setTimeout(()=>$("#addtag")?.focus(),0);} }
-  if(e.target.id==="cat" && e.key==="Enter"){ const v=e.target.value.trim(); if(v){ n.categoria=v; render(); openNote(n.id); save(n,{categoria:v}); toast("Categoria aggiornata"); } }
+  if (e.target.id==="ttl") { const v=e.target.value.trim(); if(v && v!==n.titolo){ n.titolo=v; render(); save(n,{titolo:v}); toast("Titolo aggiornato"); } }
+  if (e.target.id==="cat") { const v=e.target.value.trim(); if(v && v!==n.categoria){ n.categoria=v; render(); openNote(n.id); save(n,{categoria:v}); toast("Categoria aggiornata"); } }
 });
-document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeLayer(); if(e.key==="/" && !["INPUT","TEXTAREA"].includes(document.activeElement.tagName)){ e.preventDefault(); $("#q").focus(); } });
-S.scope = pref("nb-scope") || "mie";
+$("#layer").addEventListener("keydown",e=>{
+  const n=NOTES.find(x=>x.id===S.open);
+  if(e.key==="Enter" && (e.target.id==="ttl"||e.target.id==="cat"||e.target.id==="pnome")) { e.target.blur(); return; }
+  if(n && e.target.id==="addtag" && e.key==="Enter"){ const v=e.target.value.trim().toLowerCase();
+    if(v && !n.etichette.includes(v)){ n.etichette.push(v); render(); openNote(n.id); save(n,{etichette:n.etichette}); setTimeout(()=>$("#addtag")?.focus(),0);} }
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeLayer(); if(e.key==="/" && !["INPUT","TEXTAREA","SELECT"].includes(document.activeElement.tagName)){ e.preventDefault(); $("#q").focus(); } });
+
+try { const saved = JSON.parse(store("nb-prefs") || "null"); if (saved) P = Object.assign({}, DEFAULTS, saved); } catch(e){}
+S.scope = P.sezione;
+applyPrefs();
 load();
 </script>
 </body>

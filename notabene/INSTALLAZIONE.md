@@ -9,11 +9,11 @@ Notabene gira su Google Apps Script, gratis, con i vostri account Gmail. I file 
 | Notabene Personale | note visibili solo a te (contiene la sottocartella `Plaud`) | `1YncLk0BhdL8x7abia_lJu3zxoTV3QBf3` |
 | Notabene Condivise | note visibili a entrambi | `1ftFYAyeAeXgesIb81stFxU2ts6dACHrz` |
 
-La cartella personale del collega viene creata da sola nel suo Drive al primo accesso. Tu non puoi vederla.
+La cartella personale di Giovanna viene creata da sola nel suo Drive al primo accesso. Tu non puoi vederla, lei non vede la tua.
 
 ## 1. Condividi la cartella del team
 
-In Drive, tasto destro su **Notabene Condivise** → Condividi → aggiungi l'email del collega come **Editor**.
+In Drive, tasto destro su **Notabene Condivise** → Condividi → aggiungi `giovanna.vullo87@gmail.com` come **Editor**.
 
 ## 2. Crea il progetto
 
@@ -32,15 +32,14 @@ In Drive, tasto destro su **Notabene Condivise** → Condividi → aggiungi l'em
 
 | Proprietà | Valore |
 |---|---|
-| `ALLOWED_EMAILS` | `aki1806@gmail.com,email-del-collega@gmail.com` |
+| `ALLOWED_EMAILS` | `aki1806@gmail.com,giovanna.vullo87@gmail.com` |
 | `SHARED_FOLDER_ID` | `1ftFYAyeAeXgesIb81stFxU2ts6dACHrz` |
-| `AI_PROVIDER` | `gemini` oppure `claude` (vedi sotto). Vuota = niente AI |
-| `GEMINI_API_KEY` o `ANTHROPIC_API_KEY` | la chiave del servizio scelto |
+| `AI_PROVIDER` | `claude` |
+| `ANTHROPIC_API_KEY` | la chiave creata su <https://console.anthropic.com> → API Keys (ricarica prima un piccolo credito) |
 
-### Quale AI scegliere
+### AI scelta: Claude
 
-- **Gemini (gratis)**: chiave da <https://aistudio.google.com/apikey> con il tuo Gmail. Sa anche ascoltare file audio. Limiti: un numero massimo di richieste al giorno e, nel piano gratuito, Google può usare i contenuti per migliorare i suoi prodotti. Da evitare per note riservate.
-- **Claude (a pagamento)**: chiave da <https://console.anthropic.com>, ricarica minima con carta. I contenuti inviati tramite API non vengono usati per addestrare i modelli. Il modello predefinito è `claude-opus-5-5`; ogni nota costa indicativamente qualche centesimo. Se vuoi spendere meno, aggiungi la proprietà `CLAUDE_MODEL` con un modello più economico (per esempio `claude-haiku-4-5`). Non trascrive l'audio: per le registrazioni usa le trascrizioni di Plaud.
+Modello predefinito `claude-opus-5-5`. Costi stimati in `COSTI.md`: circa 3 $ al mese per un uso normale in due. Per spendere meno aggiungi la proprietà `CLAUDE_MODEL` = `claude-haiku-4-5`. Gli audio caricati a mano non vengono trascritti: usa le registrazioni Plaud, che arrivano già trascritte.
 
 ## 4. Pubblica l'app
 
@@ -58,7 +57,11 @@ In Drive, tasto destro su **Notabene Condivise** → Condividi → aggiungi l'em
 
 ## Plaud
 
-Le registrazioni vengono importate da Claude (connettore Plaud) come Google Doc in `Notabene Personale/Plaud`, con titolo che inizia con `[Plaud]`. L'app le riconosce e le mostra con il tipo "Plaud". Per condividerne una, aprila nell'app e premi **Condividi con il team**.
+La routine "Notabene Plaud" gira ogni mattina alle 6:46 e importa fino a 6 registrazioni al giorno, con riassunto e trascrizione completa, come Google Doc in `Notabene Personale/Plaud`. I titoli iniziano con `[Plaud]`. Le registrazioni già presenti in Plaud arrivano un po' alla volta, a partire dalle più recenti.
+
+**Da fare una volta:** la routine è stata creata senza connettori. Apri claude.ai → Routine → "Notabene Plaud" → aggiungi i connettori **Plaud** e **Google Drive** → salva. Senza questo passaggio la routine parte ma non può leggere Plaud né scrivere su Drive.
+
+L'app riconosce le registrazioni importate e le mostra con il tipo "Plaud". Per condividerne una, aprila nell'app e premi **Condividi con il team**.
 
 Le registrazioni senza trascrizione e riassunto in Plaud vengono saltate: prima vanno elaborate nell'app Plaud.
 

@@ -23,8 +23,8 @@ Telefono / PC ──► Web app Google Apps Script (eseguita come l'utente che a
                     ├─ "Notabene Condivise" (Drive di aki, condivisa) → team
                     │     in ogni cartella: foglio "_Notabene Indice"
                     ├─ estrazione testo: Docs, testo, OCR di Drive per PDF/foto/Word
-                    └─ AI configurabile: Gemini (gratis, ascolta l'audio) o Claude (API a pagamento)
-Plaud ──► Claude (connettore Plaud + Drive) ──► Google Doc "[Plaud] …" in Notabene Personale/Plaud
+                    └─ AI: Claude via API (scelta dell'utente); Gemini resta disponibile come alternativa
+Plaud ──► routine Claude giornaliera (connettori Plaud + Drive) ──► Google Doc "[Plaud] …" con riassunto e trascrizione completa
 ```
 
 - **Privacy**: ogni sezione personale sta nel Drive del proprietario; l'app esegue come chi accede, quindi Drive stesso impedisce di vedere le note altrui. Risolve il problema della versione precedente.
@@ -32,7 +32,9 @@ Plaud ──► Claude (connettore Plaud + Drive) ──► Google Doc "[Plaud] 
 - **Ricerca**: metadati filtrati nel browser all'istante; testo completo cercato sul foglio indice.
 - **Limiti noti**: file caricati dall'app fino a 20 MB; testo indicizzato fino a 45.000 caratteri per nota; con migliaia di note la ricerca sul foglio rallenta (valutare in seguito un indice dedicato).
 
-File: `app/` (codice), `INSTALLAZIONE.md` (guida passo per passo), `prototipo/` (demo con dati finti).
+- **Personalizzazione**: tema, colore principale, caratteri, sfondo, angoli, spaziatura, dimensione testo, sezioni della pagina iniziale, vista, ordine, colori delle categorie; per nota titolo, categoria, etichette, colore e stella. Le impostazioni sono salvate per utente (UserProperties).
+
+File: `app/` (codice), `INSTALLAZIONE.md` (guida), `COSTI.md` (stime), `prototipo/` (demo generata da `app/` con `prototipo/build.py` e dati di `prototipo/demo.js`).
 
 ## Fasi
 
@@ -41,8 +43,13 @@ File: `app/` (codice), `INSTALLAZIONE.md` (guida passo per passo), `prototipo/` 
 3. Importazione automatica Plaud tramite Claude (prova manuale riuscita su una registrazione; routine giornaliera da attivare).
 4. Ricerca per significato e domande in linguaggio naturale sulle note.
 
-## Decisioni aperte
+## Decisioni prese il 2026-10-06
 
-- AI: Gemini gratuito o Claude a pagamento.
-- Email del collega per `ALLOWED_EMAILS` e per la condivisione della cartella.
-- Importazione Plaud: frequenza e se includere la trascrizione completa oltre al riassunto.
+- AI: Claude (`claude-opus-5-5`, effort basso), modello cambiabile con `CLAUDE_MODEL`.
+- Collega autorizzata: giovanna.vullo87@gmail.com.
+- Plaud: routine giornaliera alle 6:46 (ora italiana), trascrizione completa, massimo 6 registrazioni per esecuzione.
+
+## Aperto
+
+- La routine è senza connettori: l'utente deve aggiungere Plaud e Google Drive dall'interfaccia Routine di claude.ai.
+- Condivisione della cartella con Giovanna: la fa l'utente (ha rifiutato che la facesse Claude).

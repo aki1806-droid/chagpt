@@ -1,8 +1,8 @@
 # Ultimo passaggio di consegne
 
-## Notabene, app Apps Script (Claude, 2026-10-06)
+## Notabene, grafica personalizzabile e Plaud (Claude, 2026-10-06)
 
-Scritti `notabene/app/` (Code.gs, Index.html, Styles.html, appsscript.json) e `notabene/INSTALLAZIONE.md`; aggiornato `notabene/ARCHITETTURA.md`. Create nel Drive di aki le cartelle `Notabene Personale` (con `Plaud`) e `Notabene Condivise`; importato come Google Doc il riassunto Plaud della riunione del 17/09/2026. Verificata solo la sintassi; nessuna esecuzione su Google. Revisione Codex utile su Code.gs: permessi, sincronizzazione con lock, spostamento tra sezioni, chiamate AI.
+Riscritti `notabene/app/Index.html` e `Styles.html` (benvenuto, statistiche, in evidenza, viste griglia/compatta/lista, ordinamento, pannello Personalizza, nota rapida scritta); `Code.gs` ora salva preferenze per utente, stella e colore per nota. Prototipo generato con `notabene/prototipo/build.py` e ripubblicato. Creati `notabene/COSTI.md` e la routine giornaliera Plaud (senza connettori: va completata dall'utente). La condivisione della cartella con Giovanna è stata rifiutata dall'utente: la fa lui. Revisione Codex utile su Code.gs e sul prompt della routine (in `mcp`/claude.ai, non nel repository).
 
 ## Trasferimento LPG
 
