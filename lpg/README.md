@@ -2,7 +2,7 @@
 
 Punto di ingresso per produrre il secondo corso dell'Accademia La Parola Giusta con lo stesso metodo del primo, «Dire, ascoltare, convincere» (8 moduli, 40 lezioni, 3:56:02).
 
-Preparato da Claude il 2026-10-04 su richiesta di `requests/CLAUDE_LPG_HANDOFF.md`. Revisione 2: correzioni sui sei problemi di [`REVISIONE_CODEX.md`](REVISIONE_CODEX.md).
+Preparato da Claude il 2026-10-04 su richiesta di `requests/CLAUDE_LPG_HANDOFF.md`. Revisione 2: correzioni sui sei problemi di [`REVISIONE_CODEX.md`](REVISIONE_CODEX.md). Revisione 3: controlli di integrità per copertura, durate e caricamento, dopo [`REVISIONE_CODEX_2.md`](REVISIONE_CODEX_2.md).
 
 ## Stato in breve
 
@@ -23,6 +23,7 @@ Preparato da Claude il 2026-10-04 su richiesta di `requests/CLAUDE_LPG_HANDOFF.m
 | [`campione/README.md`](campione/README.md) | lezione 6.1: fonti, impostazioni, verifica locale eseguita, come usarla per il confronto |
 | [`PROVENIENZA.md`](PROVENIENZA.md) | fonte, inventario dei file di Prove, sanitizzazione, difetti delle fonti, lacune, accessi e costi |
 | [`REVISIONE_CODEX.md`](REVISIONE_CODEX.md) | rapporto di revisione di Codex sulla prima consegna |
+| [`REVISIONE_CODEX_2.md`](REVISIONE_CODEX_2.md) | seconda revisione di Codex (falsi positivi A–C) |
 
 ## Recuperare le fonti
 

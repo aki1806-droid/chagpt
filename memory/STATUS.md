@@ -1,17 +1,19 @@
 # Stato attuale
 
 - Compito: trasferire il metodo LPG e rendere affidabile la procedura.
-- Responsabile: Claude (correzioni dopo seconda revisione Codex).
-- Stato: da assegnare alla sessione Claude; seconda revisione completata con problemi aperti.
-- Pacchetto revisionato: chagpt af4954b; fonti Prove 4ed8a32ef71452ce66b1c67e4084bd84c242c356, checkout pulito.
-- Rapporto: `lpg/REVISIONE_CODEX_2.md`; precedente `lpg/REVISIONE_CODEX.md` conservato come storico.
-- Esito sei punti: prova.mp3, working directory/batch/pose e distinzione chiusure corretti; bootstrap documentato ma bloccato qui; copertura/banda/upload richiedono integrità aggiuntiva.
-- Correzioni richieste: code/meta con stessa cardinalità, durate complete/valide, esito pipeline upload preservato. Precisare etichette P/S/V e affermazioni sui codici di uscita.
-- Verifiche riuscite: intermedi, audio sintetico 46 confini, copertura vuota respinta, banda 48/48, pose 22/22, batch 97 file, PUT locale 403/200, scene 50.
-- Blocchi ambiente: Chromium build 1194 e font non recuperabili (HTTP 403); Chromium sistema 151 non usato come equivalente. Playwright 1.56.1 installato con cache scrivibile.
-- Lacune: nessuna verifica dei servizi reali, render/font qui non ripetuti, chiusura 15/variante 8.5 non eseguite; input secondo corso, accessi, parametri voce, prompt e licenze restano.
-- Pubblicazione: utente autorizza rapporto e memoria su main, senza force push. Nessun servizio a pagamento autorizzato.
-- Prossimo passo: Claude corregge i controlli e ripete test positivi/negativi, poi restituisce a Codex; nessuna approvazione completa della produzione.
+- Responsabile: Codex (terza revisione).
+- Stato: da revisionare.
+- Rapporti: `lpg/REVISIONE_CODEX.md`, `lpg/REVISIONE_CODEX_2.md`.
+- Fonti: Prove @ `4ed8a32ef71452ce66b1c67e4084bd84c242c356`, non modificato.
+- Esito Claude, revisione 3: corretti in `lpg/PROCEDURA.md` i tre falsi positivi.
+  - A. Copertura: confini attesi da `chunks.json`, `prova_meta.json` coerente, `code.json` lista di testi con la stessa cardinalità.
+  - B. Durate: insieme degli ID uguale ai blocchi, valori finiti e positivi, mp3 presenti, del run attuale e lunghi come dichiarato; modalità `SOLO_INTEGRITA` dopo le pose.
+  - C. Caricamento: wrapper senza pipe, che controlla insieme il codice di uscita di `carica.py` e `errori []`, in una sotto-shell.
+  - Precisate le etichette: condizioni esatte dei codici di uscita, rendering [V] su 47 PNG e solo 3 clip, chiusura 10 s come inferenza dai registri.
+- Verifiche: test positivi e negativi su una traccia sintetica e su un server PUT locale; blocchi del documento eseguiti alla lettera; nessun servizio a pagamento.
+- Lacune: rendering non ripetibile nell'ambiente Codex (browser 1194 e font bloccati); servizi reali, `completed` reale, chiusura da 15 s e variante 8.5 non provati; input del secondo corso, parametri della voce, prompt, licenze, MD dei moduli 7–8 e versioni pubblicate dei moduli 1–5 mancanti.
+- Trasferimento: non completo.
+- Prossimo passo: Codex ripete i negativi A–C sui blocchi di `PROCEDURA.md` 5.2, 5.3 e 7.3 e decide se approvare la procedura locale.
 
 ## Altri materiali
 

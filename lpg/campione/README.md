@@ -72,6 +72,8 @@ Revisione 2, con i comandi esatti di `../PROCEDURA.md` in un'area di lavoro sepa
   - con tutti i PUT a 200: `errori []`;
 - `scene.py` con gli ID dei silenzi sostituiti nella copia di lavoro: 50 scene, copertina e chiusura sui silenzi caricati, 3 riprese da URL.
 
+Revisione 3 (2026-10-08), stessa area di lavoro e traccia sintetica: i controlli rinforzati di `../PROCEDURA.md` 5.2, 5.3 e 7.3, eseguiti come sono scritti nel documento, accettano i casi buoni e respingono `code.json` vuoto, corto, lungo o con voci non testuali; `durate.json` vuoto, con un blocco mancante, a zero o non numerico; un mp3 assente, vecchio o sbagliato; un caricamento che esce con 1 dopo `errori []`. Tabelle complete in `../PROCEDURA.md`.
+
 Non eseguiti: voce reale, trascrizione reale, riprese, caricamento e montaggio reali, chiusura da 15 s, variante 8.5. Il confronto con il montato approvato richiede l'account HeyGen dell'utente.
 
 ## Come usarlo per il confronto
