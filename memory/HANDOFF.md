@@ -45,3 +45,10 @@ Salvato in `robin/prompt-immagini-LPG-210-259.md` il file dei 50 prompt immagini
 ## Generazione immagini (Codex, 2026-10-08)
 
 Su richiesta «Crea le immagini», generati tutti i 50 prompt LPG_210–259 con image_gen, una immagine per volta. Controllate visivamente durante la generazione; rigenerati 226 (report) e 257 (bussola) per eliminare lettere/numeri. PNG con nomi esatti in `/workspace/robin-images/`, archivio `/workspace/LPG_210-259_immagini.zip` (98.184.874 byte). Verificati 50 nomi unici, formato 1024×1536, massimo 2.877.198 byte per PNG, integrità ZIP. Originali conservati separatamente. Nessun caricamento su Robin. Su successiva richiesta dell’utente, i 50 PNG sono copiati in `robin/immagini/` con `manifest.json` (nomi, dimensioni, SHA-256), per pubblicazione su main. Claude può recuperarli aggiornando il repository; non serve allegare lo ZIP. Prossima azione: revisionare le immagini rispetto ai prompt e caricarle nella cartella «la parola giusta» quando richiesto dall'utente.
+
+## Robin: revisione e caricamento (Claude, 2026-10-08)
+
+- Revisione delle 50 immagini di `robin/immagini/`: tutte approvate. Hash e formato coerenti con il manifest; nessuna scritta leggibile, nessun volto riconoscibile, mani corrette, palette rispettata. Unica nota: la 237 (ora 297) mostra persone sedute di spalle.
+- Conflitto di numerazione: nella cartella Robin «la parola giusta» i numeri LPG_201–269 esistevano già, con altre immagini. Su decisione dell'utente i file sono stati rinominati **+60** (LPG_270–319) nel repository (commit `a33b0c6`). Il manifest conserva `nome_prompt`. Il file dei prompt non è stato modificato.
+- Caricamento su Robin con `media_upload` dagli URL raw del commit `a33b0c6`: 50/50 completati, verificati con una ricerca nella cartella (10 per ogni decina 27x–31x, nessun doppione, `used_in_post_count` 0).
+- Prossimo numero libero su Robin: **LPG_320**. Per i post vale la regola salvata su Robin: un'immagine non si usa mai due volte.
