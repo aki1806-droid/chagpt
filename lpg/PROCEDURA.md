@@ -43,7 +43,7 @@ mkdir -p "$WS" "$LEZ"
 cp -r "$PROVE/produzione/script" "$WS/script"
 cd "$WS/script"
 npm init -y >/dev/null
-npm i --no-fund --no-audit playwright@1.56.1
+npm i --no-fund --no-audit playwright@1.56.1   # se la cache npm predefinita non è scrivibile: npm_config_cache="$WS/npm-cache" npm i ...
 npx playwright --version          # Version 1.56.1
 ```
 
@@ -123,7 +123,7 @@ for f in "$LEZ"/frames/c*/; do
 done
 ```
 
-[V] sulla 6.1: 47 PNG da 47 voci. Le clip sono state rese su `c01`, `c33` e `c99`: h264, 1920×1080, yuv420p, 25 fps, 3,000 s. Le slide `ciclo: N` durano N secondi **[S]**. I blocchi che sono riprese non hanno clip: `scene.py` prende l'URL da `media.json` **[S]**.
+[V] sulla 6.1, nella sessione Claude: `cards_corso.mjs` su tutte le 47 voci (47 PNG); `clips_corso.mjs` e la codifica **solo su tre slide** (`c01`, `c33`, `c99`: h264, 1920×1080, yuv420p, 25 fps, 3,000 s). Il ciclo completo delle 47 clip non è stato eseguito. Codex non ha potuto ripetere il rendering: browser 1194 e Google Fonts erano bloccati nel suo ambiente (`REVISIONE_CODEX_2.md`). Le slide `ciclo: N` durano N secondi **[S]**. I blocchi che sono riprese non hanno clip: `scene.py` prende l'URL da `media.json` **[S]**.
 
 ## 4. Voce (a pagamento) [P]
 
@@ -142,25 +142,50 @@ python3 "$WS/script/tagli.py" correggi "$LEZ"    # riscrive tagli.json E prova.m
 ```
 
 - **[S]** `correggi` termina chiamando la stessa funzione `prova()` di `allinea`, che scrive sempre **`prova.mp3`**. Il messaggio finale «riprova.mp3 aggiornato» è sbagliato: quel file non esiste. **[V]** Dopo `correggi`, `prova.mp3` risulta riscritto e `riprova.mp3` non esiste. Va trascritto ogni volta il `prova.mp3` nuovo, mai una trascrizione precedente.
-- **[S]** `verifica.py` esce sempre con codice 0 e conta «fuori posto» **solo sui confini con una coda**. I confini senza coda restano vuoti in `code.json`, e `correggi` li salta.
+- **[S]** `verifica.py` conta «fuori posto» **solo sui confini con una coda**. I confini senza coda restano stringhe vuote in `code.json`, e `correggi` li salta. Esce con 0 anche quando le code mancano tutte o in parte; esce con errore solo per un'eccezione (file assente, JSON non valido).
 
 ### 5.2 Criterio di uscita: copertura + fuori posto + banda
 
 «fuori posto: 0» **non basta**. [V] Con una trascrizione vuota, `verifica.py` stampa `0 pezzi, 46 confini | senza coda: [... 46 confini ...] | fuori posto: 0` ed esce con 0.
 
+Il controllo di copertura verifica prima l'**integrità** dei file, poi conta:
+
+- i confini attesi sono, nell'ordine, tutti i blocchi di A tranne l'ultimo e tutti quelli di B tranne l'ultimo (46 nella 6.1) **[S]**, come li scrive `allinea` in `prova_meta.json`;
+- `prova_meta.json` deve elencare esattamente quei confini, altrimenti va rifatto `allinea`;
+- `code.json` deve essere una lista di **testi**, con tante voci quanti sono i confini. Una lista troncata o allungata viene respinta prima del conteggio;
+- solo allora si contano le code vuote.
+
 Controllo di copertura, da eseguire dopo ogni `verifica.py` [V]:
 
 ```bash
 cd "$LEZ" && python3 - <<'EOF'
-import json
-meta = json.load(open('prova_meta.json')); code = json.load(open('code.json'))
-vuoti = [m['fine_di'] for m, c in zip(meta, code) if not c]
+import json, sys
+def stop(msg): print('COPERTURA NON VALIDA:', msg); sys.exit(1)
+C = json.load(open('chunks.json')); meta = json.load(open('prova_meta.json')); code = json.load(open('code.json'))
+attesi = C['A'][:-1] + C['B'][:-1]                      # un confine dopo ogni blocco, tranne l'ultimo di A e di B
+if not attesi: stop('nessun confine atteso: chunks.json vuoto?')
+if not isinstance(meta, list) or [m.get('fine_di') for m in meta] != attesi:
+    stop(f'prova_meta.json non corrisponde a chunks.json ({len(meta)} voci, attese {len(attesi)}): rifare allinea')
+if not isinstance(code, list) or len(code) != len(meta):
+    stop(f'code.json ha {len(code) if isinstance(code, list) else "?"} voci, i confini sono {len(meta)}: rifare verifica.py')
+if not all(isinstance(c, str) for c in code): stop('code.json contiene voci che non sono testo')
+vuoti = [m['fine_di'] for m, c in zip(meta, code) if not c.strip()]
 print('COPERTURA', len(meta) - len(vuoti), '/', len(meta), '| senza coda:', vuoti or 'nessuno')
-raise SystemExit(1 if vuoti else 0)
+sys.exit(1 if vuoti else 0)
 EOF
 ```
 
-[V] Esce con 1 sulla trascrizione vuota (`COPERTURA 0 / 46`). Con una trascrizione simulata delle code della 6.1 (non audio reale) stampa `COPERTURA 46 / 46`, e `verifica.py` dà `46 pezzi, 46 confini | senza coda: nessuno | fuori posto: 0`.
+[V] Esiti sulla traccia sintetica della 6.1 (revisione 3 di Claude):
+
+| caso | esito | uscita |
+|---|---|---|
+| trascrizione simulata delle code | `COPERTURA 46 / 46` | 0 |
+| `code.json` = `[]` | `code.json ha 0 voci, i confini sono 46` | 1 |
+| `code.json` con 43 voci / con 47 voci | respinto per cardinalità | 1 |
+| una coda vuota | `COPERTURA 45 / 46 \| senza coda: ['s07']` | 1 |
+| una voce `null` | `contiene voci che non sono testo` | 1 |
+| trascrizione vuota passata da `verifica.py` | `COPERTURA 0 / 46` | 1 |
+| `prova_meta.json` senza il primo confine | `non corrisponde a chunks.json` | 1 |
 
 Un confine senza coda si chiude solo in uno di questi modi, annotati nel registro **[P]**:
 
@@ -170,30 +195,76 @@ Un confine senza coda si chiude solo in uno di questi modi, annotati nel registr
 
 Anche con copertura piena, il conteggio dei pezzi non prova l'allineamento: lo scriba può saltare una coda e aggiungerne un'altra **[P]**. Per questo serve la banda (5.3).
 
-### 5.3 Banda caratteri/secondo, prima delle pose [V]
+**[S]** `tagli.py applica` **continua** dopo un errore di ffmpeg: stampa `ERRORE sNN` e scrive in `durate.json` solo i blocchi riusciti. Una durata mancante non deve sparire dalla verifica: per questo il controllo 5.3 parte dall'elenco completo dei blocchi.
+
+### 5.3 Integrità delle durate e banda caratteri/secondo, prima delle pose [V]
 
 ```bash
 python3 "$WS/script/tagli.py" applica "$LEZ"     # senza pose: durate nette
 cd "$LEZ" && python3 - <<'EOF'
-import json, re
-B = {x['id']: re.sub(r'\[[a-z ]+\]', '', x['text']).strip() for x in json.load(open('blocchi.json'))}
+import json, math, os, re, subprocess, sys
+def stop(msg): print('BANDA NON VALIDA:', msg); sys.exit(1)
+blocchi = json.load(open('blocchi.json')); ids = [b['id'] for b in blocchi]
+if not ids: stop('blocchi.json vuoto')
+if len(set(ids)) != len(ids): stop('ID duplicati in blocchi.json')
 D = json.load(open('durate.json'))
-fuori = [(b, round(len(B[b]) / d, 1)) for b, d in D.items() if not 8 <= len(B[b]) / d <= 21]
-print('BANDA', len(D) - len(fuori), '/', len(D), 'in 8-21 | fuori:', fuori or 'nessuno')
-raise SystemExit(1 if fuori else 0)
+if not isinstance(D, dict): stop('durate.json non è un oggetto')
+mancano = [i for i in ids if i not in D]; extra = [k for k in D if k not in ids]
+if mancano or extra: stop(f'durate mancanti {mancano or "-"}, estranee {extra or "-"}: rifare applica e leggere gli ERRORE')
+bad = [k for k, v in D.items() if not isinstance(v, (int, float)) or isinstance(v, bool) or not math.isfinite(v) or v <= 0]
+if bad: stop(f'durate non valide: {bad}')
+rif = os.path.getmtime('tagli.json'); prob = []
+for i in ids:
+    p = f'mp3u/{i}.mp3'
+    if not os.path.isfile(p): prob.append(f'{i}: file assente'); continue
+    if os.path.getmtime(p) < rif: prob.append(f'{i}: più vecchio di tagli.json'); continue
+    r = subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', p], capture_output=True, text=True)
+    try: d = float(r.stdout.strip())
+    except ValueError: prob.append(f'{i}: illeggibile'); continue
+    if abs(d - D[i]) > 0.1: prob.append(f'{i}: file {d:.2f} s, durate.json {D[i]} s')
+if prob: stop('; '.join(prob))
+if os.environ.get('SOLO_INTEGRITA'):
+    print('INTEGRITA', len(ids), '/', len(ids), 'blocchi con durata valida e mp3 del run attuale'); sys.exit(0)
+T = {b['id']: re.sub(r'\[[a-z ]+\]', '', b['text']).strip() for b in blocchi}
+fuori = [(i, round(len(T[i]) / D[i], 1)) for i in ids if not 8 <= len(T[i]) / D[i] <= 21]
+print('BANDA', len(ids) - len(fuori), '/', len(ids), 'in 8-21 | fuori:', fuori or 'nessuno')
+sys.exit(1 if fuori else 0)
 EOF
 ```
 
+Cosa controlla, nell'ordine:
+
+1. `blocchi.json` non vuoto, senza ID duplicati;
+2. `durate.json` con **esattamente** gli ID dei blocchi, né mancanti né estranei;
+3. ogni durata numerica, finita e maggiore di zero;
+4. per ogni blocco, `mp3u/sNN.mp3` presente, **non più vecchio di `tagli.json`** (cioè del run attuale), leggibile con `ffprobe` e lungo come in `durate.json` (±0,1 s);
+5. solo allora la banda 8–21 su **tutti** i blocchi.
+
+Con la variabile `SOLO_INTEGRITA=1` esportata ci si ferma ai punti 1–4: si esegue lo stesso blocco come `( export SOLO_INTEGRITA=1; cd "$LEZ" && python3 - <<'EOF' … EOF )`, cioè dentro una sotto-shell. Serve dopo le pose (5.4), prima del batch.
+
 - Il controllo toglie i tag di intenzione prima di contare, perché non si sentono **[P]**.
-- Va fatto **prima** di applicare le pose: un blocco allungato con `apad` scende di banda per costruzione. Questo ordine non è scritto nelle fonti, che dicono solo «dopo `applica`»: è una scelta di questo pacchetto per rendere il controllo affidabile.
+- La banda va misurata **prima** delle pose, perché un blocco allungato con `apad` può scendere sotto 8 per effetto della posa e non del taglio. Questo ordine non è scritto nelle fonti, che dicono solo «dopo `applica`»: è una scelta di questo pacchetto.
 - La banda di MASTER §5 è 8,5–21, quella di STANDARD 8–21. Un blocco fuori banda con i confini confermati per contenuto e i vicini in banda si annota e si lascia **[P]**.
-- [V] Sulla traccia sintetica della 6.1: `BANDA 48 / 48`.
+
+[V] Esiti sulla traccia sintetica della 6.1 (revisione 3):
+
+| caso | esito | uscita |
+|---|---|---|
+| positivo, senza pose | `BANDA 48 / 48` | 0 |
+| `durate.json` = `{}` | durate mancanti: tutti i 48 blocchi | 1 |
+| `s20` mancante / a zero / come testo | respinto | 1 |
+| `mp3u/s21.mp3` assente | `s21: file assente` | 1 |
+| `mp3u/s22.mp3` più vecchio di `tagli.json` | `s22: più vecchio di tagli.json` | 1 |
+| `mp3u/s23.mp3` sostituito da un altro blocco | `s23: file 6.03 s, durate.json 5.72 s` | 1 |
+| `SOLO_INTEGRITA=1` dopo le pose | `INTEGRITA 48 / 48` | 0 |
+| `SOLO_INTEGRITA=1` con `s30` mancante | respinto | 1 |
 
 ### 5.4 Pose [V]
 
 ```bash
 python3 -m json.tool "$LEZ/pose.json" >/dev/null     # JSON valido
 python3 "$WS/script/tagli.py" applica "$LEZ" "$(cat "$LEZ/pose.json")"
+# poi il controllo 5.3 in una sotto-shell con export SOLO_INTEGRITA=1, prima di preparare il batch
 ```
 
 [V] Con le 22 pose della 6.1, ricostruite dal registro (vedi `campione/README.md`): 22/22 blocchi alla durata chiesta, totale 354,4 s sulla traccia sintetica.
@@ -238,15 +309,35 @@ EOF
 
 ### 7.3 PUT e controllo degli errori
 
+Il blocco gira in una sotto-shell, così un `exit` non chiude il terminale:
+
 ```bash
+(
 cd "$LEZ"
-python3 "$WS/script/carica.py" risposta_batch.json | tee carica.log
-grep -q "| errori \[\]$" carica.log || { echo "CARICAMENTO FALLITO: non montare"; exit 1; }
+python3 "$WS/script/carica.py" risposta_batch.json > carica.log 2>&1
+rc=$?
+cat carica.log
+if [ "$rc" -ne 0 ]; then echo "CARICAMENTO FALLITO: carica.py uscito con $rc"; exit 1; fi
+if ! grep -q "| errori \[\]$" carica.log; then echo "CARICAMENTO FALLITO: errori nei PUT"; exit 1; fi
+echo "PUT OK: ora complete_asset_batch e get_asset_batch fino a completed per ogni item"
+)
 ```
 
-- **[S]** `carica.py` registra l'`asset_id` in `assets.json` **anche quando il PUT fallisce** ed esce sempre con codice 0. Né il codice di uscita né la presenza di `assets.json` dimostrano il caricamento.
-- **[V]** Con un server PUT locale che rispondeva 403 su due file: `errori [('a_s05.mp3', '403'), ('v_c12.mp4', '403')]`, codice di uscita 0, `assets.json` con 97 id. Il `grep` sopra ha fermato la procedura. Con tutti i PUT a 200: `errori []`, e il controllo passa.
-- Dopo i PUT: `complete_asset_batch`, poi `get_asset_batch` finché **ogni** item è `completed` **[P]**. Un batch parziale non si monta. Per rifare solo i file falliti si prepara un batch con quelli: `carica.py` unisce gli id a quelli già presenti **[S]**.
+- **[S]** `carica.py` registra l'`asset_id` in `assets.json` **anche quando il PUT fallisce** ed esce con 0 anche con errori di PUT. Esce con errore solo per un'eccezione: file assente, JSON non valido, numero di item della risposta diverso da `batch_in.json`. Né il codice di uscita da solo né la presenza di `assets.json` dimostrano il caricamento.
+- Il wrapper non usa pipe: il codice di uscita è quello di `carica.py`, non quello di `tee`. Poi si legge la riga `errori []`. **Servono entrambe le condizioni.**
+- `carica.log` contiene nomi di file e codici HTTP, non gli URL firmati né gli header (curl è chiamato con l'output catturato). Va comunque tenuto fuori dal repository.
+
+[V] Esiti (server PUT locale, nessun HeyGen):
+
+| caso | esito | uscita |
+|---|---|---|
+| processo finto che stampa `errori []` ed esce con 1 | `carica.py uscito con 1` | 1 |
+| processo finto con eccezione dopo `errori []` | `carica.py uscito con 1` | 1 |
+| `carica.py` reale, due PUT a 403 | `errori nei PUT` | 1 |
+| `carica.py` reale, tutti 200 | `PUT OK` | 0 |
+| risposta con un item in meno | `carica.py uscito con 1` (assert) | 1 |
+
+Dopo i PUT: `complete_asset_batch`, poi `get_asset_batch` finché **ogni** item è `completed` **[P]**. Lo schema della risposta di `get_asset_batch` non è registrato nelle fonti: il controllo si fa sulla risposta reale, item per item, confrontando gli `asset_id` con `assets.json`. Un batch parziale non si monta. Per rifare solo i file falliti si prepara un batch con quelli: `carica.py` unisce gli id a quelli già presenti **[S]**.
 
 ## 8. Lista delle scene
 
@@ -269,10 +360,10 @@ python3 "$WS/script/scene.py" 2 49               # scrive scene.json
 | | prescrizione [P] | implementazione [S] | misura nei registri |
 |---|---|---|---|
 | lezione ordinaria | 10 s | `SIL10` | durata − somma dei blocchi = **11,8 s** (6.1, 8.1) |
-| fine modulo | **15 s** (STANDARD §3) | nessuna: `scene.py` usa sempre `SIL10` | **11,8 s** anche in 6.5 e 7.5, 11,9 in 5.5: la chiusura da 15 s non risulta applicata nei moduli 5–7 |
+| fine modulo | **15 s** (STANDARD §3) | nessuna: `scene.py` usa sempre `SIL10` | **11,8 s** anche in 6.5 e 7.5, 11,9 in 5.5. Inferenza: con lo script e questi numeri, la chiusura da 15 s non risulta applicata nei moduli 5–7. Non è una misura diretta dei video |
 | fine corso (8.5) | 20 s | `copioni/8-5-scene85.py` con `a_chiusura20.mp3` | 389,0 − 367,1 = 21,9 s = 3 + 20 − 1,1 |
 
-Nella fase finale la differenza misurata è sempre circa **1,2 s meno** di copertina + chiusura nominali. La causa non è documentata.
+Nella fase finale la differenza riportata dai registri è sempre circa **1,2 s meno** di copertina + chiusura nominali. La causa non è documentata. Non va usata come calibrazione universale del render. Che i video pubblicati siano proprio quelle versioni lo deve confermare l'utente.
 
 Per una chiusura di modulo da 15 s, se l'utente la vuole davvero: creare `mp3u/muto15.mp3` come in 7.1, caricarlo, e mettere il suo ID al posto di `SIL10` nella copia di lavoro prima di lanciare `scene.py`. [V] non eseguito con 15 s; è la stessa sostituzione verificata per 10 s.
 
@@ -320,11 +411,11 @@ Le durate reali si misurano sui file con `ffprobe -v error -show_entries format=
 
 ## Criteri di completamento di una lezione
 
-1. copertura dei confini piena, oppure ogni confine senza coda chiuso secondo 5.2 e annotato;
+1. controllo di copertura (5.2) superato: file integri, copertura piena, oppure ogni confine senza coda chiuso secondo 5.2 e annotato;
 2. `verifica.py`: «fuori posto: 0» sull'ultima trascrizione del `prova.mp3` corrente;
-3. banda 8–21 (8,5–21 nel MASTER) su tutti i blocchi prima delle pose, o eccezione annotata con l'evidenza;
+3. controllo 5.3 superato prima delle pose (integrità + banda 8–21 su tutti i blocchi, o eccezione annotata con l'evidenza) e, dopo le pose, con `SOLO_INTEGRITA=1`;
 4. PNG guardati tutti una volta, diagrammi e tabelle due;
-5. `carica.log` con `errori []` e tutti gli item del batch `completed`;
+5. wrapper 7.3 uscito con 0 (`carica.py` a 0 **e** `errori []`), poi tutti gli item del batch `completed`;
 6. scene ≤ 50, con la chiusura della durata decisa;
 7. durata del render coerente con l'attesa (sezione 9) ed entro 10 s dall'obiettivo;
 8. registro scritto, con «da verificare» compilato.
