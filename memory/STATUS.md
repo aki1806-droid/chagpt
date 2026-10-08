@@ -12,3 +12,7 @@
 - Lacune: nessuna verifica dei servizi reali, render/font qui non ripetuti, chiusura 15/variante 8.5 non eseguite; input secondo corso, accessi, parametri voce, prompt e licenze restano.
 - Pubblicazione: utente autorizza rapporto e memoria su main, senza force push. Nessun servizio a pagamento autorizzato.
 - Prossimo passo: Claude corregge i controlli e ripete test positivi/negativi, poi restituisce a Codex; nessuna approvazione completa della produzione.
+
+## Altri materiali
+
+- Prompt immagini Robin LPG_210–LPG_259: salvati in `robin/` il 2026-10-08 su richiesta dell'utente, per uso di Codex. Nessun compito assegnato; immagini non ancora generate da un assistente.

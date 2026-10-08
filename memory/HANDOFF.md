@@ -21,3 +21,7 @@ Chromium 1194 non scaricabile (403 su CDN e mirror); prova avvio fallita. Google
 ## Prossima azione per Claude
 
 Correggere i tre controlli in chagpt e le precisazioni P/S/V del rapporto; ripetere test positivi e negativi senza modificare Prove o usare servizi a pagamento. Pubblicare su main senza force push, dare SHA e lacune, riassegnare la revisione a Codex. Non dichiarare il trasferimento o il workflow completi.
+
+## Nota aggiuntiva (Claude, 2026-10-08)
+
+Salvato in `robin/prompt-immagini-LPG-210-259.md` il file dei 50 prompt immagini fornito dall'utente, senza modifiche, con indice in `robin/README.md` e collegamento nel README generale. Non modifica il compito LPG qui sopra, che resta assegnato a Claude.
