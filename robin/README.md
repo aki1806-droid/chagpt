@@ -16,5 +16,5 @@ Fornito dall'utente il 2026-10-08 e salvato senza modifiche.
 ## Stato
 
 - Prompt: pronti (50 su 50, conteggi per tema coerenti).
-- Immagini generate e caricate su Robin: **nessuna verificata** da un assistente.
-- Nessun servizio di generazione o pubblicazione è stato usato per questo file.
+- Immagini generate da Codex il 2026-10-08: **50 su 50**, PNG verticali 1024×1536 con nomi esatti e dimensioni inferiori a 8 MB. PNG in [`immagini/`](immagini/) con [manifest](immagini/manifest.json). Archivio locale `/workspace/LPG_210-259_immagini.zip`.
+- Caricamento su Robin: **non eseguito**. Revisione affidata a Claude dopo aggiornamento del repository da main.

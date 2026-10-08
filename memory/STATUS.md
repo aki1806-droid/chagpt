@@ -15,4 +15,4 @@
 
 ## Altri materiali
 
-- Prompt immagini Robin LPG_210–LPG_259: salvati in `robin/` il 2026-10-08 su richiesta dell'utente, per uso di Codex. Nessun compito assegnato; immagini non ancora generate da un assistente.
+- Immagini Robin LPG_210–LPG_259: generate da Codex il 2026-10-08 dai 50 prompt in `robin/`; stato da revisionare, revisore Claude. 50 PNG con nomi esatti, 1024×1536, ciascuno sotto 8 MB; ZIP locale `/workspace/LPG_210-259_immagini.zip`. Report 226 e bussola 257 rigenerati per rimuovere lettere/numeri. Caricamento Robin non eseguito. PNG condivisi in `robin/immagini/` con `manifest.json`; pubblicazione su main autorizzata dall’utente. Criteri: 50 file recuperabili dal repository e hash coerenti.

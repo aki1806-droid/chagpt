@@ -12,3 +12,8 @@ Queste regole valgono per Codex e Claude Code.
 - Prima di terminare aggiorna stato e passaggio di consegne. Registra soltanto decisioni durature nel registro delle decisioni.
 - Mantieni la memoria breve, fattuale e utile. Non conservare password, token, dati personali non necessari o trascrizioni integrali delle chat.
 - Non pubblicare modifiche né inviare messaggi a servizi esterni senza autorizzazione dell'utente.
+
+## Immagini condivise
+
+- Quando crei immagini per l’utente, caricale anche nel repository o in una cartella Drive accessibile a Claude prima di chiudere il compito. L’utente ha autorizzato questa condivisione ricorrente il 2026-10-08.
+- Destinazione predefinita: questo repository, in una cartella pertinente al progetto; per Robin usa `robin/immagini/`. Conserva i nomi richiesti e indica il percorso nel passaggio di consegne. Verifica il caricamento remoto; se fallisce, segnala il blocco senza dichiarare le immagini condivise.

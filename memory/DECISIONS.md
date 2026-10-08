@@ -22,3 +22,8 @@
 - Scelta: dopo ogni azione, l'assistente che ha lavorato fornisce all'utente il testo da incollare nella chat dell'altro assistente.
 - Motivo: richiesta esplicita dell'utente (2026-10-04), che fa da tramite fra le due chat.
 - Conseguenza: ogni risposta che chiude un'azione termina con un blocco «Da incollare in Codex» (o «in Claude»), autosufficiente e con i file da leggere.
+
+## Condivisione delle immagini generate
+
+- Richiesta dell’utente (2026-10-08): ogni volta che vengono create immagini, caricarle in Drive o nel repository affinché Claude possa usarle.
+- Destinazione predefinita: repository chagpt; file Robin in `robin/immagini/`, con manifest di nomi, dimensioni e SHA-256. Il solo percorso locale non completa la consegna.

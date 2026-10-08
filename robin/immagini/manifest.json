@@ -1,0 +1,352 @@
+[
+  {
+    "file": "LPG_210_Silenzio_e_pause.png",
+    "bytes": 2247828,
+    "sha256": "47003037de20fc3984b76a1611f7acaabe3f45cc5cca4ce814fe4d303dc327d8",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_211_Silenzio_e_pause.png",
+    "bytes": 2184640,
+    "sha256": "627ca44a1c5456e2c17ef4f9301b637b52d0895f07b9529e1bb770498b3ef35b",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_212_Silenzio_e_pause.png",
+    "bytes": 2162215,
+    "sha256": "f028aa6aa8fe21a13fba84dd654d069981bcd44f6acd4d5db8fe2d23c23c9f64",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_213_Tempo.png",
+    "bytes": 2194054,
+    "sha256": "59bdac3f3aae8fe0ef1fadb642f7c018a348307199388d34c4c6261c0c9f99b3",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_214_Tempo.png",
+    "bytes": 2031511,
+    "sha256": "2983afb9aa657979768f9ac53be84e719188c5fb1724c86774d2eefcc7f4489d",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_215_Tempo.png",
+    "bytes": 2043745,
+    "sha256": "351eb8454f07e31e0a92ea5505d878ae056f6e3d3e82f82721d8f4bd6851bea2",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_216_Presenza.png",
+    "bytes": 2034873,
+    "sha256": "145f1c8bf287a6b5f3bf48285fadcbc6d2a3647b42bd62bba7807b48c73ad440",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_217_Presenza.png",
+    "bytes": 2168249,
+    "sha256": "acbc4ed0b5ef07ee63010016b61f3c6f95e03962eeba95cddb12470c3a2b27ce",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_218_Presenza.png",
+    "bytes": 2018695,
+    "sha256": "dbc568a7ed8a753b91164edf3e971f8b60a32606fc0b8b85b08cd66b14cba2ed",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_219_Ascolto.png",
+    "bytes": 1907289,
+    "sha256": "b074f313466ce5340df3e55df202a818f770a94bb429f93d8a09a4da3c180c2b",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_220_Ascolto.png",
+    "bytes": 2071417,
+    "sha256": "db510d410f23f29f18af0e5b6b1604f9527667f7cde909ac9219f8938291149e",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_221_Ascolto.png",
+    "bytes": 2391971,
+    "sha256": "9b28890604a47a2899fd18300cdf36331464f590bfe2fd720d8492f23c6be0d6",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_222_Conversazioni_difficili.png",
+    "bytes": 1959370,
+    "sha256": "8c3b30b885f854bd8b6ffe87299af403140b3b75adbafb5c5559f627ba18af2d",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_223_Conversazioni_difficili.png",
+    "bytes": 1975102,
+    "sha256": "9986c560c60a7e787140e6a47f6beb7f31d5c560fc0fbc3db4ef95db59bc50aa",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_224_Conversazioni_difficili.png",
+    "bytes": 2306359,
+    "sha256": "8b2007172fd4770300f67f281a5adc4701a7b2b991de92bea4c1435b661e4907",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_225_Conversazioni_difficili.png",
+    "bytes": 2078106,
+    "sha256": "ad9bc34d66ae47d6e686fa2f81a097b305674e12729954539424b4797325ed86",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_226_Critiche_e_feedback.png",
+    "bytes": 1940187,
+    "sha256": "329735a689e17964eb5ecf58b5bd6e4b72fdf516ed3bb18358691ed0a350283a",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_227_Critiche_e_feedback.png",
+    "bytes": 2140482,
+    "sha256": "efd64d87c362230bd2d9708c82a3e9565830b0f0e6e3c2ff8d144a8f4c53dd90",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_228_Riparare.png",
+    "bytes": 2011252,
+    "sha256": "8031b4c15854617ccc05e3318bb7d91ebc5546a48bea57268088dae7a5ba328a",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_229_Riparare.png",
+    "bytes": 2224982,
+    "sha256": "950771c592ec530e4fd1cd84ecd20908d114d5f98372bae0203d0408a701cf97",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_230_Disaccordo.png",
+    "bytes": 2068567,
+    "sha256": "705cec2683c7b92ccd0c36d931743278d358f2397ff4f108046921f3e7c98afb",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_231_Decisione_sgradita.png",
+    "bytes": 1942592,
+    "sha256": "e4cdd09c83efde6000f5c06430bf505c7149150bf65b63b8760de1152ea54000",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_232_Parlare_in_pubblico.png",
+    "bytes": 1912670,
+    "sha256": "18b035d229ef32e6140513cc96949b7fd4dff67b2d92bf6f216d2c4ca19a49d0",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_233_Parlare_in_pubblico.png",
+    "bytes": 2199691,
+    "sha256": "9436f6dbf739be1c2416dc89240fd121c7ad70e4ad18b4e59868449acd9e8bcb",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_234_Parlare_in_pubblico.png",
+    "bytes": 1980323,
+    "sha256": "c652fa5f697690cf138194e4b011db35e06fdc3ae11736f6a7eb2f506de5baea",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_235_Parlare_in_pubblico.png",
+    "bytes": 2020322,
+    "sha256": "0a75180a72f83c6052586728a1d208aef29e9a3f676d958dbc04b2d4cfdb1d78",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_236_Leggere_la_sala.png",
+    "bytes": 2102313,
+    "sha256": "9850c6acb4d877040d33d1f523dd70f5b650c83f1890316d165c583a4a0e6ffc",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_237_Leggere_la_sala.png",
+    "bytes": 2140954,
+    "sha256": "3f95ebe55929bee016cac154ee2804a025c7bd2d2deef12a5c89282bc2f1f342",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_238_Prepararsi.png",
+    "bytes": 2083539,
+    "sha256": "3316d7cf3ca03424b842c7f67cb168c25de115e1f47a2d498d77af39ea4514d4",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_239_Vuoto_e_ripresa.png",
+    "bytes": 1904746,
+    "sha256": "7e4c9177c177a7d15852bb34751d325eb55c0b3dc7a42f04033396877d73c47e",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_240_Empatia_nella_cura.png",
+    "bytes": 1892729,
+    "sha256": "094744f815d173662fae84d3175500f571e3484d311ad758e36e68c745c7e481",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_241_Empatia_nella_cura.png",
+    "bytes": 2595017,
+    "sha256": "7b555056e19e5ebed3a5f292da762065fa14abb47309221b03930f4a38259606",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_242_Empatia_nella_cura.png",
+    "bytes": 2144767,
+    "sha256": "c67463b1ccb3bfdb8c9790244c0c41f1c38a46abb99c48b21d8ef1aa9f5bd6d2",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_243_Notizie_difficili.png",
+    "bytes": 2147594,
+    "sha256": "a99fa72dd8ed7756370d1af01482bafd53bd650adbd034773743da5853e57ae5",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_244_Notizie_difficili.png",
+    "bytes": 1990649,
+    "sha256": "c653d870ef06fbafd120b270f48663b9df3f89c8fa1c14bb47f2388dd1635b4f",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_245_Stare_accanto.png",
+    "bytes": 2509862,
+    "sha256": "8bae0fc483620ec71da89e8d24ba930afcd424c8ddc3efa5164e5304d8aa4f07",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_246_Chi_cura.png",
+    "bytes": 2013315,
+    "sha256": "d6fc8580b4ef9a4e5e631c45ffce77740298b2f51a55f4fa1b591c5f9ffe0442",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_247_Chi_cura.png",
+    "bytes": 1944937,
+    "sha256": "143d93d900d52a6506a77e616e776210300ef2c2df16a158827f424b56b63754",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_248_Dire_no_e_confini.png",
+    "bytes": 2877198,
+    "sha256": "36264f04075d00349b037d56cde1f248d19d55d36ba13314b9bc775f83377025",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_249_Dire_no_e_confini.png",
+    "bytes": 1954822,
+    "sha256": "2c5fb54a16756ea2ff74a17ae10395e238ccd0c341afc140f961c4a64cc1a2b1",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_250_Dire_no_e_confini.png",
+    "bytes": 1964190,
+    "sha256": "53db0216708c6cfaaf8497ac86c174cdfe999e74bd2cd9d1dfb32ef99c63414c",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_251_Dire_no_e_confini.png",
+    "bytes": 1958420,
+    "sha256": "a773c8204b17821a2a9a7ad2840968c5dd2b15a068cf3e38ed2747d593d8d207",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_252_Prendere_tempo.png",
+    "bytes": 2009074,
+    "sha256": "e403f35bbbdcd005d917e3eaf2c12519bda90b04a384984b083b2f80903bb4b5",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_253_Prendere_tempo.png",
+    "bytes": 2164855,
+    "sha256": "7d5ab2bcfcece19d5469b786582da05707153e866ace5970a9295e53312bcf5c",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_254_Negoziazione.png",
+    "bytes": 2018641,
+    "sha256": "70d9fc2400c279576a68363d9b65f3bfa2c704615b22c7ada00fdfae151742aa",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_255_Negoziazione.png",
+    "bytes": 1823521,
+    "sha256": "afa64d1d7b3cf2a0cb9254cc458925ab840ce567927b57ac261ecb7faf9f370e",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_256_Convincere.png",
+    "bytes": 1982844,
+    "sha256": "3009f604eac2165bb52e8ded697987a231ae92c923b50b12b889d69bb730cda0",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_257_Convincere.png",
+    "bytes": 2228379,
+    "sha256": "c7d061ec48f21ca6bc2281115af61968b4c103c477a22f80cfd3a9601a4a16f8",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_258_Fiducia.png",
+    "bytes": 1964035,
+    "sha256": "cc40623c85599c588febea5b209e2ad8dc1ea1c9624e97b5d74f246239556ed7",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "file": "LPG_259_Fiducia.png",
+    "bytes": 1998161,
+    "sha256": "2681752951123ec977bd2ede29de20329d6efdc7eb41bef20b3b827de2dfb1d4",
+    "width": 1024,
+    "height": 1536
+  }
+]

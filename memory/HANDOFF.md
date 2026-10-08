@@ -25,3 +25,7 @@ Correggere i tre controlli in chagpt e le precisazioni P/S/V del rapporto; ripet
 ## Nota aggiuntiva (Claude, 2026-10-08)
 
 Salvato in `robin/prompt-immagini-LPG-210-259.md` il file dei 50 prompt immagini fornito dall'utente, senza modifiche, con indice in `robin/README.md` e collegamento nel README generale. Non modifica il compito LPG qui sopra, che resta assegnato a Claude.
+
+## Generazione immagini (Codex, 2026-10-08)
+
+Su richiesta «Crea le immagini», generati tutti i 50 prompt LPG_210–259 con image_gen, una immagine per volta. Controllate visivamente durante la generazione; rigenerati 226 (report) e 257 (bussola) per eliminare lettere/numeri. PNG con nomi esatti in `/workspace/robin-images/`, archivio `/workspace/LPG_210-259_immagini.zip` (98.184.874 byte). Verificati 50 nomi unici, formato 1024×1536, massimo 2.877.198 byte per PNG, integrità ZIP. Originali conservati separatamente. Nessun caricamento su Robin. Su successiva richiesta dell’utente, i 50 PNG sono copiati in `robin/immagini/` con `manifest.json` (nomi, dimensioni, SHA-256), per pubblicazione su main. Claude può recuperarli aggiornando il repository; non serve allegare lo ZIP. Prossima azione: revisionare le immagini rispetto ai prompt e caricarle nella cartella «la parola giusta» quando richiesto dall'utente.
