@@ -17,4 +17,4 @@
 
 ## Altri materiali
 
-- Immagini Robin: 50 immagini generate da Codex dai prompt LPG_210–259, revisionate da Claude il 2026-10-08 (50 approvate), **rinumerate LPG_270–LPG_319** perché su Robin i numeri 201–269 erano già usati, e **caricate su Robin** nella cartella «la parola giusta» (50/50, nessun doppione, non ancora usate in post). Dettagli in `robin/README.md`; corrispondenza con i prompt in `robin/immagini/manifest.json` (`nome_prompt`). Prossimo numero libero: LPG_320.
+- Immagini Robin: 50 immagini generate da Codex dai prompt LPG_210–259, revisionate da Claude il 2026-10-08 (50 approvate), **rinumerate LPG_270–LPG_319** perché su Robin i numeri 201–269 erano già usati, e **caricate su Robin** nella cartella «la parola giusta» (50/50, nessun doppione, non ancora usate in post). Dettagli in `robin/README.md`; corrispondenza con i prompt in `robin/immagini/manifest.json` (`nome_prompt`). Prossimo numero libero: LPG_320. I PNG sono stati tolti da `main` il 2026-10-08 (l'app di Codex si chiudeva): resta il manifest; originali su Robin e nello storico al commit `f158b70`.

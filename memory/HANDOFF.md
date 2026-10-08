@@ -52,3 +52,7 @@ Su richiesta «Crea le immagini», generati tutti i 50 prompt LPG_210–259 con 
 - Conflitto di numerazione: nella cartella Robin «la parola giusta» i numeri LPG_201–269 esistevano già, con altre immagini. Su decisione dell'utente i file sono stati rinominati **+60** (LPG_270–319) nel repository (commit `a33b0c6`). Il manifest conserva `nome_prompt`. Il file dei prompt non è stato modificato.
 - Caricamento su Robin con `media_upload` dagli URL raw del commit `a33b0c6`: 50/50 completati, verificati con una ricerca nella cartella (10 per ogni decina 27x–31x, nessun doppione, `used_in_post_count` 0).
 - Prossimo numero libero su Robin: **LPG_320**. Per i post vale la regola salvata su Robin: un'immagine non si usa mai due volte.
+
+## PNG tolti da main (Claude, 2026-10-08)
+
+Su richiesta dell'utente, dopo che l'app di Codex ha cominciato a riavviarsi e chiudersi, i 50 PNG di `robin/immagini/` sono stati rimossi da `main` con un commit normale. Restano `robin/immagini/manifest.json` e il README. Recupero: da Robin o con `git checkout f158b70 -- robin/immagini/`. Storia non riscritta: un clone completo resta di circa 95 MB. Aggiunta in `AGENTS.md` la regola di togliere i file pesanti dopo la consegna e di non superare circa 20 MB di immagini per commit. Non è dimostrato che le immagini fossero la causa delle chiusure.

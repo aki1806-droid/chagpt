@@ -22,7 +22,8 @@ Prossimo numero libero su Robin: **LPG_320**.
 ## Stato
 
 - Prompt: pronti (50 su 50, conteggi per tema coerenti).
-- Immagini generate da Codex il 2026-10-08: **50 su 50**, PNG verticali 1024×1536 sotto gli 8 MB, in [`immagini/`](immagini/) con [manifest](immagini/manifest.json) (nomi, dimensioni, SHA-256).
+- Immagini generate da Codex il 2026-10-08: **50 su 50**, PNG verticali 1024×1536 sotto gli 8 MB. Nella cartella [`immagini/`](immagini/) resta solo il [manifest](immagini/manifest.json) (nomi, dimensioni, SHA-256, nome del prompt): i PNG sono stati tolti da `main` il 2026-10-08 perché facevano chiudere l'app di Codex. Si recuperano da Robin oppure dallo storico Git:
+  `git checkout f158b70 -- robin/immagini/` (poi verificare gli SHA-256 con il manifest).
 - Revisione di Claude (2026-10-08): **50 approvate, nessuna da rifare**. Controllati a vista tutti i file e ingranditi i casi a rischio: nessuna scritta leggibile (226 grafici senza numeri, 223/234/250 scrittura illeggibile, 255 firme sfocate, 257 bussola senza lettere), nessun volto riconoscibile (237 pubblico di spalle, 217 di spalle), mani corrette (216, 234, 241, 258, 259), palette blu notte, oro e avorio rispettata. Nota: 237 mostra persone sedute di spalle, il prompt chiedeva solo sedie in fila; accettata.
 - Caricamento su Robin (Claude, 2026-10-08): **50 su 50** nella cartella «la parola giusta», nomi `LPG_270_…` → `LPG_319_…` senza estensione. Ogni nome compare una sola volta; tutte risultano non usate in post. Caricate dagli URL pubblici del commit `a33b0c6` di questo repository.
 - Regola di Robin da rispettare: mai la stessa immagine in due post, nemmeno su piattaforme diverse; scegliere solo immagini non ancora assegnate e tenere il registro di utilizzo.

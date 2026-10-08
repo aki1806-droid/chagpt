@@ -17,3 +17,4 @@ Queste regole valgono per Codex e Claude Code.
 
 - Quando crei immagini per l’utente, caricale anche nel repository o in una cartella Drive accessibile a Claude prima di chiudere il compito. L’utente ha autorizzato questa condivisione ricorrente il 2026-10-08.
 - Destinazione predefinita: questo repository, in una cartella pertinente al progetto; per Robin usa `robin/immagini/`. Conserva i nomi richiesti e indica il percorso nel passaggio di consegne. Verifica il caricamento remoto; se fallisce, segnala il blocco senza dichiarare le immagini condivise.
+- Dopo che le immagini sono arrivate a destinazione (per esempio su Robin) e sono state revisionate, i file pesanti si tolgono da `main` e resta solo il manifest: il 2026-10-08 100 MB di PNG facevano chiudere l'app di Codex. Non caricare più di circa 20 MB di immagini in un solo commit; per lotti più grandi chiedi all'utente se usare Drive.
