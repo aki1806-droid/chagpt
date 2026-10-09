@@ -39,6 +39,10 @@
   <symbol id="i-t-foglio" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 10h16M4 15h16M10 4v16"/></symbol>
   <symbol id="i-t-slide" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M12 16v4M8 20h8"/></symbol>
   <symbol id="i-t-archivio" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M12 4v3m0 2v2m0 2v2"/><rect x="10.5" y="15" width="3" height="3" rx=".6"/></symbol>
+  <symbol id="i-t-vocale" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></symbol>
+  <symbol id="i-t-email" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></symbol>
   <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></symbol>
   <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></symbol>
   <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></symbol>
@@ -123,7 +127,7 @@
 /* ---------- Dati e impostazioni ---------- */
 const SERVER_ME = <?!= JSON.stringify(me) ?>;
 const TYPES = {
-  plaud:{l:"Plaud"}, audio:{l:"Audio"}, video:{l:"Video"}, img:{l:"Foto"}, doc:{l:"Documento"}, pdf:{l:"PDF"},
+  plaud:{l:"Plaud"}, vocale:{l:"Nota vocale"}, email:{l:"Email"}, audio:{l:"Audio"}, video:{l:"Video"}, img:{l:"Foto"}, doc:{l:"Documento"}, pdf:{l:"PDF"},
   foglio:{l:"Foglio"}, slide:{l:"Presentazione"}, txt:{l:"Testo"}, archivio:{l:"Archivio"}, altro:{l:"Altro"}
 };
 const VISUAL = ["img","video","pdf","slide"];           // tipi con anteprima nella scheda
@@ -133,7 +137,8 @@ const typeIcon = (t, cls) => icon("i-t-" + (t==="altro" ? "txt" : (TYPES[t] ? t 
 const ACCENTS = [["petrolio","#1d5c6b"],["corallo","#c2513a"],["indaco","#3d55c4"],["bosco","#2f7d4f"],["prugna","#8a3d7e"],["ambra","#9a6200"],["grafite","#34424c"]];
 const DEFAULTS = {
   nome:"", tema:"auto", accento:"petrolio", font:"moderno", sfondo:"tinta", angoli:"arrotondati", densita:"comoda", testo:15,
-  benvenuto:true, statistiche:true, evidenza:true, schedeColorate:false, sezione:"mie", vista:"griglia", ordine:"recenti", catColors:{}
+  benvenuto:true, statistiche:true, evidenza:true, schedeColorate:false, sezione:"mie", vista:"griglia", ordine:"recenti", catColors:{},
+  riepilogo:true, gmail:true
 };
 let P = Object.assign({}, DEFAULTS);
 let NOTES = [], ME = "", BOOT = {};
@@ -313,7 +318,7 @@ function emptyState(total){
 }
 function media(n){
   if (VISUAL.includes(n.tipo)) return `<div class="media" data-thumb="${esc(n.id)}"><span class="ph">${typeIcon(n.tipo)}</span>${n.tipo==="video"?`<span class="play">${icon("i-play")}</span>`:""}</div>`;
-  if (n.tipo==="plaud" && n.media) return `<div class="wave" aria-hidden="true">${icon("i-play")}<i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span>Registrazione</span></div>`;
+  if ((n.tipo==="plaud" || n.tipo==="vocale") && n.media) return `<div class="wave" aria-hidden="true">${icon("i-play")}<i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span>Registrazione</span></div>`;
   return "";
 }
 function card(n){
@@ -353,6 +358,7 @@ function openNote(id){
       </div>
       ${n.eventi && n.eventi.length ? `<div><div class="lbl5">${icon("i-cal")}Nel calendario</div><div class="evlinks">${n.eventi.map(ev=>`<a class="src" href="${esc(ev.link)}" target="_blank" rel="noopener"><b>${esc(fmtD(ev.data))}</b>${esc(ev.titolo)} ↗</a>`).join("")}</div></div>` : ""}
       <div class="box"><div class="lbl5">Riassunto ${n.stato==="da rivedere"?'<span class="pill rev">Da rivedere</span>':""}</div><div>${hl(n.riassunto)}</div></div>
+      <div class="box" id="acts"><div class="lbl5">${icon("i-flag")}Scadenze e impegni</div>${actsHtml(n)}</div>
       <div><div class="lbl5">Etichette</div>
         <div class="tags tagedit">${n.etichette.map(g=>`<span class="tag">${esc(g)}<button data-rmtag="${esc(g)}" aria-label="Rimuovi ${esc(g)}">×</button></span>`).join("")}
         <input class="addtag" id="addtag" placeholder="+ etichetta, Invio"></div></div>
@@ -380,14 +386,47 @@ function openNote(id){
     </div></section>`;
   watchThumbs();
 }
+/* Scadenze e impegni trovati dall'AI nella nota, da mettere in calendario con un clic */
+const ACTS = {};
+function actsHtml(n){
+  const a = ACTS[n.id];
+  if (a === "wait") return `<p class="hint" style="margin:0">L'AI sta leggendo la nota…</p>`;
+  if (!a) return `<p class="hint" style="margin:0 0 8px">L'AI legge la nota (anche la trascrizione completa) e propone scadenze, riunioni e compiti da mettere nel calendario.</p>
+    <button class="btn" data-acts>${icon("i-flag")}Trova scadenze e impegni</button>`;
+  if (!a.length) return `<p class="hint" style="margin:0">Nessuna scadenza o impegno con una data in questa nota.</p>`;
+  return `<div class="acts">${a.map((x,i)=>`<div class="act ${x.fatto?"done":""}">
+    <div class="actt"><span class="pill ${x.tipo==="scadenza"?"rev":x.tipo==="riunione"?"ai":"ok"}">${esc(x.tipo)}</span><b>${esc(x.titolo)}</b></div>
+    ${x.dettagli?`<span class="hint">${esc(x.dettagli)}</span>`:""}
+    ${x.fatto ? `<span class="hint">${icon("i-check","mini")}Nel calendario il ${esc(fmtD(x.data))}</span>` :
+      `<div class="actrow"><input class="input" type="date" data-actd="${i}" value="${esc(x.data)}" aria-label="Giorno"><input class="input" type="time" data-acto="${i}" value="${esc(x.ora)}" aria-label="Ora (vuota = tutto il giorno)">
+      <button class="btn" data-actadd="${i}">${icon("i-cal")}Aggiungi</button></div>`}
+  </div>`).join("")}</div>`;
+}
+async function findActs(n){
+  ACTS[n.id] = "wait"; $("#acts").innerHTML = `<div class="lbl5">${icon("i-flag")}Scadenze e impegni</div>` + actsHtml(n);
+  try { ACTS[n.id] = await api("extractActions", n.id); } catch(e){ delete ACTS[n.id]; fail(e); }
+  if (S.open === n.id) $("#acts").innerHTML = `<div class="lbl5">${icon("i-flag")}Scadenze e impegni</div>` + actsHtml(n);
+}
+async function addAct(n, i, btn){
+  const x = ACTS[n.id][i];
+  x.data = $(`[data-actd="${i}"]`).value; x.ora = $(`[data-acto="${i}"]`).value;
+  if (!x.data) return toast("Scegli il giorno prima di aggiungere.");
+  btn.disabled = true;
+  try {
+    const ev = await api("createEvent", { titolo:x.titolo, data:x.data, ora:x.ora, durata:60, descrizione:(x.dettagli||"") + "\n\nDalla nota: " + n.titolo, fileIds:[n.id] });
+    x.fatto = true; markLinked([n.id], ev); S.agenda = null; loadAgenda(); render(); openNote(n.id); toast("Aggiunto al calendario con la nota allegata");
+  } catch(e){ btn.disabled = false; fail(e); }
+}
+
 /* Anteprima nel pannello: immagine subito, lettore di Drive su richiesta (si carica solo se serve). */
 function previewBox(n){
-  const playable = ["video","audio"].includes(n.tipo) || (n.tipo==="plaud" && n.media);
+  const withAudio = (n.tipo==="plaud" || n.tipo==="vocale") && n.media;
+  const playable = ["video","audio"].includes(n.tipo) || withAudio;
   if (!VISUAL.includes(n.tipo) && !playable) return "";
-  const target = n.tipo==="plaud" ? n.media : n.id;
-  const label = n.tipo==="plaud" ? "Ascolta la registrazione" : n.tipo==="audio" ? "Ascolta" : n.tipo==="video" ? "Guarda il video" : "Anteprima completa";
+  const target = withAudio ? n.media : n.id;
+  const label = withAudio ? "Ascolta la registrazione" : n.tipo==="audio" ? "Ascolta" : n.tipo==="video" ? "Guarda il video" : "Anteprima completa";
   const pic = VISUAL.includes(n.tipo) ? `<div class="pv-img" data-thumb="${esc(n.id)}"><span class="ph">${typeIcon(n.tipo)}</span></div>` : "";
-  return `<div class="pv ${n.tipo==="plaud"||n.tipo==="audio"?"pv-audio":""}" id="pv">${pic}
+  return `<div class="pv ${!pic?"pv-audio":""}" id="pv">${pic}
     <button class="btn ${pic?"pv-btn":""}" data-preview="${esc(target)}">${icon("i-play")}${label}</button></div>`;
 }
 function editable(n){ return n.mime ? (n.mime === "application/vnd.google-apps.document" || /^text\//.test(n.mime)) : ["txt","plaud"].includes(n.tipo); }
@@ -410,7 +449,7 @@ async function startEdit(n){
 function swatch(v, on, label, attr){
   return `<button class="sw ${v===""?"none":""} ${on?"on":""}" style="--c:${v===""?"transparent":`var(--c${v})`}" ${attr}="${v}" aria-label="${esc(label)}" title="${esc(label)}"></button>`;
 }
-function closeLayer(){ $("#layer").innerHTML=""; S.open=null; }
+function closeLayer(){ if (REC.rec || REC.sr) stopRec(true); $("#layer").innerHTML=""; S.open=null; }
 function save(n, changes){ cacheNotes(); return api("updateNote", n.id, changes).catch(fail); }
 function toggleStar(id){
   const n = NOTES.find(x=>x.id===id); if(!n) return;
@@ -442,6 +481,11 @@ function openCustom(){
       <div class="field"><span>Sezione all'apertura</span>${ch("sezione",[["mie","Personali"],["team","Condivise"],["tutte","Tutte"]])}</div>
       <div class="field"><span>Vista</span>${ch("vista",[["griglia","Griglia"],["compatta","Compatta"],["lista","Lista"]])}</div>
       <div class="field"><span>Ordine</span>${ch("ordine",[["recenti","Più recenti"],["vecchie","Più vecchie"],["titolo","Titolo"],["categoria","Categoria"]])}</div>
+      <div class="field"><span>Automatismi</span>
+        ${tg("riepilogo","Riepilogo del lunedì via email (note della settimana, decisioni, scadenze, impegni)")}
+        ${tg("gmail","Archivia le email di Gmail con l'etichetta «Notabene»")}
+        <p class="hint" style="margin:0">In Gmail metti l'etichetta <b>Notabene</b> a un'email: entro un'ora diventa una nota in Personale/Email con i suoi allegati, e l'email passa a «Notabene/Archiviata».</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" data-digest>${icon("i-mail")}Inviami ora il riepilogo</button><button class="btn" data-gmailnow>${icon("i-t-email")}Importa ora da Gmail</button></div></div>
       <div class="field"><span>Colori delle categorie</span>
         ${cats.length ? cats.map(c=>`<div class="catrow"><span class="nm" style="display:flex;gap:8px;align-items:center"><span class="dot" style="background:${catColor(c)}"></span>${esc(c)}</span>
           <div class="swatches" data-catcol="${esc(c)}">${[0,1,2,3,4,5,6,7,8,9].map(i=>`<button class="sw ${P.catColors[c]===i?"on":""}" style="--c:var(--c${i})" data-v="${i}" aria-label="Colore ${i+1}"></button>`).join("")}</div></div>`).join("") : `<span style="color:var(--muted);font-size:14px">Le categorie compariranno dopo la prima catalogazione.</span>`}
@@ -461,7 +505,7 @@ function openCustom(){
 function upload(){
   $("#layer").innerHTML = `<div class="scrim" data-close></div><div class="modal"><div class="panel" role="dialog" aria-label="Nuova nota">
     <h2>Nuova nota</h2>
-    <div class="seg" id="upmode"><button data-m="file" class="on">Carica file</button><button data-m="scrivi">Scrivi</button></div>
+    <div class="seg" id="upmode"><button data-m="file" class="on">Carica file</button><button data-m="scrivi">Scrivi</button><button data-m="registra">${icon("i-t-vocale")}Registra</button><button data-m="foto">${icon("i-camera")}Foto</button></div>
     <div id="m-file"><div class="drop" id="drop"><input type="file" id="file" multiple hidden>
       <div>Trascina qui uno o più file, anche decine insieme</div><button class="btn" id="pick">${icon("i-upload")}Scegli dal dispositivo</button>
       <div style="font-size:13px">Qualsiasi formato: documenti, fogli, presentazioni, PDF, foto, video, audio. I file grandi e i video vanno direttamente su Drive.</div></div>
@@ -470,6 +514,19 @@ function upload(){
       <input class="input" id="wtitle" placeholder="Titolo (facoltativo)">
       <textarea class="input" id="wtext" placeholder="Scrivi la nota. L'AI la catalogherà da sola."></textarea>
       <button class="btn primary" id="wsave" style="align-self:flex-end">Salva nota</button></div>
+    <div id="m-registra" hidden class="rec">
+      <button class="recbtn" id="recbtn" aria-label="Avvia la registrazione">${icon("i-t-vocale")}</button>
+      <div class="rectime" id="rectime">Premi per registrare una nota vocale</div>
+      <textarea class="input" id="rectext" placeholder="La trascrizione compare qui mentre parli (puoi correggerla prima di salvare)."></textarea>
+      <audio id="recplay" controls hidden></audio>
+      <div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn ghost" id="recagain" hidden>Ricomincia</button><button class="btn primary" id="recsave" disabled>Salva nota vocale</button></div>
+      <p class="hint" id="rechint" style="margin:0"></p>
+      <input type="file" id="recfile" accept="audio/*" capture hidden></div>
+    <div id="m-foto" hidden class="drop">
+      <div>Fotografa un foglio, una lavagna o un documento: l'AI legge il testo e descrive l'immagine.</div>
+      <button class="btn primary" id="shoot">${icon("i-camera")}Scatta una foto</button>
+      <button class="btn" id="shootmany">Scegli più foto</button>
+      <input type="file" id="cam" accept="image/*" capture="environment" hidden><input type="file" id="cams" accept="image/*" multiple hidden></div>
     <div class="radio">
       <label><input type="radio" name="v" value="mie" ${S.scope!=="team"?"checked":""}> <span>Personale<small>La vedi solo tu</small></span></label>
       <label><input type="radio" name="v" value="team" ${S.scope==="team"?"checked":""}> <span>Condivisa<small>La vede tutto il team</small></span></label>
@@ -481,7 +538,16 @@ function upload(){
   const f=$("#file"), d=$("#drop");
   $("#upmode").onclick = e => { const b=e.target.closest("button"); if(!b) return;
     document.querySelectorAll("#upmode button").forEach(x=>x.classList.toggle("on", x===b));
-    $("#m-file").hidden = b.dataset.m!=="file"; $("#m-scrivi").hidden = b.dataset.m!=="scrivi"; if(b.dataset.m==="scrivi") $("#wtext").focus(); };
+    ["file","scrivi","registra","foto"].forEach(m => $("#m-"+m).hidden = b.dataset.m!==m);
+    if (b.dataset.m!=="registra") stopRec(true);
+    if(b.dataset.m==="scrivi") $("#wtext").focus(); };
+  $("#shoot").onclick=()=>$("#cam").click(); $("#shootmany").onclick=()=>$("#cams").click();
+  $("#cam").onchange=e=>e.target.files.length&&sendFiles([...e.target.files]);
+  $("#cams").onchange=e=>e.target.files.length&&sendFiles([...e.target.files]);
+  $("#recbtn").onclick=()=> REC.rec ? stopRec() : startRec();
+  $("#recagain").onclick=()=>{ resetRec(); };
+  $("#recsave").onclick=saveRec;
+  $("#recfile").onchange=e=>{ const fl=e.target.files[0]; if(!fl) return; REC.blob=fl; REC.secs=0; $("#recplay").src=URL.createObjectURL(fl); $("#recplay").hidden=false; $("#recsave").disabled=false; $("#rectime").textContent="Registrazione pronta"; };
   $("#pick").onclick=()=>f.click();
   f.onchange=()=>f.files.length&&sendFiles([...f.files]);
   d.ondragover=e=>{e.preventDefault();d.classList.add("over")};
@@ -493,6 +559,55 @@ function upload(){
     const bytes = new TextEncoder().encode(text); let bin=""; bytes.forEach(b=>bin+=String.fromCharCode(b));
     sendData(title + ".txt", "text/plain", btoa(bin));
   };
+}
+/* ---------- Nota vocale: registrazione e trascrizione nel browser ---------- */
+const REC = { rec:null, chunks:[], blob:null, t0:0, timer:null, sr:null, final:"" };
+function resetRec(){ stopRec(true); REC.blob=null; REC.final=""; $("#rectext").value=""; $("#recplay").hidden=true; $("#recsave").disabled=true; $("#recagain").hidden=true; $("#rectime").textContent="Premi per registrare una nota vocale"; }
+async function startRec(){
+  let stream;
+  try { stream = await navigator.mediaDevices.getUserMedia({ audio:true }); }
+  catch(e){
+    $("#rechint").textContent = "Il browser non permette di usare il microfono qui: usa il registratore del telefono e scegli il file.";
+    return $("#recfile").click();
+  }
+  REC.chunks = []; REC.final = $("#rectext").value ? $("#rectext").value + " " : "";
+  const type = ["audio/webm;codecs=opus","audio/mp4","audio/ogg"].find(t => window.MediaRecorder && MediaRecorder.isTypeSupported(t)) || "";
+  REC.rec = new MediaRecorder(stream, type ? { mimeType:type } : undefined);
+  REC.rec.ondataavailable = e => e.data.size && REC.chunks.push(e.data);
+  REC.rec.onstop = () => { stream.getTracks().forEach(t=>t.stop()); if (REC.cancel) return;
+    REC.blob = new Blob(REC.chunks, { type: REC.rec.mimeType || "audio/webm" });
+    $("#recplay").src = URL.createObjectURL(REC.blob); $("#recplay").hidden = false; $("#recsave").disabled = false; $("#recagain").hidden = false; REC.rec = null; };
+  REC.cancel = false; REC.rec.start(1000); REC.t0 = Date.now();
+  $("#recbtn").classList.add("on"); $("#recbtn").setAttribute("aria-label","Ferma la registrazione");
+  REC.timer = setInterval(() => { const s = Math.round((Date.now()-REC.t0)/1000); REC.secs = s;
+    $("#rectime").textContent = `Registrazione ${Math.floor(s/60)}:${String(s%60).padStart(2,"0")} · premi per fermare`; if (s >= 3600) stopRec(); }, 500);
+  // Trascrizione dal vivo, se il browser la offre (Chrome, Edge, Safari)
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (SR) {
+    const sr = new SR(); REC.sr = sr; sr.lang = "it-IT"; sr.continuous = true; sr.interimResults = true;
+    sr.onresult = e => { let interim = ""; for (let i = e.resultIndex; i < e.results.length; i++) { const r = e.results[i];
+      if (r.isFinal) REC.final += r[0].transcript.trim() + " "; else interim += r[0].transcript; }
+      $("#rectext").value = REC.final + interim; };
+    sr.onend = () => { if (REC.rec && REC.sr === sr) try { sr.start(); } catch(e){} };   // riprende dopo le pause
+    try { sr.start(); $("#rechint").textContent = "Trascrizione automatica attiva."; } catch(e){}
+  } else $("#rechint").textContent = "Questo browser non trascrive: puoi scrivere tu un riassunto nel riquadro.";
+}
+function stopRec(cancel){
+  clearInterval(REC.timer);
+  if (REC.sr) { const sr = REC.sr; REC.sr = null; try { sr.stop(); } catch(e){} }
+  if (REC.rec) { REC.cancel = !!cancel; try { REC.rec.stop(); } catch(e){} if (cancel) REC.rec = null; }
+  const b = $("#recbtn"); if (b) { b.classList.remove("on"); b.setAttribute("aria-label","Avvia la registrazione"); }
+  if (!cancel && $("#rectime")) $("#rectime").textContent = "Registrazione pronta: ascoltala, correggi il testo e salva";
+}
+async function saveRec(){
+  if (!REC.blob) return;
+  if (REC.blob.size > BIG) return toast("Registrazione troppo lunga: massimo 20 MB.");
+  const b = $("#recsave"); b.disabled = true; b.textContent = "Salvataggio e catalogazione…";
+  try {
+    const n = await api("saveVoiceNote", await readB64(REC.blob), REC.blob.type || "audio/webm", $("#rectext").value, scopeChoice(), REC.secs || 0);
+    NOTES.unshift(n); S.scope = scopeChoice(); S.cat=S.type=S.tag=null; cacheNotes();
+    closeLayer(); render(); toast("Nota vocale salvata e catalogata"); openNote(n.id);
+  } catch(e){ b.disabled = false; b.textContent = "Salva nota vocale"; fail(e); }
 }
 function scopeChoice(){ return document.querySelector('input[name="v"]:checked').value; }
 function readB64(file){
@@ -806,6 +921,12 @@ async function importPlaud(){
   } catch(e){ fail(e); }
 }
 
+async function importGmailNow(){
+  toast("Cerco in Gmail le email con l'etichetta Notabene…");
+  try { const r = await api("importGmailNow"); if (!r.email) return toast("Nessuna email nuova con l'etichetta Notabene.");
+    toast(`${r.email} email archiviate: ora le catalogo`); $("#sync").click(); }
+  catch(e){ fail(e); }
+}
 async function runQueue(){
   toast("Controllo delle registrazioni Plaud in arrivo…");
   try { const r = await api("runPlaudQueue"); toast(r.fatti ? `${r.fatti} registrazioni completate con audio e trascrizione: premi Aggiorna` : (r.errori && r.errori.length ? "Problema: " + r.errori[0] : "Nessuna registrazione in attesa")); }
@@ -907,17 +1028,17 @@ $("#selbar").addEventListener("click",e=>{ const b=e.target.closest("[data-sel]"
 $("#custom").onclick=openCustom;
 $("#sync").onclick=async()=>{
   const b=$("#sync"); b.disabled=true; toast("Aggiornamento in corso…");
-  try { const r = await api("syncNow"); toast(r.restanti<0 ? r.messaggio : `${r.fatti} note catalogate` + (r.restanti?`, ${r.restanti} in attesa: premi di nuovo`:"")); await load(); }
+  try { const r = await api("syncNow"); toast(r.restanti<0 ? r.messaggio : (r.email?`${r.email} email da Gmail · `:"") + `${r.fatti} note catalogate` + (r.restanti?`, ${r.restanti} in attesa: premi di nuovo`:"")); await load(); }
   catch(e){ fail(e); } finally { b.disabled=false; }
 };
 $("#mf").onclick=()=>{const o=$("#side").classList.toggle("open"); $("#mf").setAttribute("aria-expanded",o);};
 $("#av").onclick=()=>{
   const m=$("#menu"); m.hidden=!m.hidden;
   m.innerHTML=`<div class="lbl">Connesso come</div><div style="padding:2px 10px 8px;font-weight:600;overflow-wrap:anywhere">${esc(ME)}</div>
-  <button data-m="custom">${icon("i-palette")}Personalizza</button><button data-m="sync">${icon("i-sync")}Aggiorna dalle cartelle</button><button data-m="cal">${icon("i-cal")}Calendario</button>${BOOT.isAdmin?`<button data-m="plaud">${icon("i-t-plaud")}Importa da Plaud</button><button data-m="queue">${icon("i-t-audio")}Scarica ora audio e trascrizioni Plaud</button>`:""}
+  <button data-m="custom">${icon("i-palette")}Personalizza</button><button data-m="sync">${icon("i-sync")}Aggiorna dalle cartelle</button><button data-m="cal">${icon("i-cal")}Calendario</button><button data-m="gmail">${icon("i-t-email")}Importa ora da Gmail</button>${BOOT.isAdmin?`<button data-m="plaud">${icon("i-t-plaud")}Importa da Plaud</button><button data-m="queue">${icon("i-t-audio")}Scarica ora audio e trascrizioni Plaud</button>`:""}
   <div class="lbl">Per cambiare account usa il menu di Google</div>`;
 };
-$("#menu").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; $("#menu").hidden=true; if(b.dataset.m==="custom") openCustom(); if(b.dataset.m==="sync") $("#sync").click(); if(b.dataset.m==="plaud") importPlaud(); if(b.dataset.m==="queue") runQueue(); if(b.dataset.m==="cal") openCal(); });
+$("#menu").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; $("#menu").hidden=true; if(b.dataset.m==="custom") openCustom(); if(b.dataset.m==="sync") $("#sync").click(); if(b.dataset.m==="plaud") importPlaud(); if(b.dataset.m==="queue") runQueue(); if(b.dataset.m==="cal") openCal(); if(b.dataset.m==="gmail") importGmailNow(); });
 document.addEventListener("click",e=>{ if(!e.target.closest("#menu,#av")) $("#menu").hidden=true; });
 
 $("#layer").addEventListener("click",async e=>{
@@ -946,11 +1067,16 @@ $("#layer").addEventListener("click",async e=>{
     try { await api("setApiKey", $("#newkey").value); BOOT.aiEnabled = true; banner(); $("#newkey").value = ""; toast("Chiave verificata e salvata"); }
     catch(err){ fail(err); } finally { b.disabled = false; b.textContent = "Verifica e salva"; } return; }
   if (e.target.closest("[data-savetoken]")) { try { await api("setPlaudToken", $("#plaudtoken").value); BOOT.plaudReady = true; $("#plaudtoken").value = ""; toast("Token salvato: ora puoi usare Importa da Plaud"); } catch(err){ fail(err); } return; }
+  if (e.target.closest("[data-digest]")) { const b = e.target.closest("[data-digest]"); b.disabled = true;
+    try { await api("sendDigestNow"); toast("Riepilogo inviato alla tua email"); } catch(err){ fail(err); } finally { b.disabled = false; } return; }
+  if (e.target.closest("[data-gmailnow]")) { importGmailNow(); return; }
   if (e.target.closest("[data-reset]")) { P = Object.assign({}, DEFAULTS, {nome:P.nome}); savePrefs(); render(); toast("Impostazioni ripristinate"); return openCustom(); }
   // Nota
   const n=NOTES.find(x=>x.id===S.open); if(!n) return;
   const st=e.target.closest("[data-star]"); if(st) return toggleStar(n.id);
   if(e.target.closest("[data-mail]")) return openMail([n.id]);
+  if(e.target.closest("[data-acts]")) return findActs(n);
+  const aa=e.target.closest("[data-actadd]"); if(aa) return addAct(n, Number(aa.dataset.actadd), aa);
   if(e.target.closest("[data-tocal]")) return openCal([n.id]);
   const pv=e.target.closest("[data-preview]");
   if(pv){ const box=$("#pv"); box.classList.add("playing");

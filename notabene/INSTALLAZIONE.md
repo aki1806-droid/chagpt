@@ -80,8 +80,8 @@ Dopo aver modificato i file: **Esegui il deployment** → **Gestisci deployment*
 
 1. Nello **stesso progetto** sostituisci il contenuto di tutti e quattro i file (`appsscript.json`, `Code.gs`, `Index.html`, `Styles.html`) con quelli nuovi dei link al punto 2. Non creare un progetto nuovo.
 2. Salva, poi pubblica una **Nuova versione** come sopra.
-3. Apri l'app: Google chiede di nuovo il consenso perché ci sono permessi nuovi (**inviare email a tuo nome** e **gestire Google Calendar**). Premi **Avanzate** → **Vai a Notabene** → **Consenti**. Lo stesso farà Giovanna al suo primo accesso.
-4. Solo tu (amministratore): nel riquadro in alto premi **Attiva**. Così l'app aggiorna le cartelle ogni ora e scarica audio e trascrizioni Plaud ogni 10 minuti.
+3. Apri l'app: Google chiede di nuovo il consenso perché ci sono permessi nuovi (**inviare email a tuo nome**, **leggere e etichettare le email** per l'archiviazione da Gmail, **gestire Google Calendar**). Premi **Avanzate** → **Vai a Notabene** → **Consenti**. Lo stesso farà Giovanna al suo primo accesso.
+4. Nel riquadro in alto premi **Attiva** (tu e Giovanna, ognuno dal proprio account). Così l'app aggiorna le cartelle e archivia le email ogni ora, invia il riepilogo del lunedì e, per te, scarica audio e trascrizioni Plaud ogni 10 minuti.
 5. Premi **Aggiorna**: l'indice riceve due colonne nuove (`media`, `eventi`) senza toccare le righe già catalogate.
 
 Cosa c'è di nuovo:
@@ -90,4 +90,8 @@ Cosa c'è di nuovo:
 - **L'AI guarda foto e video** (un fotogramma) per scrivere il riassunto. Un video appena caricato si cataloga quando Drive ha preparato l'anteprima, di solito al primo aggiornamento successivo.
 - **Invia per email** dal pannello della nota o da più note selezionate: parte dal tuo Gmail con i file allegati (Documenti come PDF).
 - **Calendario**: vista del mese con i tuoi eventi, **Nuovo evento** con ora, durata, luogo, promemoria e invitati, **Allega al calendario** per mettere una nota in un evento o in un giorno. Nel riquadro di benvenuto compaiono gli impegni di oggi e domani.
+- **Archivio da Gmail**: metti l'etichetta **Notabene** a un'email (l'app la crea al primo aggiornamento). Entro un'ora diventa una nota in `Notabene Personale/Email`, gli allegati diventano note a sé, e l'email passa all'etichetta **Notabene/Archiviata**. Ognuno archivia solo dal proprio Gmail. Per farlo subito: menu del profilo → **Importa ora da Gmail**.
+- **Scadenze e impegni**: nel pannello di una nota (per esempio una riunione Plaud) premi **Trova scadenze e impegni**: l'AI propone scadenze, riunioni e compiti con la data; con **Aggiungi** finiscono in Google Calendar con la nota allegata.
+- **Riepilogo del lunedì**: ogni lunedì alle 7 ricevi un'email con le note della settimana, un riassunto dell'AI di decisioni e scadenze, gli impegni dei prossimi 7 giorni e le note da rivedere. Si spegne in **Personalizza → Automatismi**; lì c'è anche **Inviami ora il riepilogo** per provarlo.
+- **Registra e fotografa**: in **Nuova nota** ci sono **Registra** (nota vocale con trascrizione automatica mentre parli, che puoi correggere prima di salvare) e **Foto** (apre la fotocamera del telefono). La trascrizione automatica funziona in Chrome, Edge e Safari; se il browser non permette il microfono nell'app, si apre il registratore del telefono.
 - **Più veloce**: all'apertura le note compaiono subito (salvate nel browser) e poi si aggiornano; le schede si caricano man mano che scorri.

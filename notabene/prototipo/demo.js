@@ -7,13 +7,14 @@
     ["Idee per il lancio dell'ebook di novembre","doc","mie","Idee",["laparolagiusta","marketing","ebook"],d(8),"Canali per il lancio: newsletter, post programmati, sconto per i primi 7 giorni. Verificare il certificato del sito prima del 1° novembre.","confermata",true,1],
     ["Appunti a mano: struttura corso busta paga","img","mie","Corsi",["busta paga","struttura"],d(16),"Testo riconosciuto dalla foto: 6 lezioni, dalla lettura del cedolino alle trattenute fiscali. Due righe a margine poco leggibili.","da rivedere",false,""],
     ["Contratto fornitore video","pdf","mie","Amministrazione",["contratti","rinnovo"],d(21),"Abbonamento annuale con rinnovo automatico, disdetta con 30 giorni di preavviso. Clausola sui diritti dei video a pagina 4.","ai",false,""],
+    ["Email: conferma sala per l'assemblea di novembre","email","mie","Riunioni",["assemblea","sala","novembre"],d(1),"Il Comune conferma la sala consiliare per il 14 novembre dalle 9 alle 13; allegata la planimetria in PDF.","ai",false,""],
     ["Promemoria fiscale ottobre","txt","mie","Amministrazione",["scadenze","fisco"],d(5),"Versamento IVA del 16 ottobre. Fatture fornitori da registrare entro fine mese.","ai",false,""],
     ["Call: calendario contenuti social","plaud","team","Riunioni",["social","calendario","marketing"],d(6),"Tre post a settimana fino al lancio. Grafiche pronte il venerdì, revisione ogni lunedì.","ai",false,""],
     ["Checklist qualità video corso","doc","team","Procedure",["video","qualità","checklist"],d(10),"Volume voce, sottotitoli sincronizzati, logo finale di 15 secondi, nessun refuso nei titoli.","confermata",true,""],
     ["Brief grafico copertine ebook","pdf","team","Progetti",["ebook","grafica"],d(14),"Palette, font e formato per le copertine degli ebook 3–6. Formato 1600×2560 per Amazon KDP.","ai",false,""],
     ["Lavagna riunione: obiettivi del trimestre","img","team","Riunioni",["obiettivi","pianificazione"],d(18),"Tre obiettivi: lancio ebook, chiusura corso infermieri, 500 iscritti sulla piattaforma corsi.","da rivedere",false,""],
     ["Procedura caricamento corsi","doc","team","Procedure",["corsi","procedura"],d(28),"Creare il corso, caricare i video, impostare prezzo e certificato. Errori più comuni in fondo.","ai",false,""],
-    ["Nota vocale: idee corso anticorruzione","audio","mie","Idee",["anticorruzione","corsi"],d(2),"Modulo extra con casi pratici anonimizzati e un quiz finale di dieci domande.","ai",false,""],
+    ["Nota vocale: idee corso anticorruzione","vocale","mie","Idee",["anticorruzione","corsi"],d(2),"Modulo extra con casi pratici anonimizzati e un quiz finale di dieci domande.","ai",false,""],
     ["Video: presentazione del corso infermieri","video","team","Corsi",["video","corso infermieri","promozione"],d(3),"Video di 4 minuti: la docente presenta i moduli del corso e le date d'esame. Fotogramma con la slide del programma.","ai",true,""],
     ["Foto evento: assemblea di marzo","img","team","Riunioni",["assemblea","foto"],d(4),"Sala piena durante l'assemblea; sullo schermo la slide con i punti all'ordine del giorno.","ai",false,""],
     ["Budget corsi 2027","foglio","mie","Amministrazione",["budget","corsi","2027"],d(9),"Foglio con costi e ricavi stimati per corso: totale previsto 18.400 euro, margine più alto sul corso busta paga.","ai",false,""],
@@ -22,7 +23,7 @@
   let id = 0;
   const MIME = {doc:"application/vnd.google-apps.document", plaud:"application/vnd.google-apps.document", txt:"text/plain", pdf:"application/pdf", img:"image/jpeg", audio:"audio/mp4",
     video:"video/mp4", foglio:"application/vnd.google-apps.spreadsheet", slide:"application/vnd.google-apps.presentation"};
-  const notes = N.map(r => ({ id:"demo"+(++id), mime:MIME[r[1]], media:r[1]==="plaud"?"audio"+id:"", eventi:[], titolo:r[0], tipo:r[1], sezione:r[2], categoria:r[3], etichette:r[4], data:r[5], riassunto:r[6], stato:r[7], preferita:r[8], colore:r[9],
+  const notes = N.map(r => ({ id:"demo"+(++id), mime:MIME[r[1]], media:r[1]==="plaud"||r[1]==="vocale"?"audio"+id:"", eventi:[], titolo:r[0], tipo:r[1], sezione:r[2], categoria:r[3], etichette:r[4], data:r[5], riassunto:r[6], stato:r[7], preferita:r[8], colore:r[9],
     url:"https://drive.google.com/", autore:r[2]==="team"&&id%2?"collega@gmail.com":"tu@gmail.com",
     percorso:(r[2]==="team"?"Notabene Condivise/":"Notabene Personale/")+(r[1]==="plaud"?"Plaud/":"")+r[0] }));
   let prefs = null;
@@ -73,6 +74,15 @@
       return attach(ev, ids); },
     sendEmail: o => new Promise((ok, ko) => setTimeout(() => /@/.test(o.a) ? ok({ allegati:o.allega?o.fileIds.length:0, collegamenti:o.allega?0:o.fileIds.length, restanti:99 }) : ko(new Error("Scrivi almeno un destinatario.")), 500)),
     runPlaudQueue: () => ({ fatti:0, errori:[] }),
+    extractActions: id => new Promise(ok => setTimeout(() => ok([
+      { titolo:"Invio della nota all'amministrazione sui turni critici", tipo:"scadenza", data:day(3), ora:"", dettagli:"Con i dati su carichi di lavoro e minimi assistenziali." },
+      { titolo:"Incontro con la direzione sanitaria sul piano ferie", tipo:"riunione", data:day(8), ora:"11:00", dettagli:"Presenti DMO e DPS." },
+      { titolo:"Raccogliere i nominativi per il comitato paritetico", tipo:"compito", data:"", ora:"", dettagli:"" }]), 900)),
+    sendDigestNow: () => new Promise(ok => setTimeout(() => ok(true), 600)),
+    importGmailNow: () => ({ email:0 }),
+    saveVoiceNote: (b64, type, text, scope, secs) => { const n = { id:"demo"+(++id), titolo:"Nota vocale: " + (text||"senza trascrizione").split(/\s+/).slice(0,6).join(" "), tipo:"vocale", mime:"application/vnd.google-apps.document",
+      sezione:scope, categoria:"Idee", etichette:["nota vocale"], data:new Date().toISOString().slice(0,10), stato:"ai", preferita:false, colore:"", media:"audio-demo", eventi:[],
+      riassunto:text ? "Riassunto dell'AI dalla trascrizione: " + text.slice(0,120) : "Nota vocale senza trascrizione.", url:"https://drive.google.com/", autore:"tu@gmail.com", percorso:"Notabene Personale/[Vocale]" }; notes.unshift(n); return n; },
     demoUpload: (name, type, scope) => "demo-big-" + name,
     finishUpload: (fid, scope) => ({ id:"demo"+(++id), titolo:fid.replace("demo-big-","").replace(/\.[^.]+$/,""), tipo:"video", mime:"video/mp4", sezione:scope, categoria:"Da classificare", etichette:["video"], data:new Date().toISOString().slice(0,10),
       stato:"da rivedere", preferita:false, colore:"", media:"", eventi:[], riassunto:"In attesa dell'anteprima di Drive: la catalogazione riprova al prossimo aggiornamento.", url:"https://drive.google.com/", autore:"tu@gmail.com", percorso:"Notabene/" + fid }),

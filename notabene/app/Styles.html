@@ -379,4 +379,25 @@ body.stale .toolbar .sub::after{content:" · aggiornamento…";color:var(--accen
 .evform{display:flex;flex-direction:column;gap:10px}
 .row3{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
 @media (max-width:480px){ .day{aspect-ratio:1/1.05;font-size:13px} .calhead b{font-size:17px} }
+
+/* Scadenze trovate dall'AI */
+.acts{display:flex;flex-direction:column;gap:8px}
+.act{border:1px solid var(--line);background:var(--surface);border-radius:var(--r-s);padding:9px 11px;display:flex;flex-direction:column;gap:6px}
+.act.done{opacity:.7}
+.act .actt{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.act .actrow{display:flex;gap:6px;flex-wrap:wrap}
+.act .actrow .input{width:auto;flex:1 1 130px;padding:6px 8px}
+.t-vocale{color:var(--c6)} .t-email{color:var(--c1)}
+
+/* Nota vocale */
+#upmode{flex-wrap:wrap}
+.rec{display:flex;flex-direction:column;align-items:center;gap:10px}
+.recbtn{width:78px;height:78px;border-radius:50%;border:none;display:grid;place-items:center;color:#fff;
+  background:linear-gradient(135deg, var(--c7), var(--c1));box-shadow:0 8px 24px color-mix(in srgb, var(--c7) 35%, transparent)}
+.recbtn .i{width:32px;height:32px}
+.recbtn.on{animation:recpulse 1.4s infinite}
+@keyframes recpulse{50%{box-shadow:0 0 0 14px color-mix(in srgb, var(--c7) 18%, transparent)}}
+.rectime{font-family:var(--mono);font-size:13px;color:var(--muted);text-align:center}
+.rec textarea{min-height:110px}
+.rec audio{width:100%}
 </style>

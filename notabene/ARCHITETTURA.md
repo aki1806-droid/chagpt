@@ -45,6 +45,10 @@ Plaud ──► routine Claude giornaliera (connettori Plaud + Drive) ──► 
   - Plaud: la routine scrive in `Plaud/_coda` un JSON con i link temporanei (1 ora) di audio e trascrizione; `processPlaudQueue` (ogni 10 minuti, account amministratore) scarica audio in `Plaud/Audio Plaud` e trascrizione nel Doc. Colonna `media` = ID dell'audio.
   - Velocità: note salvate nel browser per account (chiave con l'email scritta dal server nella pagina), schede a pagine da 60, ridisegno raggruppato.
   - Colonne dell'indice: sempre aggiunte in fondo, lette per posizione.
+  - Gmail (servizio avanzato v1, scope gmail.modify): in `syncAll`, le email con etichetta "Notabene" diventano Doc "[Email] …" in Personale/Email con gli allegati; poi etichetta "Notabene/Archiviata". Disattivabile (prefs.gmail).
+  - `extractActions`: Haiku con schema JSON propone scadenze/riunioni/compiti con data; il browser li crea con `createEvent`.
+  - `weeklyDigest`: trigger del lunedì alle 7 per ogni utente; email a sé stessi con note della settimana, riassunto AI, eventi dei 7 giorni (prefs.riepilogo).
+  - Note vocali: MediaRecorder + riconoscimento vocale del browser (it-IT); `saveVoiceNote` salva l'audio in "Audio note vocali" e un Doc "[Vocale] …" con la trascrizione; tipo `vocale`, colonna `media`. Foto con `capture="environment"`.
 - **Personalizzazione**: tema, colore principale, caratteri, sfondo, angoli, spaziatura, dimensione testo, sezioni della pagina iniziale, vista, ordine, colori delle categorie; per nota titolo, categoria, etichette, colore e stella. Le impostazioni sono salvate per utente (UserProperties).
 
 File: `app/` (codice), `INSTALLAZIONE.md` (guida), `COSTI.md` (stime), `prototipo/` (demo generata da `app/` con `prototipo/build.py` e dati di `prototipo/demo.js`).

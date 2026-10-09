@@ -45,7 +45,11 @@ const MAX_UPLOAD_BYTES = 20 * 1024 * 1024;   // caricamento classico; oltre si u
 const CHAT_EXCERPT = 300;                       // lunghezza degli estratti mostrati all'agente
 const MAX_MAIL_ATTACH = 24 * 1024 * 1024;       // Gmail accetta allegati fino a 25 MB in totale
 const AUDIO_FOLDER_NAME = 'Audio Plaud';        // registrazioni scaricate da Plaud (non catalogate a parte)
-const QUEUE_FOLDER_NAME = '_coda';              // richieste della routine Plaud in attesa
+const QUEUE_FOLDER_NAME = '_coda';
+const VOICE_FOLDER_NAME = 'Audio note vocali';  // audio delle note vocali (si aprono dalla loro nota)
+const EMAIL_FOLDER_NAME = 'Email';              // email importate da Gmail, nella sezione personale
+const GMAIL_LABEL = 'Notabene';                 // etichetta Gmail da archiviare
+const GMAIL_DONE_LABEL = 'Notabene/Archiviata';              // richieste della routine Plaud in attesa
 const PENDING_PREVIEW = 'In attesa dell\'anteprima di Drive: la catalogazione riprova al prossimo aggiornamento.';
 
 // ---------- Pagina ----------
@@ -211,7 +215,8 @@ function getBootstrap() {
     plaudReady: admin && !!prop_('PLAUD_ROUTINE_TOKEN'),
     prefs: getPrefs(),
     // L'amministratore (proprietario della cartella Plaud) ha anche il controllo della coda ogni 10 minuti.
-    syncInstalled: handlers.indexOf('syncAll') !== -1 && (!admin || handlers.indexOf('processPlaudQueue') !== -1),
+    syncInstalled: handlers.indexOf('syncAll') !== -1 && handlers.indexOf('weeklyDigest') !== -1 &&
+      (!admin || handlers.indexOf('processPlaudQueue') !== -1),
     personal: listNotes('mie'),
     team: listNotes('team')
   };
@@ -667,9 +672,10 @@ function syncNow() {
  */
 function installSync() {
   const u = requireUser_();
-  const mine = ['syncAll', 'processPlaudQueue'];
+  const mine = ['syncAll', 'processPlaudQueue', 'weeklyDigest'];
   ScriptApp.getProjectTriggers().filter(t => mine.indexOf(t.getHandlerFunction()) !== -1).forEach(t => ScriptApp.deleteTrigger(t));
   ScriptApp.newTrigger('syncAll').timeBased().everyHours(1).create();
+  ScriptApp.newTrigger('weeklyDigest').timeBased().onWeekDay(ScriptApp.WeekDay.MONDAY).atHour(7).create();
   if (isAdmin_(u.email)) ScriptApp.newTrigger('processPlaudQueue').timeBased().everyMinutes(10).create();
   return true;
 }
@@ -677,8 +683,18 @@ function installSync() {
 /** Impostazioni grafiche personali, salvate nell'account Google di chi usa l'app. */
 function getPrefs() {
   requireUser_();
+  return readPrefs_();
+}
+
+/** Preferenze dell'utente corrente, leggibili anche dagli aggiornamenti automatici. */
+function readPrefs_() {
   const raw = PropertiesService.getUserProperties().getProperty('prefs');
-  return raw ? JSON.parse(raw) : null;
+  try { return raw ? JSON.parse(raw) : null; } catch (e) { return null; }
+}
+
+function prefOn_(key) {
+  const p = readPrefs_();
+  return !p || p[key] !== false; // attivo se l'utente non l'ha spento
 }
 
 function savePrefs(prefs) {
@@ -826,6 +842,10 @@ function evOut_(e) {
 /** Eventi del calendario principale tra due date (YYYY-MM-DD, fine esclusa). */
 function listEvents(from, to) {
   requireUser_();
+  return eventsBetween_(from, to);
+}
+
+function eventsBetween_(from, to) {
   const res = Calendar.Events.list('primary', {
     timeMin: romeDate_(from, '00:00').toISOString(), timeMax: romeDate_(to, '00:00').toISOString(),
     singleEvents: true, orderBy: 'startTime', maxResults: 250
@@ -1071,6 +1091,229 @@ function runPlaudQueue() {
   return processPlaudQueue();
 }
 
+// ---------- Importazione da Gmail ----------
+
+/*
+ * Chi usa l'app mette l'etichetta "Notabene" a un'email in Gmail. A ogni aggiornamento (ogni ora)
+ * l'email diventa un Google Doc "[Email] …" in Notabene Personale/Email, gli allegati diventano file
+ * nella stessa cartella (catalogati come le altre note) e l'email passa all'etichetta "Notabene/Archiviata".
+ * Ognuno importa solo dal proprio Gmail, nella propria sezione personale.
+ */
+function gmailLabelIds_() {
+  const labels = Gmail.Users.Labels.list('me').labels || [];
+  const find = name => labels.find(l => l.name === name);
+  const make = name => Gmail.Users.Labels.create({ name: name, labelListVisibility: 'labelShow', messageListVisibility: 'show' }, 'me');
+  const todo = find(GMAIL_LABEL) || make(GMAIL_LABEL);
+  const done = find(GMAIL_DONE_LABEL) || make(GMAIL_DONE_LABEL);
+  return { todo: todo.id, done: done.id };
+}
+
+function importGmail_(start, budget) {
+  const ids = gmailLabelIds_();
+  const list = Gmail.Users.Messages.list('me', { labelIds: [ids.todo], maxResults: 10 }).messages || [];
+  if (!list.length) return 0;
+  const folder = subFolder_(folderFor_('mie'), EMAIL_FOLDER_NAME);
+  let n = 0;
+  for (const m of list) {
+    if (Date.now() - start > budget) break;
+    const msg = Gmail.Users.Messages.get('me', m.id, { format: 'full' });
+    saveEmail_(msg, folder);
+    Gmail.Users.Messages.modify({ addLabelIds: [ids.done], removeLabelIds: [ids.todo] }, 'me', m.id);
+    n++;
+  }
+  return n;
+}
+
+/** Pulsante "Importa ora da Gmail". */
+function importGmailNow() {
+  requireUser_();
+  const n = importGmail_(Date.now(), 4 * 60 * 1000);
+  return { email: n };
+}
+
+function header_(msg, name) {
+  const h = (msg.payload.headers || []).find(x => x.name.toLowerCase() === name.toLowerCase());
+  return h ? h.value : '';
+}
+
+function b64web_(data) {
+  return Utilities.newBlob(Utilities.base64DecodeWebSafe(data));
+}
+
+/** Raccoglie testo e allegati dalle parti del messaggio. */
+function walkParts_(part, out) {
+  if (!part) return;
+  const mime = part.mimeType || '';
+  if (part.filename && part.body && (part.body.attachmentId || part.body.data)) {
+    out.files.push(part);
+  } else if (mime === 'text/plain' && part.body && part.body.data) {
+    out.plain += b64web_(part.body.data).getDataAsString('UTF-8') + '\n';
+  } else if (mime === 'text/html' && part.body && part.body.data) {
+    out.html += b64web_(part.body.data).getDataAsString('UTF-8') + '\n';
+  }
+  (part.parts || []).forEach(p => walkParts_(p, out));
+}
+
+function htmlToText_(html) {
+  return String(html).replace(/<(style|script)[\s\S]*?<\/\1>/gi, '').replace(/<br\s*\/?>/gi, '\n').replace(/<\/(p|div|tr|li|h\d)>/gi, '\n')
+    .replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'").replace(/\n{3,}/g, '\n\n').trim();
+}
+
+function saveEmail_(msg, folder) {
+  const out = { plain: '', html: '', files: [] };
+  walkParts_(msg.payload, out);
+  const subject = header_(msg, 'Subject') || '(senza oggetto)';
+  const date = new Date(Number(msg.internalDate) || Date.now());
+  const day = Utilities.formatDate(date, 'Europe/Rome', 'yyyy-MM-dd');
+  const safe = subject.replace(/[\\/:*?"<>|]/g, '-').substr(0, 90);
+  const links = [];
+  out.files.forEach(part => {
+    const size = Number(part.body.size) || 0;
+    // Le piccole immagini incorporate (loghi, firme) non sono allegati utili.
+    if (/^image\//.test(part.mimeType) && size < 30000) return;
+    if (size > 25 * 1024 * 1024) { links.push(part.filename + ' (troppo grande, resta in Gmail)'); return; }
+    const data = part.body.attachmentId ? Gmail.Users.Messages.Attachments.get('me', msg.id, part.body.attachmentId).data : part.body.data;
+    const file = folder.createFile(b64web_(data).setName(part.filename).setContentType(part.mimeType || 'application/octet-stream'));
+    file.setDescription('Allegato dell\'email "' + subject + '" del ' + day);
+    links.push(part.filename + ': ' + file.getUrl());
+  });
+  const body = (out.plain.trim() || htmlToText_(out.html)).substr(0, 200000);
+  const text = 'Email\nDa: ' + header_(msg, 'From') + '\nA: ' + header_(msg, 'To') +
+    (header_(msg, 'Cc') ? '\nCc: ' + header_(msg, 'Cc') : '') +
+    '\nData: ' + Utilities.formatDate(date, 'Europe/Rome', 'd MMMM yyyy, HH:mm') + '\nOggetto: ' + subject +
+    '\nID email: ' + msg.id + '\n' + (links.length ? '\nALLEGATI\n' + links.join('\n') + '\n' : '') + '\nTESTO\n' + body;
+  const doc = DocumentApp.create('[Email] ' + day + ' ' + safe);
+  doc.getBody().setText(text);
+  doc.saveAndClose();
+  DriveApp.getFileById(doc.getId()).moveTo(folder);
+}
+
+// ---------- Scadenze e impegni trovati dall'AI ----------
+
+const ACTIONS_SCHEMA = {
+  type: 'object',
+  properties: {
+    azioni: { type: 'array', items: { type: 'object', properties: {
+      titolo: { type: 'string' },
+      tipo: { type: 'string', enum: ['scadenza', 'riunione', 'compito'] },
+      data: { type: 'string' },
+      ora: { type: 'string' },
+      dettagli: { type: 'string' }
+    }, required: ['titolo', 'tipo', 'data', 'ora', 'dettagli'], additionalProperties: false } }
+  },
+  required: ['azioni'],
+  additionalProperties: false
+};
+
+/** Claude legge la nota (anche la trascrizione completa) e propone scadenze, riunioni e compiti con data. */
+function extractActions(id) {
+  requireUser_();
+  if (prop_('AI_PROVIDER').toLowerCase() !== 'claude' || !aiReady_()) throw new Error('Serve la chiave di Claude.');
+  const found = findNote_(id);
+  if (!found) throw new Error('Nota non trovata.');
+  const text = String(readAnyText_(DriveApp.getFileById(id)) || found.note.testo || '').substr(0, MAX_AI_CHARS);
+  if (!text.trim()) return [];
+  const created = Utilities.formatDate(new Date(found.note.data), 'Europe/Rome', 'd MMMM yyyy');
+  const prompt = 'Dal testo seguente estrai le scadenze, le riunioni da fissare e i compiti con una data, da mettere in un calendario. Scrivi in italiano.\n' +
+    '- titolo: breve e chiaro (per esempio "Invio nota all\'amministrazione su turni critici").\n' +
+    '- data: AAAA-MM-GG. Le date relative ("lunedì prossimo", "entro fine mese") vanno calcolate dalla data della nota (' + created + '). Se non c\'è una data, stringa vuota.\n' +
+    '- ora: HH:MM se indicata, altrimenti stringa vuota.\n' +
+    '- dettagli: una frase con chi, cosa, dove.\n' +
+    'Al massimo 12 voci, solo impegni concreti. Se non ce ne sono, restituisci un elenco vuoto.\n\n' +
+    'Titolo della nota: ' + found.note.titolo + '\n\nTesto:\n' + text;
+  const data = claudeRequest_({
+    max_tokens: 3000,
+    output_config: { format: { type: 'json_schema', schema: ACTIONS_SCHEMA } },
+    messages: [{ role: 'user', content: prompt }]
+  }, 'catalogo');
+  const out = claudeText_(data);
+  return out ? (JSON.parse(out).azioni || []).map(a => ({
+    titolo: a.titolo, tipo: a.tipo, dettagli: a.dettagli,
+    data: /^\d{4}-\d{2}-\d{2}$/.test(a.data) ? a.data : '', ora: /^\d{2}:\d{2}$/.test(a.ora) ? a.ora : ''
+  })) : [];
+}
+
+// ---------- Riepilogo del lunedì ----------
+
+/**
+ * Ogni lunedì alle 7 (aggiornamento automatico) invia a chi usa l'app un'email con le note della settimana,
+ * un riassunto dell'AI con decisioni e scadenze, gli impegni dei prossimi 7 giorni e le note da rivedere.
+ */
+function weeklyDigest(force) {
+  if (force !== true && !prefOn_('riepilogo')) return false;
+  const me = Session.getEffectiveUser().getEmail();
+  const weekAgo = new Date(Date.now() - 7 * 864e5);
+  const notes = [];
+  ['mie', 'team'].forEach(scope => { try { readIndex_(indexSheet_(folderFor_(scope))).forEach(o => notes.push(Object.assign(o, { scope }))); } catch (e) {} });
+  const recent = notes.filter(o => new Date(o.data) >= weekAgo).sort((a, b) => new Date(b.data) - new Date(a.data));
+  const review = notes.filter(o => o.stato === 'da rivedere').length;
+  const today = Utilities.formatDate(new Date(), 'Europe/Rome', 'yyyy-MM-dd');
+  let events = [];
+  try { events = eventsBetween_(today, addDays_(today, 7)); } catch (e) { console.warn('Calendario non disponibile: ' + e); }
+
+  let brief = '';
+  if (recent.length && prop_('AI_PROVIDER').toLowerCase() === 'claude' && aiReady_()) {
+    try {
+      const list = recent.slice(0, 30).map(o => '- ' + o.titolo + ' (' + dateStr_(o.data) + '): ' + o.riassunto).join('\n').substr(0, 20000);
+      brief = claudeText_(claudeRequest_({ max_tokens: 1200, messages: [{ role: 'user', content:
+        'Ecco le note archiviate questa settimana. Scrivi in italiano da 4 a 8 punti brevi (inizia ogni punto con "- ") con le decisioni prese, ' +
+        'le scadenze e le cose da fare. Niente introduzione, niente titoli. Non inventare.\n\n' + list }] }, 'catalogo'));
+    } catch (e) { console.warn('Riassunto AI non riuscito: ' + e); }
+  }
+  const url = ScriptApp.getService().getUrl();
+  const li = s => '<li style="margin:4px 0">' + s + '</li>';
+  const when = e => e.giorno ? Utilities.formatDate(new Date(e.inizio + 'T12:00:00Z'), 'Europe/Rome', 'EEE d MMM') :
+    Utilities.formatDate(new Date(e.inizio), 'Europe/Rome', 'EEE d MMM, HH:mm');
+  const html = '<div style="font-family:sans-serif;font-size:14px;color:#16212a;max-width:640px">' +
+    '<h2 style="margin:0 0 4px">La tua settimana in Notabene</h2><p style="color:#5b6b76;margin:0 0 16px">' +
+    recent.length + ' note nuove · ' + events.length + ' impegni nei prossimi 7 giorni · ' + review + ' da rivedere</p>' +
+    (brief ? '<h3>In breve</h3><ul>' + brief.split('\n').filter(l => l.trim()).map(l => li(escapeHtml_(l.replace(/^-\s*/, '')))).join('') + '</ul>' : '') +
+    (events.length ? '<h3>Prossimi impegni</h3><ul>' + events.slice(0, 15).map(e => li('<b>' + escapeHtml_(when(e)) + '</b> — ' + escapeHtml_(e.titolo) +
+      (e.allegati.length ? ' (' + e.allegati.length + ' allegati)' : ''))).join('') + '</ul>' : '') +
+    (recent.length ? '<h3>Note della settimana</h3><ul>' + recent.slice(0, 25).map(o => li('<a href="' + escapeHtml_(o.url) + '">' + escapeHtml_(o.titolo) + '</a>' +
+      '<br><span style="color:#5b6b76">' + escapeHtml_(String(o.riassunto || '').substr(0, 220)) + '</span>')).join('') + '</ul>' : '<p>Nessuna nota nuova questa settimana.</p>') +
+    '<p style="margin-top:20px"><a href="' + escapeHtml_(url) + '" style="background:#1d5c6b;color:#fff;padding:9px 14px;border-radius:8px;text-decoration:none">Apri Notabene</a></p>' +
+    '<p style="color:#8a98a2;font-size:12px">Per non ricevere più questo riepilogo: Notabene → Personalizza → Riepilogo del lunedì.</p></div>';
+  MailApp.sendEmail({ to: me, subject: 'Notabene: la tua settimana', htmlBody: html, body: htmlToText_(html) });
+  return true;
+}
+
+/** Pulsante "Inviami ora il riepilogo". */
+function sendDigestNow() {
+  requireUser_();
+  return weeklyDigest(true);
+}
+
+// ---------- Note vocali ----------
+
+/**
+ * Salva una nota vocale registrata nell'app: l'audio va in "Audio note vocali" e la nota è un Google Doc
+ * "[Vocale] …" con la trascrizione fatta dal browser durante la registrazione.
+ */
+function saveVoiceNote(base64, mimeType, transcript, scope, seconds) {
+  requireUser_();
+  const bytes = Utilities.base64Decode(base64);
+  if (bytes.length > MAX_UPLOAD_BYTES) throw new Error('Registrazione troppo lunga (massimo 20 MB).');
+  const folder = folderFor_(scope);
+  const now = new Date();
+  const stamp = Utilities.formatDate(now, 'Europe/Rome', 'yyyy-MM-dd HH:mm');
+  const words = String(transcript || '').trim().split(/\s+/).slice(0, 8).join(' ').replace(/[\\/:*?"<>|]/g, '-');
+  const ext = /mp4|m4a|aac/.test(mimeType) ? '.m4a' : /ogg/.test(mimeType) ? '.ogg' : '.webm';
+  const audio = subFolder_(folder, VOICE_FOLDER_NAME).createFile(Utilities.newBlob(bytes, mimeType || 'audio/webm', 'Nota vocale ' + stamp + ext));
+  const text = 'Nota vocale\nData: ' + Utilities.formatDate(now, 'Europe/Rome', 'd MMMM yyyy, HH:mm') +
+    ' - Durata: ' + Math.max(1, Math.round((Number(seconds) || 0) / 60)) + ' min\nRegistrazione audio: ' + audio.getUrl() +
+    '\n\nTRASCRIZIONE\n' + (String(transcript || '').trim() || '(trascrizione non disponibile: il browser non l\'ha fornita)');
+  const doc = DocumentApp.create('[Vocale] ' + stamp + (words ? ' ' + words : ''));
+  doc.getBody().setText(text);
+  doc.saveAndClose();
+  const file = DriveApp.getFileById(doc.getId());
+  file.moveTo(folder);
+  const note = processFile_(file, folder.getName() + '/' + file.getName());
+  indexSheet_(folder).appendRow(toRow_(note));
+  return clientNote_(note, scope);
+}
+
 // ---------- Sincronizzazione ----------
 
 /** Cerca file nuovi o modificati nelle due sezioni e li cataloga. Rispetta il limite di tempo. */
@@ -1078,8 +1321,11 @@ function syncAll() {
   const start = Date.now();
   const lock = LockService.getScriptLock();
   if (!lock.tryLock(1000)) return { fatti: 0, restanti: -1, messaggio: 'Sincronizzazione già in corso.' };
-  let done = 0, pending = 0;
+  let done = 0, pending = 0, emails = 0;
   try {
+    if (prefOn_('gmail')) {
+      try { emails = importGmail_(start, 60000); } catch (e) { console.warn('Importazione da Gmail non riuscita: ' + e); }
+    }
     for (const scope of ['mie', 'team']) {
       const folder = folderFor_(scope);
       const sheet = indexSheet_(folder);
@@ -1106,7 +1352,7 @@ function syncAll() {
         .sort((a, b) => b._row - a._row).forEach(o => sheet.deleteRow(o._row));
     }
   } finally { lock.releaseLock(); }
-  return { fatti: done, restanti: pending };
+  return { fatti: done, restanti: pending, email: emails };
 }
 
 function collectFiles_(folder, path, out) {
@@ -1121,7 +1367,7 @@ function collectFiles_(folder, path, out) {
   while (sub.hasNext()) {
     const s = sub.next();
     // Le registrazioni Plaud si aprono dalla loro nota; le cartelle che iniziano con "_" sono di servizio.
-    if (s.getName() === AUDIO_FOLDER_NAME || s.getName().charAt(0) === '_') continue;
+    if (s.getName() === AUDIO_FOLDER_NAME || s.getName() === VOICE_FOLDER_NAME || s.getName().charAt(0) === '_') continue;
     collectFiles_(s, path + '/' + s.getName(), out);
   }
 }
@@ -1142,6 +1388,8 @@ const TEXT_MIMES = ['application/json', 'application/xml', 'application/x-yaml',
 
 function typeFor_(name, mime) {
   if (/^\[Plaud\]/i.test(name)) return 'plaud';
+  if (/^\[Vocale\]/i.test(name)) return 'vocale';
+  if (/^\[Email\]/i.test(name)) return 'email';
   if (mime === MimeType.GOOGLE_DOCS || DOC_MIMES.indexOf(mime) !== -1) return 'doc';
   if (mime === MimeType.GOOGLE_SHEETS || SHEET_MIMES.indexOf(mime) !== -1) return 'foglio';
   if (mime === MimeType.GOOGLE_SLIDES || SLIDE_MIMES.indexOf(mime) !== -1) return 'slide';
@@ -1403,7 +1651,7 @@ function processFile_(file, path, old) {
     percorso: path,
     preferita: old ? old.preferita : false,
     colore: old ? old.colore : '',
-    media: type === 'plaud' ? audioIdFromText_(text) : '',
+    media: type === 'plaud' || type === 'vocale' ? audioIdFromText_(text) : '',
     eventi: old ? old.eventi : ''
   };
 }

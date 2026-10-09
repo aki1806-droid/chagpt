@@ -35,7 +35,11 @@ Un token corrisponde a circa 4 caratteri di testo italiano. Per cambiare modello
 | Foto (l'AI guarda l'immagine) | circa 0,3 centesimi |
 | Video (l'AI guarda un fotogramma scelto da Drive) | circa 0,3 centesimi |
 
-Con la versione 2 le registrazioni Plaud già importate vengono ricatalogate una volta, quando arriva la trascrizione completa: per circa 60 registrazioni, circa 1 $ una tantum.
+| Scadenze e impegni (su richiesta, per nota) | circa 1–2 centesimi (legge tutta la nota, anche la trascrizione) |
+| Riepilogo del lunedì | circa 0,5 centesimi a settimana per persona |
+| Email importata da Gmail e nota vocale | come una nota breve: circa 0,3 centesimi |
+
+La trascrizione delle note vocali la fa il browser, gratis. Con la versione 2 le registrazioni Plaud già importate vengono ricatalogate una volta, quando arriva la trascrizione completa: per circa 60 registrazioni, circa 1 $ una tantum.
 
 Una nota viene ricatalogata solo se il file cambia.
 

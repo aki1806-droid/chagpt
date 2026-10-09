@@ -1,5 +1,9 @@
 # Ultimo passaggio di consegne
 
+## Notabene: le 4 funzioni proposte (Claude, 2026-10-09)
+
+Aggiunte in `Code.gs`: importGmail_/importGmailNow (servizio avanzato Gmail, scope gmail.modify, dentro syncAll), extractActions (Haiku, schema JSON), weeklyDigest/sendDigestNow (trigger del lunedì alle 7, installato da installSync), saveVoiceNote; tipi `vocale` ed `email`; prefs `riepilogo` e `gmail`. In `Index.html`: schede Registra e Foto in Nuova nota, riquadro "Scadenze e impegni" nella nota, Automatismi in Personalizza, voce di menu "Importa ora da Gmail". Indice invariato (nessuna colonna nuova). Rischi sul reale: microfono dentro l'iframe di Apps Script (c'è il ripiego col registratore del telefono), riconoscimento vocale non disponibile su Firefox, consenso per gmail.modify.
+
 ## Notabene versione 2 (Claude, 2026-10-09)
 
 Richiesta: più formati e video, Gmail con allegati, trascrizioni e audio da Plaud, app più veloce, anteprime, Google Calendar (eventi, allegati, programmazione), grafica più accattivante, 4 proposte di funzioni.

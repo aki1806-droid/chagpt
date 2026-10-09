@@ -13,6 +13,11 @@
         "userSymbol": "Calendar",
         "serviceId": "calendar",
         "version": "v3"
+      },
+      {
+        "userSymbol": "Gmail",
+        "serviceId": "gmail",
+        "version": "v1"
       }
     ]
   },
@@ -27,6 +32,7 @@
     "https://www.googleapis.com/auth/presentations.readonly",
     "https://www.googleapis.com/auth/calendar",
     "https://www.googleapis.com/auth/script.send_mail",
+    "https://www.googleapis.com/auth/gmail.modify",
     "https://www.googleapis.com/auth/script.external_request",
     "https://www.googleapis.com/auth/script.scriptapp",
     "https://www.googleapis.com/auth/userinfo.email"
