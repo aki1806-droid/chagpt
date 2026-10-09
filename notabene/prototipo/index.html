@@ -631,7 +631,7 @@ function showFatal(msg){
   if (g && /Caricamento/.test(g.textContent)) g.innerHTML = `<div class="empty"><b>Qualcosa non va</b>${String(msg).replace(/[<>&]/g, "")}</div>`;
 }
 /* ---------- Dati e impostazioni ---------- */
-const SERVER_ME = "";
+const SERVER_ME = document.body.dataset.me || "";   // email scritta dal server nell'attributo data-me
 const TYPES = {
   plaud:{l:"Plaud"}, vocale:{l:"Nota vocale"}, email:{l:"Email"}, audio:{l:"Audio"}, video:{l:"Video"}, img:{l:"Foto"}, doc:{l:"Documento"}, pdf:{l:"PDF"},
   foglio:{l:"Foglio"}, slide:{l:"Presentazione"}, txt:{l:"Testo"}, archivio:{l:"Archivio"}, altro:{l:"Altro"}

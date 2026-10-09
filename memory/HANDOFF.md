@@ -1,5 +1,10 @@
 # Ultimo passaggio di consegne
 
+## Notabene: pagina bloccata su "Caricamento" (Claude, 2026-10-09)
+
+Sintomo sull'app reale: SyntaxError "Unexpected identifier 'Registrazione'" alla riga del template literal della registrazione vocale; nessuna chiamata getBootstrap nel registro. Causa probabile: lo scriptlet `<?!= JSON.stringify(me) ?>` dentro `<script>` fa analizzare lo script al motore dei modelli di Apps Script, che non gestisce i template literal. Correzione: email in `<body data-me="<?= me ?>">`, letta con `document.body.dataset.me`. Regola: niente scriptlet dentro `<script>`. Da confermare sull'app reale.
+
+
 ## Notabene: le 4 funzioni proposte (Claude, 2026-10-09)
 
 Aggiunte in `Code.gs`: importGmail_/importGmailNow (servizio avanzato Gmail, scope gmail.modify, dentro syncAll), extractActions (Haiku, schema JSON), weeklyDigest/sendDigestNow (trigger del lunedì alle 7, installato da installSync), saveVoiceNote; tipi `vocale` ed `email`; prefs `riepilogo` e `gmail`. In `Index.html`: schede Registra e Foto in Nuova nota, riquadro "Scadenze e impegni" nella nota, Automatismi in Personalizza, voce di menu "Importa ora da Gmail". Indice invariato (nessuna colonna nuova). Rischi sul reale: microfono dentro l'iframe di Apps Script (c'è il ripiego col registratore del telefono), riconoscimento vocale non disponibile su Firefox, consenso per gmail.modify.

@@ -43,3 +43,8 @@
 
 - Scelta (2026-10-09): invio con MailApp (scope `script.send_mail`, non l'accesso completo a Gmail); Calendar con il servizio avanzato v3 per poter allegare file di Drive agli eventi.
 - Motivo: richiesta dell'utente; permessi minimi necessari.
+
+## Notabene: niente scriptlet dentro gli script
+
+- Scelta (2026-10-09): i dati del server vanno nella pagina come attributi HTML (`<?= … ?>`), mai dentro `<script>`.
+- Motivo: uno scriptlet dentro lo script ha rotto la pagina reale (template literal non riconosciuti da Apps Script), mentre prototipo e test passavano.
