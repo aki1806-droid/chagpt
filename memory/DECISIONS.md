@@ -33,3 +33,13 @@
 
 - Scelta (2026-10-06): `claude-haiku-4-5` per catalogare, `claude-sonnet-5-5` per la chat-agente.
 - Motivo: richiesta dell'utente per contenere i costi; Gemini gratuito scartato per la privacy dei contenuti (riunioni sindacali e del personale).
+
+## Notabene: Plaud completo tramite coda
+
+- Scelta (2026-10-09): la routine crea il Doc con il riassunto e un JSON in `Plaud/_coda` con i link temporanei (1 ora) di audio e trascrizione; l'app (trigger ogni 10 minuti dell'amministratore) scarica audio e trascrizione. Sostituisce la regola A (arretrato solo riassunto).
+- Motivo: l'utente vuole trascrizioni e registrazioni; copiarle attraverso la chat era troppo pesante, mentre `get_file` di Plaud fornisce link scaricabili. L'app accetta solo link `*.amazonaws.com` con "plaud" nell'host.
+
+## Notabene: Gmail e Calendar
+
+- Scelta (2026-10-09): invio con MailApp (scope `script.send_mail`, non l'accesso completo a Gmail); Calendar con il servizio avanzato v3 per poter allegare file di Drive agli eventi.
+- Motivo: richiesta dell'utente; permessi minimi necessari.

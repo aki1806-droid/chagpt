@@ -1,13 +1,15 @@
 # Stato attuale
 
-## Notabene (app archivio note) — 2026-10-06
+## Notabene (app archivio note) — 2026-10-09
 
 - Compito: web app per catalogare e cercare note su Google Drive, con AI, Plaud, sezione personale e condivisa, due utenti Gmail (aki1806, giovanna.vullo87).
 - Responsabile: Claude.
-- Stato: in corso. App Apps Script in `notabene/app/` con grafica personalizzabile; guida `notabene/INSTALLAZIONE.md`; costi `notabene/COSTI.md`. AI scelta: Claude. Importazione Plaud (regola A: dal 1/10/2026 complete max 3/giorno, arretrato solo riassunto max 15/giorno): routine trig_01JadYR5ovSYPuzcvBgdHzLw alle 6:46, legata a questa sessione Claude (session_01G4MBAHofPJo5ZufnrbHWCS) perché le routine in sessioni nuove non ricevono i connettori; la vecchia trig_01LDZxvtUM75egEvXHCrEo27 è disattivata.
-- Verifiche: sintassi di Code.gs, Index.html, manifest; prototipo renderizzato con Chromium a 1360 e 400 px (nessun errore, nessuno scorrimento orizzontale). App non ancora installata su Google.
-- Configurazione ora nel codice (`CONFIG` in Code.gs); la chiave Claude si inserisce dall'app (solo l'amministratore). Installazione impossibile da Claude: il connettore Drive non crea progetti Apps Script e non c'è accesso all'account Google.
-- Azioni dell'utente: condividere la cartella con Giovanna, installare l'app (10 minuti), creare la chiave API.
+- Stato: da revisionare (versione 2). Novità: video e altri formati, anteprime, AI che guarda foto/video, caricamento diretto dei file grandi, email con Gmail, Google Calendar (eventi, allegati a eventi e giorni, agenda), note salvate nel browser e schede a pagine, audio e trascrizioni Plaud tramite `Plaud/_coda`. Corretto un bug: mancava la costante `CHAT_EXCERPT` (la ricerca nell'indice della chat falliva).
+- Routine Plaud trig_01JadYR5ovSYPuzcvBgdHzLw (6:46, legata alla sessione session_01G4MBAHofPJo5ZufnrbHWCS) aggiornata alla versione 2: max 20 documenti e 20 richieste in coda al giorno; non crea richieste se in `_coda` ci sono file più vecchi di 2 ore (app non attiva). Cartella `_coda`: 1uvWp8-WgWFCWo7cW0WW-MbqV9RsElkFB.
+- Importati finora circa 46 documenti Plaud con il solo riassunto (arretrato fino al 23/02/2026): verranno completati dalla coda.
+- Verifiche: sintassi; 19 test Node della logica server con servizi Google simulati (coda Plaud, formato reale della trascrizione Plaud verificato su un file vero, tipi, date con ora legale, email); prototipo con Chromium a 1360 e 400 px (anteprime, email, calendario, allegati: nessun errore, nessuno scorrimento orizzontale). Non verificato su Google: chiamate reali a Drive, Calendar, MailApp, caricamento resumable dal browser, anteprime via thumbnailLink.
+- Azioni dell'utente: aggiornare i 4 file nello stesso progetto, nuova versione, nuovo consenso, premere "Attiva" (amministratore).
+- Criteri di completamento: app aggiornata e provata sull'account reale; prima coda Plaud elaborata.
 
 ## Trasferimento LPG
 

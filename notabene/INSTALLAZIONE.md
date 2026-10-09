@@ -52,7 +52,9 @@ Email autorizzate, cartella condivisa e modelli di Claude (Haiku per catalogare,
 
 ## Plaud
 
-La routine "Notabene Plaud" gira ogni mattina alle 6:46 e importa fino a 6 registrazioni al giorno, con riassunto e trascrizione completa, come Google Doc in `Notabene Personale/Plaud`. I titoli iniziano con `[Plaud]`. Le registrazioni già presenti in Plaud arrivano un po' alla volta, a partire dalle più recenti.
+La routine "Notabene Plaud" gira ogni mattina alle 6:46. Per ogni registrazione crea un Google Doc in `Notabene Personale/Plaud` con il riassunto (titolo che inizia con `[Plaud]`) e lascia all'app una richiesta nella cartella `Plaud/_coda`. L'app, ogni 10 minuti, copia l'**audio** in `Plaud/Audio Plaud`, aggiunge la **trascrizione completa** al documento e poi lo ricataloga. Nella nota si ascolta la registrazione con **Ascolta la registrazione**.
+
+Serve l'aggiornamento automatico attivo sull'account dell'amministratore (vedi "Aggiornare alla versione 2"). Ogni giorno arrivano fino a 20 documenti nuovi e 20 registrazioni completate, a partire dalle più recenti; anche le note Plaud già importate con il solo riassunto vengono completate un po' alla volta.
 
 ### Importare da Plaud quando vuoi, dall'app
 
@@ -66,8 +68,26 @@ Dopo aver premuto **Importa ora**, i nuovi documenti arrivano su Drive in qualch
 
 L'app riconosce le registrazioni importate e le mostra con il tipo "Plaud". Per condividerne una, aprila nell'app e premi **Condividi con il team**.
 
-Le registrazioni senza trascrizione e riassunto in Plaud vengono saltate: prima vanno elaborate nell'app Plaud.
+Le registrazioni senza trascrizione e senza riassunto in Plaud vengono saltate: prima vanno elaborate nell'app Plaud. Le registrazioni oltre circa 50 MB di audio (più di 3–4 ore) arrivano con la sola trascrizione: l'audio resta nell'app Plaud.
+
+Per scaricare subito audio e trascrizioni in attesa, senza aspettare i 10 minuti: menu del profilo → **Scarica ora audio e trascrizioni Plaud**.
 
 ## Aggiornare l'app
 
-Dopo aver modificato i file: **Esegui il deployment** → **Gestisci deployment** → matita → Versione **Nuova versione** → **Esegui il deployment**. L'URL resta lo stesso.
+Dopo aver modificato i file: **Esegui il deployment** → **Gestisci deployment** → matita → Versione **Nuova versione** → **Esegui il deployment**. L'URL resta lo stesso. Note, catalogo, chiave e preferenze restano: sono su Drive e nelle proprietà del progetto, non nel codice.
+
+### Aggiornare alla versione 2 (video, anteprime, Gmail, Calendar, audio Plaud)
+
+1. Nello **stesso progetto** sostituisci il contenuto di tutti e quattro i file (`appsscript.json`, `Code.gs`, `Index.html`, `Styles.html`) con quelli nuovi dei link al punto 2. Non creare un progetto nuovo.
+2. Salva, poi pubblica una **Nuova versione** come sopra.
+3. Apri l'app: Google chiede di nuovo il consenso perché ci sono permessi nuovi (**inviare email a tuo nome** e **gestire Google Calendar**). Premi **Avanzate** → **Vai a Notabene** → **Consenti**. Lo stesso farà Giovanna al suo primo accesso.
+4. Solo tu (amministratore): nel riquadro in alto premi **Attiva**. Così l'app aggiorna le cartelle ogni ora e scarica audio e trascrizioni Plaud ogni 10 minuti.
+5. Premi **Aggiorna**: l'indice riceve due colonne nuove (`media`, `eventi`) senza toccare le righe già catalogate.
+
+Cosa c'è di nuovo:
+- **Tutti i formati**: video, Fogli ed Excel, Presentazioni e PowerPoint, CSV, JSON, archivi ZIP. Video e file oltre 20 MB vanno direttamente su Drive (fino a qualche GB, compatibilmente con lo spazio).
+- **Anteprime** di foto, video, PDF e presentazioni nelle schede; nel pannello della nota **Guarda il video** / **Ascolta**.
+- **L'AI guarda foto e video** (un fotogramma) per scrivere il riassunto. Un video appena caricato si cataloga quando Drive ha preparato l'anteprima, di solito al primo aggiornamento successivo.
+- **Invia per email** dal pannello della nota o da più note selezionate: parte dal tuo Gmail con i file allegati (Documenti come PDF).
+- **Calendario**: vista del mese con i tuoi eventi, **Nuovo evento** con ora, durata, luogo, promemoria e invitati, **Allega al calendario** per mettere una nota in un evento o in un giorno. Nel riquadro di benvenuto compaiono gli impegni di oggi e domani.
+- **Più veloce**: all'apertura le note compaiono subito (salvate nel browser) e poi si aggiornano; le schede si caricano man mano che scorri.

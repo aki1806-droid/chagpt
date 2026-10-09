@@ -59,7 +59,8 @@
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html,body{min-height:100%}
-body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:var(--fs);line-height:1.5}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:var(--fs);line-height:1.5;
+  background-image:radial-gradient(1100px 380px at 50% -160px, color-mix(in srgb, var(--accent) 10%, transparent), transparent 70%);background-repeat:no-repeat}
 :root[data-bg="puntini"] body{background-image:radial-gradient(var(--line-2) 1px, transparent 1.2px);background-size:22px 22px}
 :root[data-bg="aurora"] body{background-image:radial-gradient(900px 420px at 12% -10%, var(--accent-soft), transparent 70%), radial-gradient(700px 380px at 95% 0%, color-mix(in srgb, var(--c1) 12%, transparent), transparent 70%);background-repeat:no-repeat}
 :root[data-bg="righe"] body{background-image:repeating-linear-gradient(var(--bg) 0 31px, var(--line) 31px 32px)}
@@ -97,7 +98,7 @@ svg.i{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-widt
 /* Struttura */
 .page{max-width:1360px;margin:0 auto;padding-inline:16px;padding-block:20px 48px;display:flex;flex-direction:column;gap:22px}
 .hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:var(--gap);align-items:stretch}
-.welcome{background:var(--welcome-bg);color:var(--welcome-fg);border-radius:var(--r);padding:22px 24px;display:flex;flex-direction:column;justify-content:space-between;gap:16px;position:relative;overflow:hidden;min-width:0}
+.welcome{background:linear-gradient(135deg, var(--welcome-bg), color-mix(in srgb, var(--welcome-bg) 70%, var(--c2)));color:var(--welcome-fg);border-radius:var(--r);padding:22px 24px;display:flex;flex-direction:column;justify-content:space-between;gap:16px;position:relative;overflow:hidden;min-width:0}
 .welcome::after{content:"";position:absolute;right:-60px;bottom:-80px;width:260px;height:260px;border-radius:50%;border:38px solid color-mix(in srgb, var(--welcome-fg) 9%, transparent)}
 .welcome .date{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;opacity:.8}
 .welcome h1{font-family:var(--display);font-size:clamp(26px,3.4vw,38px);line-height:1.08;margin:6px 0 0;letter-spacing:-.02em;text-wrap:balance}
@@ -150,7 +151,7 @@ select.btn{padding-right:28px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:var(--gap)}
 .grid.list{grid-template-columns:minmax(0,1fr);gap:8px}
 .grid.compact{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
-.card{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:var(--pad);padding-top:calc(var(--pad) + 4px);display:flex;flex-direction:column;gap:8px;text-align:left;min-width:0;cursor:pointer;transition:border-color .15s, transform .15s, box-shadow .15s;color:var(--fg);overflow:hidden}
+.card{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:var(--pad);padding-top:calc(var(--pad) + 4px);display:flex;flex-direction:column;gap:8px;text-align:left;min-width:0;cursor:pointer;transition:border-color .15s, transform .15s, box-shadow .15s;color:var(--fg);overflow:hidden;box-shadow:var(--shadow-s);animation:rise .25s ease-out both}
 .card::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:var(--band, var(--line))}
 .card:hover{border-color:var(--accent-line);transform:translateY(-2px);box-shadow:var(--shadow)}
 .card.tinted{background:color-mix(in srgb, var(--band) 7%, var(--surface))}
@@ -159,7 +160,7 @@ select.btn{padding-right:28px}
 .type .i{width:15px;height:15px}
 .card h4{margin:0;font-size:16px;line-height:1.3;font-weight:600;padding-right:26px;overflow-wrap:anywhere}
 .card p{margin:0;color:var(--muted);font-size:13.5px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.star{position:absolute;top:calc(var(--pad) + 18px);right:10px;border:none;background:none;padding:4px;color:var(--faint);border-radius:6px}
+.star{border:none;background:none;padding:3px;margin:-3px -4px -3px 0;color:var(--faint);border-radius:6px;display:inline-grid}
 .star:hover{color:var(--warn);background:var(--surface-2)}
 .star.on{color:var(--warn)}
 .star.on .i{fill:currentColor}
@@ -178,7 +179,7 @@ select.btn{padding-right:28px}
 .grid.list .card .meta{order:3;flex:none}
 .grid.list .card h4{flex:1;padding-right:0}
 .grid.list .card .foot{order:2;margin:0;padding:0;flex:none;max-width:40%}
-.grid.list .star{position:static;order:4}
+.grid.list .media,.grid.list .wave{display:none}
 .grid.compact .card p{-webkit-line-clamp:2}
 .grid.compact .card .tags{display:none}
 .empty{grid-column:1/-1;text-align:center;padding:48px 16px;color:var(--muted);border:1px dashed var(--line-2);border-radius:var(--r);background:var(--surface)}
@@ -295,6 +296,94 @@ a.src{text-decoration:none}
 .chatin{display:flex;gap:8px;align-items:flex-end;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);background:var(--surface)}
 .chatin textarea{min-height:44px;max-height:160px;resize:vertical}
 </style>
+
+<style>
+/* ---- Versione 2: logo, anteprime, calendario, email ---- */
+.brand .logo{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-size:17px;color:#fff;
+  background:linear-gradient(135deg, var(--accent), var(--c2));box-shadow:0 4px 12px color-mix(in srgb, var(--accent) 35%, transparent)}
+.btn.primary{background:linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 75%, var(--c2)));border-color:transparent}
+.stat{box-shadow:var(--shadow-s);transition:transform .15s, box-shadow .15s, border-color .15s}
+button.stat:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+svg.i.mini{width:13px;height:13px}
+.hint{font-size:12.5px;color:var(--muted)}
+@keyframes rise{from{opacity:0;transform:translateY(6px)}}
+
+/* Colori per tipo di file */
+.type{border-radius:999px}
+.t-plaud,.t-audio{color:var(--c4)} .t-video{color:var(--c7)} .t-img{color:var(--c2)} .t-pdf{color:var(--c1)}
+.t-doc{color:var(--c0)} .t-foglio{color:var(--c3)} .t-slide{color:var(--c5)} .t-txt,.t-altro,.t-archivio{color:var(--c9)}
+.card .meta .mr{display:inline-flex;align-items:center;gap:6px}
+
+/* Anteprime nelle schede */
+.card .media{margin:calc(-1 * var(--pad) - 4px) calc(-1 * var(--pad)) 2px;aspect-ratio:16/9;position:relative;
+  background:linear-gradient(135deg, color-mix(in srgb, var(--band) 22%, var(--surface-2)), var(--surface-2));
+  background-size:cover;background-position:center;display:grid;place-items:center;border-bottom:1px solid var(--line)}
+.card .media .ph .i{width:34px;height:34px;opacity:.45;stroke-width:1.4}
+.card .media.hasthumb .ph{display:none}
+.card .media .play{position:absolute;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:rgb(0 0 0 / .55);color:#fff;backdrop-filter:blur(4px)}
+.card .media .play .i{fill:currentColor;stroke:none;margin-left:3px}
+.card::before{z-index:1}
+.wave{display:flex;align-items:center;gap:3px;height:34px;padding:0 10px;border-radius:var(--r-s);background:color-mix(in srgb, var(--c4) 10%, var(--surface-2));color:var(--c4);font-size:12px;font-weight:600}
+.wave .i{width:14px;height:14px;fill:currentColor;stroke:none;margin-right:4px}
+.wave i{display:block;width:3px;border-radius:2px;background:currentColor;opacity:.55;height:30%}
+.wave i:nth-child(3n){height:70%} .wave i:nth-child(4n){height:50%} .wave i:nth-child(5n){height:90%}
+.wave span{margin-left:auto}
+.grid.compact .card .media{aspect-ratio:2/1}
+.more{grid-column:1/-1;justify-self:center;border:1px dashed var(--line-2);background:var(--surface);border-radius:999px;padding:9px 18px;color:var(--muted)}
+body.stale .toolbar .sub::after{content:" · aggiornamento…";color:var(--accent);animation:pulse 1.2s infinite}
+
+/* Benvenuto: prossimi impegni */
+.agenda{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.agenda .ag{display:inline-flex;gap:8px;align-items:center;max-width:100%;border:1px solid color-mix(in srgb, var(--welcome-fg) 22%, transparent);
+  background:color-mix(in srgb, var(--welcome-fg) 10%, transparent);color:var(--welcome-fg);border-radius:999px;padding:4px 12px;font-size:13px}
+.agenda .ag span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.agenda .ag b{font-family:var(--mono);font-size:12px;font-weight:500;opacity:.85;white-space:nowrap}
+.agenda .ag-wait{font-size:13px;opacity:.7}
+
+/* Pannello della nota: anteprima e azioni rapide */
+.drawer .db > *{flex-shrink:0}
+.quick{display:flex;gap:8px;flex-wrap:wrap}
+.pv{border-radius:var(--r);overflow:hidden;border:1px solid var(--line);background:var(--surface-2);position:relative}
+.pv .pv-img{aspect-ratio:16/10;background-size:contain;background-repeat:no-repeat;background-position:center;display:grid;place-items:center}
+.pv .pv-img.hasthumb .ph{display:none}
+.pv .pv-img .ph .i{width:40px;height:40px;opacity:.4}
+.pv .pv-btn{position:absolute;left:12px;bottom:12px;box-shadow:var(--shadow)}
+.pv.pv-audio{padding:12px;display:flex}
+.pv iframe{width:100%;aspect-ratio:16/10;border:0;display:block;background:#000}
+.pv.pv-audio.playing{display:block;padding:0}
+.pv.pv-audio iframe{aspect-ratio:auto;height:120px;background:var(--surface-2)}
+.pv.playing .hint{padding:0 12px 10px}
+.evlinks{display:flex;flex-wrap:wrap;gap:6px}
+.files{display:flex;flex-wrap:wrap;gap:6px}
+.files .tag{display:inline-flex;gap:5px;align-items:center;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* Calendario */
+.drawer.cal{width:min(720px,100%)}
+.attachbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 18px;background:var(--accent-soft);border-bottom:1px solid var(--accent-line);font-size:14px}
+.calhead{display:flex;align-items:center;gap:8px}
+.calhead b{font-family:var(--display);font-size:20px;text-transform:capitalize;margin-right:auto;order:-1}
+.month{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.month .wd{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:center;padding-bottom:2px}
+.day{aspect-ratio:1/0.82;border:1px solid var(--line);background:var(--surface);border-radius:var(--r-s);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:2px;font-variant-numeric:tabular-nums;color:var(--fg)}
+.day:hover{border-color:var(--accent-line)}
+.day.out{opacity:.45}
+.day.today span:first-child{background:var(--accent);color:var(--accent-ink);border-radius:999px;padding:0 7px}
+.day.sel{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.day .dots{display:flex;gap:3px;height:6px}
+.day .dots i{width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.day .dots i.n{background:var(--c5)}
+.dayhead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.dayhead h3{margin:0;font-family:var(--display);font-size:18px;text-transform:capitalize}
+.evlist{display:flex;flex-direction:column;gap:8px}
+.ev{border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:var(--r-s);padding:10px 12px;display:flex;flex-direction:column;gap:8px;background:var(--surface)}
+.ev .evt{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.ev .when{font-family:var(--mono);font-size:12px;color:var(--accent);white-space:nowrap}
+.ev .hint{display:inline-flex;gap:4px;align-items:center}
+.ev .evact{display:flex;gap:6px;flex-wrap:wrap}
+.evform{display:flex;flex-direction:column;gap:10px}
+.row3{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+@media (max-width:480px){ .day{aspect-ratio:1/1.05;font-size:13px} .calhead b{font-size:17px} }
+</style>
 <div style="background:var(--accent-soft);color:var(--fg);font-size:13px;padding:6px 16px;text-align:center">Prototipo con dati di esempio: le modifiche non vengono salvate su Drive</div>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -322,10 +411,21 @@ a.src{text-decoration:none}
   <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 5 5L20 7"/></symbol>
   <symbol id="i-send" viewBox="0 0 24 24"><path d="M4 12 20 4l-6 16-3-7z"/></symbol>
   <symbol id="i-pen" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></symbol>
+  <symbol id="i-t-video" viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="m16 10 5-3v10l-5-3z"/></symbol>
+  <symbol id="i-t-foglio" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 10h16M4 15h16M10 4v16"/></symbol>
+  <symbol id="i-t-slide" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M12 16v4M8 20h8"/></symbol>
+  <symbol id="i-t-archivio" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M12 4v3m0 2v2m0 2v2"/><rect x="10.5" y="15" width="3" height="3" rx=".6"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></symbol>
+  <symbol id="i-clip" viewBox="0 0 24 24"><path d="m20 11-8.5 8.5a5 5 0 0 1-7-7L13 4a3.5 3.5 0 0 1 5 5l-8.5 8.5a2 2 0 0 1-3-3L14 7"/></symbol>
+  <symbol id="i-chevl" viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></symbol>
+  <symbol id="i-chevr" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-6-5.6-6-11a6 6 0 0 1 12 0c0 5.4-6 11-6 11z"/><circle cx="12" cy="10" r="2.2"/></symbol>
 </svg>
 
 <header class="top">
-  <div class="brand">Notabene <span class="nb">NB</span></div>
+  <div class="brand"><span class="logo" aria-hidden="true">N</span>Notabene</div>
   <label class="search" for="q">
     <svg class="i"><use href="#i-search"/></svg>
     <input id="q" type="search" placeholder="Cerca, oppure fai una domanda e premi Invio…" autocomplete="off">
@@ -334,6 +434,7 @@ a.src{text-decoration:none}
   <div class="actions">
     <button class="btn icon mfilters" id="mf" aria-expanded="false" aria-label="Filtri"><svg class="i"><use href="#i-filter"/></svg></button>
     <button class="btn" id="ask" title="Chiedi all'archivio"><svg class="i"><use href="#i-chat"/></svg><span class="hide-s">Chiedi</span></button>
+    <button class="btn" id="calbtn" title="Calendario"><svg class="i"><use href="#i-cal"/></svg><span class="hide-s">Calendario</span></button>
     <button class="btn icon" id="sync" aria-label="Aggiorna dalle cartelle Drive" title="Aggiorna dalle cartelle Drive"><svg class="i"><use href="#i-sync"/></svg></button>
     <button class="btn icon" id="custom" aria-label="Personalizza" title="Personalizza"><svg class="i"><use href="#i-palette"/></svg></button>
     <button class="btn primary" id="up"><svg class="i"><use href="#i-plus"/></svg><span class="hide-s">Nuova nota</span></button>
@@ -387,6 +488,8 @@ a.src{text-decoration:none}
   <button class="btn" data-sel="all">Seleziona tutte</button>
   <button class="btn" data-sel="team"><svg class="i"><use href="#i-share"/></svg>Condividi</button>
   <button class="btn" data-sel="mie"><svg class="i"><use href="#i-lock"/></svg>Rendi personali</button>
+  <button class="btn" data-sel="mail"><svg class="i"><use href="#i-mail"/></svg>Invia</button>
+  <button class="btn" data-sel="cal"><svg class="i"><use href="#i-cal"/></svg>Calendario</button>
   <button class="btn danger" data-sel="del"><svg class="i"><use href="#i-trash"/></svg>Elimina</button>
   <button class="btn ghost" data-sel="exit">Fine</button>
 </div>
@@ -408,14 +511,36 @@ a.src{text-decoration:none}
     ["Brief grafico copertine ebook","pdf","team","Progetti",["ebook","grafica"],d(14),"Palette, font e formato per le copertine degli ebook 3–6. Formato 1600×2560 per Amazon KDP.","ai",false,""],
     ["Lavagna riunione: obiettivi del trimestre","img","team","Riunioni",["obiettivi","pianificazione"],d(18),"Tre obiettivi: lancio ebook, chiusura corso infermieri, 500 iscritti sulla piattaforma corsi.","da rivedere",false,""],
     ["Procedura caricamento corsi","doc","team","Procedure",["corsi","procedura"],d(28),"Creare il corso, caricare i video, impostare prezzo e certificato. Errori più comuni in fondo.","ai",false,""],
-    ["Nota vocale: idee corso anticorruzione","audio","mie","Idee",["anticorruzione","corsi"],d(2),"Modulo extra con casi pratici anonimizzati e un quiz finale di dieci domande.","ai",false,""]
+    ["Nota vocale: idee corso anticorruzione","audio","mie","Idee",["anticorruzione","corsi"],d(2),"Modulo extra con casi pratici anonimizzati e un quiz finale di dieci domande.","ai",false,""],
+    ["Video: presentazione del corso infermieri","video","team","Corsi",["video","corso infermieri","promozione"],d(3),"Video di 4 minuti: la docente presenta i moduli del corso e le date d'esame. Fotogramma con la slide del programma.","ai",true,""],
+    ["Foto evento: assemblea di marzo","img","team","Riunioni",["assemblea","foto"],d(4),"Sala piena durante l'assemblea; sullo schermo la slide con i punti all'ordine del giorno.","ai",false,""],
+    ["Budget corsi 2027","foglio","mie","Amministrazione",["budget","corsi","2027"],d(9),"Foglio con costi e ricavi stimati per corso: totale previsto 18.400 euro, margine più alto sul corso busta paga.","ai",false,""],
+    ["Slide: lancio piattaforma corsi","slide","team","Progetti",["presentazione","lancio","piattaforma"],d(12),"12 diapositive: obiettivi, calendario dei lanci, prezzi e canali di vendita.","ai",false,""]
   ];
   let id = 0;
-  const MIME = {doc:"application/vnd.google-apps.document", plaud:"application/vnd.google-apps.document", txt:"text/plain", pdf:"application/pdf", img:"image/jpeg", audio:"audio/mp4"};
-  const notes = N.map(r => ({ id:"demo"+(++id), mime:MIME[r[1]], titolo:r[0], tipo:r[1], sezione:r[2], categoria:r[3], etichette:r[4], data:r[5], riassunto:r[6], stato:r[7], preferita:r[8], colore:r[9],
+  const MIME = {doc:"application/vnd.google-apps.document", plaud:"application/vnd.google-apps.document", txt:"text/plain", pdf:"application/pdf", img:"image/jpeg", audio:"audio/mp4",
+    video:"video/mp4", foglio:"application/vnd.google-apps.spreadsheet", slide:"application/vnd.google-apps.presentation"};
+  const notes = N.map(r => ({ id:"demo"+(++id), mime:MIME[r[1]], media:r[1]==="plaud"?"audio"+id:"", eventi:[], titolo:r[0], tipo:r[1], sezione:r[2], categoria:r[3], etichette:r[4], data:r[5], riassunto:r[6], stato:r[7], preferita:r[8], colore:r[9],
     url:"https://drive.google.com/", autore:r[2]==="team"&&id%2?"collega@gmail.com":"tu@gmail.com",
     percorso:(r[2]==="team"?"Notabene Condivise/":"Notabene Personale/")+(r[1]==="plaud"?"Plaud/":"")+r[0] }));
   let prefs = null;
+  // Anteprime finte: piccoli disegni SVG al posto delle immagini di Drive.
+  const PAL = [["#1d5c6b","#5fb3c4"],["#c2513a","#f2c879"],["#3d55c4","#a7b4ff"],["#2f7d4f","#cfe8a9"],["#8a3d7e","#f0a6d8"]];
+  const thumb = (i, t) => { const [a,b] = PAL[i % PAL.length];
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="480" height="270"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs><rect width="480" height="270" fill="url(#g)"/>` +
+      (t==="pdf"||t==="slide" ? `<rect x="120" y="40" width="240" height="190" rx="6" fill="#fff" opacity=".92"/><rect x="145" y="70" width="150" height="12" rx="3" fill="${a}"/><rect x="145" y="100" width="190" height="8" rx="3" fill="#bbb"/><rect x="145" y="118" width="170" height="8" rx="3" fill="#bbb"/><rect x="145" y="136" width="180" height="8" rx="3" fill="#bbb"/>`
+       : `<circle cx="360" cy="80" r="34" fill="#fff" opacity=".7"/><path d="M0 270 L150 130 L260 220 L340 160 L480 270Z" fill="#000" opacity=".22"/>`) + `</svg>`;
+    return "data:image/svg+xml;base64," + btoa(svg); };
+  const today = new Date(); const day = n => { const x = new Date(today); x.setDate(x.getDate()+n); return x.toISOString().slice(0,10); };
+  const at = (n, h, m) => { const x = new Date(today); x.setDate(x.getDate()+n); x.setHours(h, m, 0, 0); return x.toISOString(); };
+  let events = [
+    { id:"ev1", titolo:"Riunione RSU sul piano ferie", inizio:at(0,10,0), fine:at(0,11,30), giorno:false, luogo:"Sala riunioni 2", descrizione:"", link:"https://calendar.google.com/", allegati:[{titolo:"Riunione: lavoro agile, part-time e progressioni economiche", id:"demo2", url:"https://drive.google.com/"}] },
+    { id:"ev2", titolo:"Chiamata con la commissione di garanzia", inizio:at(1,15,0), fine:at(1,15,45), giorno:false, luogo:"", descrizione:"", link:"https://calendar.google.com/", allegati:[] },
+    { id:"ev3", titolo:"Scadenza versamento IVA", inizio:day(5), fine:day(6), giorno:true, luogo:"", descrizione:"", link:"https://calendar.google.com/", allegati:[] },
+    { id:"ev4", titolo:"Lancio ebook", inizio:at(12,9,30), fine:at(12,10,30), giorno:false, luogo:"Online", descrizione:"", link:"https://calendar.google.com/", allegati:[] }
+  ];
+  const linkNotes = (ids, ev) => (ids||[]).forEach(i => { const n = notes.find(x=>x.id===i); if (n) n.eventi = [{id:ev.id, titolo:ev.titolo, data:ev.inizio.slice(0,10), link:ev.link}].concat(n.eventi.filter(e=>e.id!==ev.id)); });
+  const attach = (ev, ids) => { (ids||[]).forEach(i => { const n = notes.find(x=>x.id===i); if (n && !ev.allegati.some(a=>a.id===i)) ev.allegati.push({titolo:n.titolo, id:i, url:n.url}); }); linkNotes(ids, ev); return Object.assign({}, ev); };
   window.NB_DEMO = {
     getBootstrap: () => ({ email:"tu@gmail.com", aiEnabled:true, syncInstalled:true, isAdmin:true, plaudReady:true, prefs:prefs || {nome:"Achille"},
       personal: notes.filter(n=>n.sezione==="mie"), team: notes.filter(n=>n.sezione==="team") }),
@@ -435,6 +560,20 @@ a.src{text-decoration:none}
         : "Non ho trovato note che parlino di questo. Prova con altre parole. (Risposta di esempio.)", fonti });
     }, 900)),
     moveNote: () => true,
+    getThumbs: ids => new Promise(ok => setTimeout(() => { const o = {}; ids.forEach(i => { const n = notes.find(x=>x.id===i); o[i] = n ? thumb(Number(i.replace(/\D/g,"")), n.tipo) : ""; }); ok(o); }, 300)),
+    listEvents: (from, to) => new Promise(ok => setTimeout(() => ok(events.filter(e => e.inizio.slice(0,10) < to && (e.giorno ? e.fine.slice(0,10) : e.inizio.slice(0,10)) >= from).map(e => Object.assign({}, e))), 250)),
+    createEvent: o => { const ev = { id:"ev"+(events.length+1), titolo:o.titolo, giorno:!o.ora, luogo:o.luogo||"", descrizione:o.descrizione||"", link:"https://calendar.google.com/", allegati:[],
+        inizio: o.ora ? new Date(o.data+"T"+o.ora+":00").toISOString() : o.data, fine: o.ora ? new Date(new Date(o.data+"T"+o.ora+":00").getTime()+o.durata*60000).toISOString() : (()=>{ const x=new Date(o.data+"T12:00:00"); x.setDate(x.getDate()+1); return x.toISOString().slice(0,10); })() };
+      if (!ev.titolo) throw new Error("Scrivi il titolo dell'evento."); events.push(ev); return attach(ev, o.fileIds); },
+    attachToEvent: (id, ids) => attach(events.find(e=>e.id===id), ids),
+    attachToDay: (d, ids) => { let ev = events.find(e=>e.giorno && e.inizio===d && e.titolo==="File del giorno (Notabene)");
+      if (!ev) { ev = { id:"ev"+(events.length+1), titolo:"File del giorno (Notabene)", giorno:true, inizio:d, fine:d, luogo:"", descrizione:"", link:"https://calendar.google.com/", allegati:[] }; events.push(ev); }
+      return attach(ev, ids); },
+    sendEmail: o => new Promise((ok, ko) => setTimeout(() => /@/.test(o.a) ? ok({ allegati:o.allega?o.fileIds.length:0, collegamenti:o.allega?0:o.fileIds.length, restanti:99 }) : ko(new Error("Scrivi almeno un destinatario.")), 500)),
+    runPlaudQueue: () => ({ fatti:0, errori:[] }),
+    demoUpload: (name, type, scope) => "demo-big-" + name,
+    finishUpload: (fid, scope) => ({ id:"demo"+(++id), titolo:fid.replace("demo-big-","").replace(/\.[^.]+$/,""), tipo:"video", mime:"video/mp4", sezione:scope, categoria:"Da classificare", etichette:["video"], data:new Date().toISOString().slice(0,10),
+      stato:"da rivedere", preferita:false, colore:"", media:"", eventi:[], riassunto:"In attesa dell'anteprima di Drive: la catalogazione riprova al prossimo aggiornamento.", url:"https://drive.google.com/", autore:"tu@gmail.com", percorso:"Notabene/" + fid }),
     searchText: q => notes.filter(n => n.tipo==="plaud" && "incentivi delibera allegati dec".includes(q.toLowerCase().split(/\s+/)[0])).map(n => ({id:n.id, estratto:"…per la liquidazione è obbligatoria una delibera annuale di ogni servizio proponente, con gli allegati che indicano chi ha fatto cosa…"})),
     getNoteText: () => "Esempio di testo completo. Nell'app reale qui compare il testo estratto dal file o la trascrizione Plaud.",
     syncNow: () => new Promise(ok => setTimeout(() => ok({ fatti:0, restanti:0 }), 600)),
@@ -450,10 +589,15 @@ a.src{text-decoration:none}
 </script>
 <script>
 /* ---------- Dati e impostazioni ---------- */
+const SERVER_ME = "";
 const TYPES = {
-  plaud:{l:"Plaud", c:"--c4"}, audio:{l:"Audio", c:"--c4"}, doc:{l:"Documento", c:"--c0"},
-  pdf:{l:"PDF", c:"--c1"}, img:{l:"Foto", c:"--c2"}, txt:{l:"Testo", c:"--c9"}, altro:{l:"Altro", c:"--c9"}
+  plaud:{l:"Plaud"}, audio:{l:"Audio"}, video:{l:"Video"}, img:{l:"Foto"}, doc:{l:"Documento"}, pdf:{l:"PDF"},
+  foglio:{l:"Foglio"}, slide:{l:"Presentazione"}, txt:{l:"Testo"}, archivio:{l:"Archivio"}, altro:{l:"Altro"}
 };
+const VISUAL = ["img","video","pdf","slide"];           // tipi con anteprima nella scheda
+const BIG = 20*1024*1024;                                 // oltre: caricamento diretto su Drive
+const PAGE = 60;                                          // schede disegnate alla volta
+const typeIcon = (t, cls) => icon("i-t-" + (t==="altro" ? "txt" : (TYPES[t] ? t : "txt")), cls);
 const ACCENTS = [["petrolio","#1d5c6b"],["corallo","#c2513a"],["indaco","#3d55c4"],["bosco","#2f7d4f"],["prugna","#8a3d7e"],["ambra","#9a6200"],["grafite","#34424c"]];
 const DEFAULTS = {
   nome:"", tema:"auto", accento:"petrolio", font:"moderno", sfondo:"tinta", angoli:"arrotondati", densita:"comoda", testo:15,
@@ -461,7 +605,8 @@ const DEFAULTS = {
 };
 let P = Object.assign({}, DEFAULTS);
 let NOTES = [], ME = "", BOOT = {};
-let S = {scope:"mie", cat:null, type:null, tag:null, q:"", open:null, hits:{}, sel:null, chat:[]};
+let S = {scope:"mie", cat:null, type:null, tag:null, q:"", open:null, hits:{}, sel:null, chat:[], shown:PAGE};
+const THUMBS = {};                                        // anteprime già scaricate (id → data URI o "")
 const $ = s => document.querySelector(s);
 const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const fmtD = d => d ? new Date(d+"T12:00:00").toLocaleDateString("it-IT",{day:"numeric",month:"short",year:"numeric"}) : "";
@@ -541,15 +686,52 @@ function render(){
   const cc = count(base,"categoria"), tc = count(base,"tipo"), gc = count(base,"etichette");
   $("#cats").innerHTML = `<button class="${!S.cat?"on":""}" data-cat=""><span class="nm">Tutte</span><span class="n">${base.length}</span></button>` +
     Object.keys(cc).sort((a,b)=>a.localeCompare(b,"it")).map(c=>`<button class="${S.cat===c?"on":""}" data-cat="${esc(c)}"><span class="nm"><span class="dot" style="background:${catColor(c)}"></span>${esc(c)}</span><span class="n">${cc[c]}</span></button>`).join("");
-  $("#types").innerHTML = Object.keys(TYPES).filter(k=>tc[k]).map(k=>`<button class="${S.type===k?"on":""}" data-type="${k}"><span class="nm">${icon("i-t-"+(k==="altro"?"txt":k))}${TYPES[k].l}</span><span class="n">${tc[k]}</span></button>`).join("");
+  $("#types").innerHTML = Object.keys(TYPES).filter(k=>tc[k]).map(k=>`<button class="${S.type===k?"on":""}" data-type="${k}"><span class="nm">${typeIcon(k)}${TYPES[k].l}</span><span class="n">${tc[k]}</span></button>`).join("");
   $("#tags").innerHTML = Object.entries(gc).sort((a,b)=>b[1]-a[1]).slice(0,24).map(([g])=>`<button class="chip ${S.tag===g?"on":""}" data-tag="${esc(g)}">${esc(g)}</button>`).join("");
   const grid = $("#grid");
   grid.className = "grid" + (P.vista==="lista"?" list":P.vista==="compatta"?" compact":"");
-  grid.innerHTML = res.length ? res.map(card).join("") : emptyState(base.length);
+  // Con migliaia di note si disegnano solo le prime schede; le altre arrivano scorrendo.
+  const shown = res.slice(0, S.shown);
+  grid.innerHTML = res.length ? shown.map(card).join("") + (res.length > shown.length ?
+    `<button class="more" id="more">Mostra altre ${Math.min(PAGE, res.length - shown.length)} di ${res.length - shown.length}</button>` : "") : emptyState(base.length);
   const pins = NOTES.filter(n=>n.preferita).sort(SORTS.recenti);
   $("#pinsec").hidden = !P.evidenza || !pins.length;
   $("#pins").innerHTML = pins.map(card).join("");
+  watchThumbs(); watchMore();
 }
+/* Ridisegno raggruppato: più modifiche ravvicinate producono un solo disegno. */
+let rafPending = false;
+function renderSoon(){ if (rafPending) return; rafPending = true; requestAnimationFrame(() => { rafPending = false; render(); }); }
+
+/* ---------- Anteprime ---------- */
+const thumbQueue = new Set(); let thumbBusy = 0;
+const thumbObs = "IntersectionObserver" in window ? new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { thumbObs.unobserve(e.target); thumbQueue.add(e.target.dataset.thumb); } });
+  pumpThumbs();
+}, {rootMargin:"400px"}) : null;
+function watchThumbs(){
+  document.querySelectorAll("[data-thumb]").forEach(el => {
+    const id = el.dataset.thumb;
+    if (id in THUMBS) return paintThumb(el, THUMBS[id]);
+    if (thumbObs) thumbObs.observe(el); else thumbQueue.add(id);
+  });
+  if (!thumbObs) pumpThumbs();
+}
+function paintThumb(el, uri){
+  if (!uri) { el.classList.add("nothumb"); return; }
+  el.style.backgroundImage = `url("${uri}")`; el.classList.add("hasthumb");
+}
+async function pumpThumbs(){
+  while (thumbQueue.size && thumbBusy < 3) {
+    const ids = [...thumbQueue].slice(0, 8); ids.forEach(id => thumbQueue.delete(id));
+    thumbBusy++;
+    api("getThumbs", ids).then(map => {
+      ids.forEach(id => { THUMBS[id] = map[id] || ""; document.querySelectorAll(`[data-thumb="${CSS.escape(id)}"]`).forEach(el => paintThumb(el, THUMBS[id])); });
+    }).catch(() => ids.forEach(id => THUMBS[id] = "")).finally(() => { thumbBusy--; pumpThumbs(); });
+  }
+}
+const moreObs = "IntersectionObserver" in window ? new IntersectionObserver(e => { if (e[0].isIntersecting) { S.shown += PAGE; render(); } }, {rootMargin:"600px"}) : null;
+function watchMore(){ const m = $("#more"); if (m && moreObs) moreObs.observe(m); }
 function greeting(){
   const h = new Date().getHours();
   return h < 6 ? "Buonanotte" : h < 13 ? "Buongiorno" : h < 18 ? "Buon pomeriggio" : "Buonasera";
@@ -567,6 +749,7 @@ function renderHero(){
   hero.innerHTML = (P.benvenuto ? `<div class="welcome">
       <div><div class="date">${esc(today)}</div>
       <h1>${greeting()}${P.nome?", "+esc(P.nome):""}</h1></div>
+      <div class="agenda">${agendaHtml()}</div>
       <p>${rev ? `Hai <b>${rev}</b> ${rev===1?"nota da rivedere":"note da rivedere"}: l'AI non era sicura di categoria o etichette.` : "Tutte le note sono catalogate. Cerca, filtra o aggiungine una nuova."}</p>
       <div class="row"><button class="btn" data-act="ask">${icon("i-chat")}Chiedi all'archivio</button><button class="btn" data-act="new">${icon("i-plus")}Nuova nota</button>${rev?`<button class="btn" data-act="review">Rivedi ora</button>`:""}<button class="btn" data-act="custom">${icon("i-palette")}Personalizza</button></div>
     </div>` : "") + (P.statistiche ? `<div class="stats">
@@ -577,10 +760,29 @@ function renderHero(){
       <button class="stat ${rev?"warn":""}" data-act="review"><span class="k">Da rivedere</span><span class="v">${rev}</span><span class="s">${rev?"tocca per vederle":"nessuna"}</span></button>
     </div>` : "");
 }
+/* Prossimi impegni (oggi e domani) nel riquadro di benvenuto */
+function agendaHtml(){
+  if (S.agenda === "err") return "";
+  if (!S.agenda) return `<span class="ag-wait">Controllo il calendario…</span>`;
+  const now = Date.now();
+  const next = S.agenda.filter(e => e.giorno || new Date(e.fine).getTime() > now).slice(0, 3);
+  if (!next.length) return `<button class="ag" data-act="cal">${icon("i-cal")}<span>Nessun impegno oggi e domani</span></button>`;
+  return next.map(e => `<button class="ag" data-act="cal" data-day="${esc(evDay(e))}"><b>${esc(evWhen(e, true))}</b><span>${esc(e.titolo)}</span>${e.allegati.length?icon("i-clip","mini"):""}</button>`).join("");
+}
+async function loadAgenda(){
+  const t = ymd(new Date());
+  try { S.agenda = await api("listEvents", t, addDays(t, 2)); } catch(e){ S.agenda = "err"; }
+  renderHero();
+}
 function emptyState(total){
   if (total) return `<div class="empty"><b>Nessun risultato</b>Prova a togliere un filtro o a cercare un'altra parola.</div>`;
   return `<div class="empty"><b>Sezione vuota</b>Crea una nota con «Nuova nota» oppure mettila nella cartella Drive
     «${S.scope==="team"?"Notabene Condivise":"Notabene Personale"}» e premi Aggiorna.</div>`;
+}
+function media(n){
+  if (VISUAL.includes(n.tipo)) return `<div class="media" data-thumb="${esc(n.id)}"><span class="ph">${typeIcon(n.tipo)}</span>${n.tipo==="video"?`<span class="play">${icon("i-play")}</span>`:""}</div>`;
+  if (n.tipo==="plaud" && n.media) return `<div class="wave" aria-hidden="true">${icon("i-play")}<i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span>Registrazione</span></div>`;
+  return "";
 }
 function card(n){
   const T = TYPES[n.tipo] || TYPES.altro;
@@ -589,8 +791,8 @@ function card(n){
   const picked = S.sel && S.sel.has(n.id);
   return `<article class="card ${P.schedeColorate?"tinted":""} ${S.sel?"selecting":""} ${picked?"picked":""}" style="--band:${noteColor(n)}" data-open="${esc(n.id)}" tabindex="0">
     ${S.sel?`<span class="tick" aria-hidden="true">${picked?icon("i-check"):""}</span>`:""}
-    <div class="meta"><span class="type">${icon("i-t-"+(n.tipo==="altro"?"txt":n.tipo))}${T.l}</span><span>${fmtD(n.data)}</span></div>
-    <button class="star ${n.preferita?"on":""}" data-star="${esc(n.id)}" aria-label="${n.preferita?"Togli dall'evidenza":"Metti in evidenza"}">${icon("i-star")}</button>
+    ${media(n)}
+    <div class="meta"><span class="type t-${esc(n.tipo)}">${typeIcon(n.tipo)}${T.l}</span><span class="mr">${n.eventi&&n.eventi.length?`<span title="Allegata a un evento del calendario">${icon("i-cal","mini")}</span>`:""}${fmtD(n.data)}<button class="star ${n.preferita?"on":""}" data-star="${esc(n.id)}" aria-label="${n.preferita?"Togli dall'evidenza":"Metti in evidenza"}">${icon("i-star")}</button></span></div>
     <h4>${hl(n.titolo)}</h4>
     <p>${hl(n.riassunto)}</p>${hit}
     <div class="tags">${n.etichette.slice(0,5).map(g=>`<span class="tag">${hl(g)}</span>`).join("")}</div>
@@ -603,14 +805,21 @@ function openNote(id){
   const n = NOTES.find(x=>x.id===id); if(!n) return; S.open=id;
   const T = TYPES[n.tipo] || TYPES.altro;
   const cats = Object.keys(count(NOTES,"categoria")).sort();
+  const preview = previewBox(n);
   $("#layer").innerHTML = `<div class="scrim" data-close></div>
   <section class="drawer" role="dialog" aria-label="${esc(n.titolo)}" style="--band:${noteColor(n)}">
     <div class="band"></div>
-    <div class="dh"><span class="type" style="font-family:var(--mono);font-size:12px">${icon("i-t-"+(n.tipo==="altro"?"txt":n.tipo))}${T.l} · ${fmtD(n.data)}</span>
+    <div class="dh"><span class="type t-${esc(n.tipo)}" style="font-family:var(--mono);font-size:12px">${typeIcon(n.tipo)}${T.l} · ${fmtD(n.data)}</span>
       <div style="display:flex;gap:4px"><button class="btn icon ghost star ${n.preferita?"on":""}" style="position:static" data-star="${esc(n.id)}" aria-label="In evidenza">${icon("i-star")}</button>
       <button class="btn icon ghost" data-close aria-label="Chiudi">${icon("i-close")}</button></div></div>
     <div class="db">
       <input class="ttl" id="ttl" value="${esc(n.titolo)}" aria-label="Titolo">
+      ${preview}
+      <div class="quick">
+        <button class="btn" data-mail>${icon("i-mail")}Invia per email</button>
+        <button class="btn" data-tocal>${icon("i-cal")}Allega al calendario</button>
+      </div>
+      ${n.eventi && n.eventi.length ? `<div><div class="lbl5">${icon("i-cal")}Nel calendario</div><div class="evlinks">${n.eventi.map(ev=>`<a class="src" href="${esc(ev.link)}" target="_blank" rel="noopener"><b>${esc(fmtD(ev.data))}</b>${esc(ev.titolo)} ↗</a>`).join("")}</div></div>` : ""}
       <div class="box"><div class="lbl5">Riassunto ${n.stato==="da rivedere"?'<span class="pill rev">Da rivedere</span>':""}</div><div>${hl(n.riassunto)}</div></div>
       <div><div class="lbl5">Etichette</div>
         <div class="tags tagedit">${n.etichette.map(g=>`<span class="tag">${esc(g)}<button data-rmtag="${esc(g)}" aria-label="Rimuovi ${esc(g)}">×</button></span>`).join("")}
@@ -637,12 +846,23 @@ function openNote(id){
         <a class="btn primary" href="${esc(n.url)}" target="_blank" rel="noopener">Apri in Drive</a>
       </div>
     </div></section>`;
+  watchThumbs();
+}
+/* Anteprima nel pannello: immagine subito, lettore di Drive su richiesta (si carica solo se serve). */
+function previewBox(n){
+  const playable = ["video","audio"].includes(n.tipo) || (n.tipo==="plaud" && n.media);
+  if (!VISUAL.includes(n.tipo) && !playable) return "";
+  const target = n.tipo==="plaud" ? n.media : n.id;
+  const label = n.tipo==="plaud" ? "Ascolta la registrazione" : n.tipo==="audio" ? "Ascolta" : n.tipo==="video" ? "Guarda il video" : "Anteprima completa";
+  const pic = VISUAL.includes(n.tipo) ? `<div class="pv-img" data-thumb="${esc(n.id)}"><span class="ph">${typeIcon(n.tipo)}</span></div>` : "";
+  return `<div class="pv ${n.tipo==="plaud"||n.tipo==="audio"?"pv-audio":""}" id="pv">${pic}
+    <button class="btn ${pic?"pv-btn":""}" data-preview="${esc(target)}">${icon("i-play")}${label}</button></div>`;
 }
 function editable(n){ return n.mime ? (n.mime === "application/vnd.google-apps.document" || /^text\//.test(n.mime)) : ["txt","plaud"].includes(n.tipo); }
 function replaceNote(updated){
   const i = NOTES.findIndex(x=>x.id===updated.id);
   if (i !== -1) NOTES[i] = Object.assign({}, NOTES[i], updated);
-  render(); openNote(updated.id);
+  cacheNotes(); render(); openNote(updated.id);
 }
 async function startEdit(n){
   const box = $("#textbox"); box.innerHTML = `<div class="lbl5">Modifica il testo</div><p style="margin:0;color:var(--muted)">Caricamento…</p>`;
@@ -659,7 +879,7 @@ function swatch(v, on, label, attr){
   return `<button class="sw ${v===""?"none":""} ${on?"on":""}" style="--c:${v===""?"transparent":`var(--c${v})`}" ${attr}="${v}" aria-label="${esc(label)}" title="${esc(label)}"></button>`;
 }
 function closeLayer(){ $("#layer").innerHTML=""; S.open=null; }
-function save(n, changes){ return api("updateNote", n.id, changes).catch(fail); }
+function save(n, changes){ cacheNotes(); return api("updateNote", n.id, changes).catch(fail); }
 function toggleStar(id){
   const n = NOTES.find(x=>x.id===id); if(!n) return;
   n.preferita = !n.preferita; render(); if (S.open===id) openNote(id);
@@ -712,7 +932,7 @@ function upload(){
     <div class="seg" id="upmode"><button data-m="file" class="on">Carica file</button><button data-m="scrivi">Scrivi</button></div>
     <div id="m-file"><div class="drop" id="drop"><input type="file" id="file" multiple hidden>
       <div>Trascina qui uno o più file, anche decine insieme</div><button class="btn" id="pick">${icon("i-upload")}Scegli dal dispositivo</button>
-      <div style="font-size:13px">Documenti, PDF, foto, audio. Massimo 20 MB per file.</div></div>
+      <div style="font-size:13px">Qualsiasi formato: documenti, fogli, presentazioni, PDF, foto, video, audio. I file grandi e i video vanno direttamente su Drive.</div></div>
       <ul class="uplist" id="uplist" hidden></ul></div>
     <div id="m-scrivi" hidden style="display:flex;flex-direction:column;gap:10px">
       <input class="input" id="wtitle" placeholder="Titolo (facoltativo)">
@@ -748,16 +968,28 @@ function readB64(file){
 }
 /** Un file: caricato e catalogato subito. Più file: caricati uno alla volta, poi catalogati con la sincronizzazione. */
 async function sendFiles(files){
-  if (files.length === 1) return sendFile(files[0]);
+  if (files.length === 1 && files[0].size <= BIG) return sendFile(files[0]);
   const scope = scopeChoice();
   const list = $("#uplist"); list.hidden = false; $("#drop").hidden = true; $("#upmode").hidden = true;
   list.innerHTML = files.map((f,i)=>`<li id="up${i}"><span class="nm">${esc(f.name)}</span><span class="st">In attesa</span></li>`).join("");
   let ok = 0;
   for (let i = 0; i < files.length; i++) {
     const li = $("#up"+i), st = li.querySelector(".st");
-    if (files[i].size > 20*1024*1024) { st.textContent = "Troppo grande (oltre 20 MB)"; li.className = "err"; continue; }
     st.textContent = "Caricamento…"; li.className = "run";
-    try { await api("uploadRaw", files[i].name, files[i].type, await readB64(files[i]), scope); st.textContent = "Caricato"; li.className = "done"; ok++; }
+    try {
+      if (files[i].size > BIG) {
+        const id = await uploadBig(files[i], scope, p => st.textContent = `Caricamento ${p}%`);
+        if (files.length === 1) {   // un solo file grande: catalogato subito e aperto
+          st.textContent = "Catalogazione…";
+          const n = await api("finishUpload", id, scope, true);
+          NOTES.unshift(n); S.scope = scope; S.cat = S.type = S.tag = null; cacheNotes();
+          closeLayer(); render(); toast("File caricato e catalogato"); return openNote(n.id);
+        }
+      } else {
+        await api("uploadRaw", files[i].name, files[i].type, await readB64(files[i]), scope);
+      }
+      st.textContent = "Caricato"; li.className = "done"; ok++;
+    }
     catch(e){ st.textContent = String(e.message || e); li.className = "err"; }
   }
   $("#upmsg").hidden = false;
@@ -775,7 +1007,6 @@ async function catalogAll(){
   await load(); toast("Caricamento massivo completato");
 }
 function sendFile(file){
-  if (file.size > 20*1024*1024) return toast("Il file supera 20 MB: caricalo direttamente nella cartella Drive.");
   const r = new FileReader();
   r.onload = () => sendData(file.name, file.type, String(r.result).split(",")[1]);
   r.readAsDataURL(file);
@@ -785,7 +1016,7 @@ async function sendData(name, type, b64){
   $("#upmsg").hidden = false;
   try {
     const n = await api("uploadNote", name, type, b64, scope);
-    NOTES.unshift(n); S.scope = scope; S.cat=S.type=S.tag=null;
+    NOTES.unshift(n); S.scope = scope; S.cat=S.type=S.tag=null; cacheNotes();
     closeLayer(); render(); toast("Nota salvata e catalogata"); openNote(n.id);
   } catch(e){ $("#upmsg").hidden = true; fail(e); }
 }
@@ -831,6 +1062,176 @@ async function ask(question){
   const log2 = $("#chatlog"); if (log2) { log2.innerHTML = chatLog(); log2.scrollTop = log2.scrollHeight; }
 }
 
+/* ---------- Email con Gmail ---------- */
+function recipients(){ try { return JSON.parse(store("nb-rcpt") || "[]"); } catch(e){ return []; } }
+function openMail(ids){
+  const list = ids.map(id => NOTES.find(x=>x.id===id)).filter(Boolean);
+  if (!list.length) return;
+  S.open = null; S.mailIds = list.map(n=>n.id);
+  const one = list.length === 1 ? list[0] : null;
+  const msg = one ? `Ti invio «${one.titolo}».\n\nIn breve: ${one.riassunto || ""}` : `Ti invio questi file:\n${list.map(n=>"- "+n.titolo).join("\n")}`;
+  $("#layer").innerHTML = `<div class="scrim" data-close></div><div class="modal"><form class="panel" id="mailform" role="dialog" aria-label="Invia per email">
+    <h2 style="display:flex;gap:10px;align-items:center">${icon("i-mail")}Invia per email</h2>
+    <datalist id="rcpt">${recipients().map(r=>`<option value="${esc(r)}">`).join("")}</datalist>
+    <label class="field"><span>A</span><input class="input" id="m-a" list="rcpt" placeholder="nome@esempio.it, altro@esempio.it" autocomplete="email" required></label>
+    <label class="field"><span>Cc (facoltativo)</span><input class="input" id="m-cc" list="rcpt"></label>
+    <label class="field"><span>Oggetto</span><input class="input" id="m-ogg" value="${esc(one ? one.titolo : list.length + " file da Notabene")}"></label>
+    <label class="field"><span>Messaggio</span><textarea class="input" id="m-msg" style="min-height:130px">${esc(msg)}</textarea></label>
+    <div class="files">${list.map(n=>`<span class="tag">${typeIcon(n.tipo,"mini")}${esc(n.titolo)}</span>`).join("")}</div>
+    <label class="toggle"><span>Allega i file (Documenti, Fogli e Presentazioni come PDF)</span><input type="checkbox" id="m-all" checked></label>
+    <label class="toggle"><span>Se un file è troppo grande da allegare, condividilo in lettura con i destinatari</span><input type="checkbox" id="m-sh"></label>
+    <p class="hint">L'email parte dal tuo Gmail. Oltre 24 MB di allegati, i file restanti vengono inseriti come collegamento a Drive.</p>
+    <div style="display:flex;justify-content:flex-end;gap:8px"><button type="button" class="btn ghost" data-close>Annulla</button><button class="btn primary" id="m-send">${icon("i-send")}Invia</button></div>
+  </form></div>`;
+  $("#m-a").focus();
+}
+async function sendMail(){
+  const b = $("#m-send"); b.disabled = true; b.lastChild.textContent = "Invio…";
+  const o = { a:$("#m-a").value, cc:$("#m-cc").value, oggetto:$("#m-ogg").value, messaggio:$("#m-msg").value,
+    allega:$("#m-all").checked, condividi:$("#m-sh").checked, fileIds:S.mailIds };
+  try {
+    const r = await api("sendEmail", o);
+    const used = (o.a + "," + o.cc).split(/[,;\s]+/).filter(x=>x.includes("@"));
+    store("nb-rcpt", JSON.stringify([...new Set(used.concat(recipients()))].slice(0, 15)));
+    closeLayer();
+    toast(`Email inviata` + (r.allegati?` con ${r.allegati} allegat${r.allegati===1?"o":"i"}`:"") + (r.collegamenti?`, ${r.collegamenti} come collegamento`:""));
+  } catch(e){ b.disabled = false; b.lastChild.textContent = "Invia"; fail(e); }
+}
+
+/* ---------- Calendario ---------- */
+const ymd = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const addDays = (day, n) => { const d = new Date(day+"T12:00:00"); d.setDate(d.getDate()+n); return ymd(d); };
+const evDay = e => e.giorno ? e.inizio.slice(0,10) : ymd(new Date(e.inizio));
+function evWhen(e, short){
+  if (e.giorno) return short ? (evDay(e) <= ymd(new Date()) ? "Oggi" : "Domani") : "Tutto il giorno";
+  const t = new Date(e.inizio).toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit"});
+  if (!short) return t + "–" + new Date(e.fine).toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit"});
+  return (evDay(e)===ymd(new Date()) ? "" : "Domani ") + t;
+}
+const CAL = { month:null, day:null, events:{}, attach:null, form:false };
+function openCal(attachIds, day){
+  S.open = null;
+  const today = ymd(new Date());
+  CAL.day = day || CAL.day || today;
+  CAL.month = CAL.day.slice(0,7);
+  CAL.attach = attachIds && attachIds.length ? attachIds : null;
+  CAL.form = false;
+  drawCal(); loadMonth(CAL.month);
+}
+function monthRange(m){
+  const first = new Date(m+"-01T12:00:00");
+  const start = new Date(first); start.setDate(1 - ((first.getDay()+6)%7));   // lunedì della prima settimana
+  const days = []; for (let i = 0; i < 42; i++){ const d = new Date(start); d.setDate(start.getDate()+i); days.push(ymd(d)); }
+  return days;
+}
+async function loadMonth(m){
+  if (CAL.events[m]) return;
+  CAL.events[m] = "loading"; drawCal();
+  const days = monthRange(m);
+  try { CAL.events[m] = await api("listEvents", days[0], addDays(days[41], 1)); }
+  catch(e){ CAL.events[m] = null; fail(e); }
+  if (CAL.month === m) drawCal();
+}
+function eventsOn(day){
+  const list = CAL.events[CAL.month];
+  if (!Array.isArray(list)) return [];
+  return list.filter(e => e.giorno ? (day >= e.inizio.slice(0,10) && day < e.fine.slice(0,10)) : evDay(e) === day);
+}
+function drawCal(){
+  const m = CAL.month, days = monthRange(m), today = ymd(new Date());
+  const label = new Date(m+"-01T12:00:00").toLocaleDateString("it-IT",{month:"long", year:"numeric"});
+  const loading = CAL.events[m] === "loading";
+  const noteDays = count(NOTES.map(n=>({d:n.data})), "d");
+  const dayEvents = eventsOn(CAL.day);
+  const dayNotes = NOTES.filter(n=>n.data===CAL.day);
+  const att = CAL.attach ? CAL.attach.map(id=>NOTES.find(x=>x.id===id)).filter(Boolean) : null;
+  const scroll = $(".drawer.cal .db") ? $(".drawer.cal .db").scrollTop : 0;
+  $("#layer").innerHTML = `<div class="scrim" data-close></div>
+  <section class="drawer cal" role="dialog" aria-label="Calendario">
+    <div class="dh"><strong style="font-family:var(--display);font-size:20px;display:flex;gap:8px;align-items:center">${icon("i-cal")}Calendario</strong>
+      <button class="btn icon ghost" data-close aria-label="Chiudi">${icon("i-close")}</button></div>
+    ${att ? `<div class="attachbar">${icon("i-clip")}<span>Allega <b>${att.length===1?esc(att[0].titolo):att.length+" file"}</b>: scegli un giorno, poi un evento o «Allega al giorno».</span><button class="btn ghost" data-calnoattach>Annulla</button></div>` : ""}
+    <div class="db">
+      <div class="calhead"><button class="btn icon ghost" data-calnav="-1" aria-label="Mese precedente">${icon("i-chevl")}</button>
+        <b>${esc(label)}</b>${loading?`<span class="hint">caricamento…</span>`:""}
+        <button class="btn icon ghost" data-calnav="1" aria-label="Mese successivo">${icon("i-chevr")}</button>
+        <button class="btn" data-caltoday>Oggi</button></div>
+      <div class="month">${["lun","mar","mer","gio","ven","sab","dom"].map(d=>`<span class="wd">${d}</span>`).join("")}
+        ${days.map(d => { const ev = eventsOn(d).length; return `<button class="day ${d.slice(0,7)!==m?"out":""} ${d===today?"today":""} ${d===CAL.day?"sel":""}" data-calday="${d}">
+          <span>${Number(d.slice(8))}</span><span class="dots">${ev?`<i class="e"></i>`.repeat(Math.min(ev,3)):""}${noteDays[d]?`<i class="n"></i>`:""}</span></button>`; }).join("")}</div>
+      <div class="dayhead"><h3>${esc(new Date(CAL.day+"T12:00:00").toLocaleDateString("it-IT",{weekday:"long", day:"numeric", month:"long"}))}</h3>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">${att?`<button class="btn" data-calattachday>${icon("i-clip")}Allega al giorno</button>`:""}
+        <button class="btn primary" data-calnew>${icon("i-plus")}Nuovo evento</button></div></div>
+      ${CAL.form ? eventForm(att) : ""}
+      <div class="evlist">${dayEvents.length ? dayEvents.map(e => `<div class="ev">
+          <div class="evt"><span class="when">${esc(evWhen(e))}</span><b>${esc(e.titolo)}</b>${e.luogo?`<span class="hint">${icon("i-pin","mini")}${esc(e.luogo)}</span>`:""}</div>
+          ${e.allegati.length?`<div class="evlinks">${e.allegati.map(a=>NOTES.some(x=>x.id===a.id)?`<button class="src" data-src="${esc(a.id)}">${icon("i-clip","mini")}${esc(a.titolo)}</button>`:`<a class="src" href="${esc(a.url)}" target="_blank" rel="noopener">${icon("i-clip","mini")}${esc(a.titolo)} ↗</a>`).join("")}</div>`:""}
+          <div class="evact">${att?`<button class="btn" data-calattach="${esc(e.id)}">${icon("i-clip")}Allega qui</button>`:""}<a class="btn ghost" href="${esc(e.link)}" target="_blank" rel="noopener">Apri in Google Calendar ↗</a></div>
+        </div>`).join("") : `<p class="hint">${loading?"Caricamento degli eventi…":"Nessun evento in questo giorno."}</p>`}</div>
+      ${dayNotes.length?`<div><div class="lbl5">Note di questo giorno</div><div class="evlinks">${dayNotes.map(n=>`<button class="src" data-src="${esc(n.id)}">${typeIcon(n.tipo,"mini")}${esc(n.titolo)}</button>`).join("")}</div></div>`:""}
+    </div></section>`;
+  const db = $(".drawer.cal .db"); if (db) db.scrollTop = scroll;
+}
+function eventForm(att){
+  return `<form class="box evform" id="evform">
+    <div class="lbl5">Nuovo evento in Google Calendar</div>
+    <input class="input" id="e-tit" placeholder="Titolo" required value="${att&&att.length===1?esc(att[0].titolo):""}">
+    <div class="row3"><label class="field"><span>Giorno</span><input class="input" type="date" id="e-day" value="${CAL.day}" required></label>
+      <label class="field"><span>Ora (vuota = tutto il giorno)</span><input class="input" type="time" id="e-ora" value="09:00"></label>
+      <label class="field"><span>Durata</span><select class="input" id="e-dur"><option value="30">30 minuti</option><option value="60" selected>1 ora</option><option value="90">1 ora e mezza</option><option value="120">2 ore</option><option value="240">4 ore</option><option value="480">Giornata</option></select></label></div>
+    <div class="row3"><label class="field"><span>Luogo</span><input class="input" id="e-luogo"></label>
+      <label class="field"><span>Promemoria</span><select class="input" id="e-rem"><option value="0">Predefinito</option><option value="10">10 minuti prima</option><option value="30">30 minuti prima</option><option value="60">1 ora prima</option><option value="1440">1 giorno prima</option></select></label></div>
+    <label class="field"><span>Invita (email, facoltativo)</span><input class="input" id="e-inv" list="rcpt2" placeholder="nome@esempio.it"><datalist id="rcpt2">${recipients().map(r=>`<option value="${esc(r)}">`).join("")}</datalist></label>
+    <textarea class="input" id="e-desc" placeholder="Note (facoltative)" style="min-height:70px"></textarea>
+    ${att?`<div class="files">${att.map(n=>`<span class="tag">${icon("i-clip","mini")}${esc(n.titolo)}</span>`).join("")}</div>`:""}
+    <p class="hint" style="margin:0">Gli invitati ricevono l'invito via email; per aprire gli allegati devono avere accesso ai file su Drive.</p>
+    <div style="display:flex;justify-content:flex-end;gap:8px"><button type="button" class="btn ghost" data-calcancel>Annulla</button><button class="btn primary" id="e-save">${icon("i-check")}Crea evento</button></div>
+  </form>`;
+}
+function markLinked(ids, ev){
+  (ids||[]).forEach(id => { const n = NOTES.find(x=>x.id===id); if (!n) return;
+    n.eventi = [{id:ev.id, titolo:ev.titolo, data:evDay(ev), link:ev.link}].concat((n.eventi||[]).filter(x=>x.id!==ev.id)); });
+  cacheNotes();
+}
+function calChanged(ev, ids, msg){
+  delete CAL.events[CAL.month]; S.agenda = null; loadAgenda();
+  markLinked(ids, ev); CAL.attach = null; CAL.form = false;
+  CAL.day = evDay(ev); CAL.month = CAL.day.slice(0,7);
+  toast(msg); drawCal(); loadMonth(CAL.month); render();
+}
+async function saveEvent(){
+  const b = $("#e-save"); b.disabled = true;
+  const ids = CAL.attach || [];
+  const o = { titolo:$("#e-tit").value, data:$("#e-day").value, ora:$("#e-ora").value, durata:Number($("#e-dur").value),
+    luogo:$("#e-luogo").value, promemoria:Number($("#e-rem").value), invitati:$("#e-inv").value, descrizione:$("#e-desc").value, fileIds:ids };
+  try { calChanged(await api("createEvent", o), ids, "Evento creato in Google Calendar"); }
+  catch(e){ b.disabled = false; fail(e); }
+}
+
+/* ---------- Caricamento diretto su Drive (file grandi, video) ---------- */
+async function uploadBig(file, scope, onProgress){
+  if (window.NB_DEMO) { for (let p = 0; p <= 100; p += 25) { onProgress(p); await new Promise(r=>setTimeout(r,150)); } return api("demoUpload", file.name, file.type, scope); }
+  const t = await api("getUploadTarget", scope);
+  const start = await fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable&fields=id", {
+    method:"POST",
+    headers:{ "Authorization":"Bearer " + t.token, "Content-Type":"application/json; charset=UTF-8",
+      "X-Upload-Content-Type": file.type || "application/octet-stream", "X-Upload-Content-Length": String(file.size) },
+    body: JSON.stringify({ name:file.name, parents:[t.folderId], mimeType:file.type || undefined })
+  });
+  const url = start.headers.get("Location");
+  if (!start.ok || !url) throw new Error("Drive non ha accettato il caricamento (" + start.status + ").");
+  const CHUNK = 32 * 256 * 1024; // 8 MB, multiplo di 256 KB come richiede Drive
+  for (let pos = 0; pos < file.size; ) {
+    const end = Math.min(pos + CHUNK, file.size);
+    const r = await fetch(url, { method:"PUT", headers:{ "Content-Range":`bytes ${pos}-${end-1}/${file.size}` }, body:file.slice(pos, end) });
+    if (r.status === 308) { const rg = r.headers.get("Range"); pos = rg ? Number(rg.split("-")[1]) + 1 : end; onProgress(Math.round(pos/file.size*100)); continue; }
+    if (!r.ok) throw new Error("Caricamento interrotto (" + r.status + "). Riprova.");
+    onProgress(100);
+    return (await r.json()).id;
+  }
+  throw new Error("Caricamento non completato.");
+}
+
 /* ---------- Selezione multipla ---------- */
 function setSelecting(on){
   S.sel = on ? new Set() : null;
@@ -840,6 +1241,8 @@ function setSelecting(on){
 function updateSelbar(){ if (S.sel) $("#selcount").textContent = S.sel.size + (S.sel.size===1?" selezionata":" selezionate"); }
 async function bulk(action){
   const ids = [...S.sel]; if (!ids.length) return toast("Seleziona prima qualche nota.");
+  if (action === "mail") { if (ids.length > 20) return toast("Puoi inviare al massimo 20 file per email."); return openMail(ids); }
+  if (action === "cal") { if (ids.length > 25) return toast("Un evento accetta al massimo 25 allegati."); return openCal(ids); }
   if (action === "del" && !$("#selbar").dataset.confirm) {
     $("#selbar").dataset.confirm = "1";
     $("#selcount").textContent = `Eliminare ${ids.length} note? Vanno nel cestino di Drive (recuperabili per 30 giorni). Premi di nuovo Elimina per confermare.`;
@@ -856,6 +1259,7 @@ async function bulk(action){
       ok++;
     } catch(e){ ko++; }
   }
+  cacheNotes();
   toast(`${ok} note ${action==="del"?"eliminate":"spostate"}` + (ko?`, ${ko} non riuscite (file di altre persone o errori)`:""));
   setSelecting(false);
 }
@@ -870,23 +1274,44 @@ async function importPlaud(){
   } catch(e){ fail(e); }
 }
 
+async function runQueue(){
+  toast("Controllo delle registrazioni Plaud in arrivo…");
+  try { const r = await api("runPlaudQueue"); toast(r.fatti ? `${r.fatti} registrazioni completate con audio e trascrizione: premi Aggiorna` : (r.errori && r.errori.length ? "Problema: " + r.errori[0] : "Nessuna registrazione in attesa")); }
+  catch(e){ fail(e); }
+}
+
 /* ---------- Avvio ---------- */
+/* Le note restano anche nel browser: all'apertura compaiono subito, poi si aggiornano da Drive. */
+function cacheNotes(){ if (!ME) return; try { localStorage.setItem("nb-notes-" + ME, JSON.stringify(NOTES)); } catch(e){} }
+function cachedNotes(){
+  // Solo le note dell'account che sta aprendo l'app (il server scrive l'email nella pagina).
+  try { const me = SERVER_ME; const v = me && localStorage.getItem("nb-notes-" + me); return v ? {me, notes:JSON.parse(v)} : null; } catch(e){ return null; }
+}
 async function load(){
   try {
     BOOT = await api("getBootstrap");
     ME = BOOT.email;
     if (BOOT.prefs) { P = Object.assign({}, DEFAULTS, BOOT.prefs); store("nb-prefs", JSON.stringify(P)); applyPrefs(); }
     NOTES = [...BOOT.personal, ...BOOT.team];
+    cacheNotes();
     $("#av").textContent = (P.nome || ME).slice(0,2).toUpperCase();
+    document.body.classList.remove("stale");
     banner(); render();
-  } catch(e){ $("#grid").innerHTML = `<div class="empty"><b>Non riesco a leggere le cartelle</b>${esc(e.message||e)}</div>`; }
+    if (!S.agenda) loadAgenda();
+  } catch(e){
+    document.body.classList.remove("stale");
+    if (NOTES.length) return toast("Non riesco ad aggiornare le note: " + (e.message || e));
+    $("#grid").innerHTML = `<div class="empty"><b>Non riesco a leggere le cartelle</b>${esc(e.message||e)}</div>`;
+  }
 }
 function banner(){
   const msgs = [];
   if (!BOOT.aiEnabled) msgs.push(BOOT.isAdmin
     ? `La catalogazione con Claude non è attiva. Incolla la chiave API: <input class="input" id="apikey" type="password" placeholder="sk-ant-…" style="width:min(320px,100%)" autocomplete="off"> <button class="btn primary" id="savekey">Salva chiave</button>`
     : "La catalogazione automatica non è ancora attiva: l'amministratore deve inserire la chiave di Claude.");
-  if (!BOOT.syncInstalled) msgs.push(`I file nuovi su Drive vengono letti quando premi Aggiorna. <button class="btn" id="auto">Attiva l'aggiornamento ogni ora</button>`);
+  if (!BOOT.syncInstalled) msgs.push(BOOT.isAdmin
+    ? `Attiva gli aggiornamenti automatici: cartelle ogni ora e registrazioni Plaud (audio e trascrizione) ogni 10 minuti. <button class="btn" id="auto">Attiva</button>`
+    : `I file nuovi su Drive vengono letti quando premi Aggiorna. <button class="btn" id="auto">Attiva l'aggiornamento ogni ora</button>`);
   $("#banner").innerHTML = msgs.map(m=>`<div class="banner"><span>${m}</span></div>`).join("");
   $("#banner").hidden = !msgs.length;
   const k = $("#savekey"); if (k) k.onclick = async () => { k.disabled = true; try { await api("setApiKey", $("#apikey").value); BOOT.aiEnabled = true; banner(); toast("Chiave verificata e salvata: premi Aggiorna per catalogare le note"); } catch(e){ k.disabled = false; fail(e); } };
@@ -896,7 +1321,7 @@ function banner(){
 /* ---------- Eventi ---------- */
 let searchTimer;
 $("#q").addEventListener("input",e=>{
-  S.q=e.target.value; S.hits={}; render();
+  S.q=e.target.value; S.hits={}; S.shown=PAGE; renderSoon();
   clearTimeout(searchTimer);
   if (S.q.trim().length < 3) return;
   const q = S.q;
@@ -904,7 +1329,7 @@ $("#q").addEventListener("input",e=>{
     try { const r = await api("searchText", q); if (q !== S.q) return; r.forEach(h => S.hits[h.id] = h.estratto); render(); } catch(e){}
   }, 450);
 });
-$("#seg").addEventListener("click",e=>{const b=e.target.closest("button"); if(!b) return; S.scope=b.dataset.s; S.cat=S.type=S.tag=null; render();});
+$("#seg").addEventListener("click",e=>{const b=e.target.closest("button"); if(!b) return; S.scope=b.dataset.s; S.cat=S.type=S.tag=null; S.shown=PAGE; render();});
 $("#views").addEventListener("click",e=>{const b=e.target.closest("button"); if(!b) return; P.vista=b.dataset.v; savePrefs(); render();});
 $("#sort").addEventListener("change",e=>{P.ordine=e.target.value; savePrefs(); render();});
 $("#side").addEventListener("click",e=>{
@@ -912,9 +1337,10 @@ $("#side").addEventListener("click",e=>{
   if("cat" in b.dataset) S.cat=b.dataset.cat||null;
   if(b.dataset.type) S.type = S.type===b.dataset.type?null:b.dataset.type;
   if(b.dataset.tag) S.tag = S.tag===b.dataset.tag?null:b.dataset.tag;
-  render();
+  S.shown=PAGE; render();
 });
 function onCards(e){
+  if (e.target.closest("#more")) { S.shown += PAGE; return render(); }
   if (S.sel) { const c=e.target.closest("[data-open]"); if(!c) return; const id=c.dataset.open;
     S.sel.has(id) ? S.sel.delete(id) : S.sel.add(id); delete $("#selbar").dataset.confirm; updateSelbar(); render(); return; }
   const st=e.target.closest("[data-star]"); if(st){ e.stopPropagation(); return toggleStar(st.dataset.star); }
@@ -930,12 +1356,14 @@ $("#hero").addEventListener("click",e=>{
   if(a==="plaudimport") importPlaud();
   if(a==="ask") openChat();
   if(a==="custom") openCustom();
+  if(a==="cal") openCal(null, b.dataset.day);
   if(a==="all"){ S.scope="tutte"; S.cat=S.type=S.tag=null; render(); }
   if(a==="plaud"){ S.scope="tutte"; S.cat=S.tag=null; S.type="plaud"; render(); $("#grid").scrollIntoView({behavior:"smooth"}); }
   if(a==="review"){ S.scope="tutte"; S.cat=S.type=S.tag=null; S.q=""; $("#q").value=""; P.ordine="recenti"; render();
     const first = NOTES.find(n=>n.stato==="da rivedere"); if(first) openNote(first.id); }
 });
 $("#up").onclick=upload;
+$("#calbtn").onclick=()=>openCal();
 $("#ask").onclick=()=>{ const q = S.q.trim().length > 2 ? S.q : ""; if (q) { $("#q").value=""; S.q=""; S.hits={}; render(); } openChat(q); };
 $("#q").addEventListener("keydown",e=>{ if(e.key==="Enter" && S.q.trim().length > 2){ e.preventDefault(); const q=S.q; e.target.value=""; S.q=""; S.hits={}; render(); openChat(q); } });
 $("#selbtn").onclick=()=>setSelecting(!S.sel);
@@ -954,14 +1382,25 @@ $("#mf").onclick=()=>{const o=$("#side").classList.toggle("open"); $("#mf").setA
 $("#av").onclick=()=>{
   const m=$("#menu"); m.hidden=!m.hidden;
   m.innerHTML=`<div class="lbl">Connesso come</div><div style="padding:2px 10px 8px;font-weight:600;overflow-wrap:anywhere">${esc(ME)}</div>
-  <button data-m="custom">${icon("i-palette")}Personalizza</button><button data-m="sync">${icon("i-sync")}Aggiorna dalle cartelle</button>${BOOT.isAdmin?`<button data-m="plaud">${icon("i-t-plaud")}Importa da Plaud</button>`:""}
+  <button data-m="custom">${icon("i-palette")}Personalizza</button><button data-m="sync">${icon("i-sync")}Aggiorna dalle cartelle</button><button data-m="cal">${icon("i-cal")}Calendario</button>${BOOT.isAdmin?`<button data-m="plaud">${icon("i-t-plaud")}Importa da Plaud</button><button data-m="queue">${icon("i-t-audio")}Scarica ora audio e trascrizioni Plaud</button>`:""}
   <div class="lbl">Per cambiare account usa il menu di Google</div>`;
 };
-$("#menu").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; $("#menu").hidden=true; if(b.dataset.m==="custom") openCustom(); if(b.dataset.m==="sync") $("#sync").click(); if(b.dataset.m==="plaud") importPlaud(); });
+$("#menu").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; $("#menu").hidden=true; if(b.dataset.m==="custom") openCustom(); if(b.dataset.m==="sync") $("#sync").click(); if(b.dataset.m==="plaud") importPlaud(); if(b.dataset.m==="queue") runQueue(); if(b.dataset.m==="cal") openCal(); });
 document.addEventListener("click",e=>{ if(!e.target.closest("#menu,#av")) $("#menu").hidden=true; });
 
 $("#layer").addEventListener("click",async e=>{
   if(e.target.closest("[data-close]")) return closeLayer();
+  // Calendario
+  const cd = e.target.closest("[data-calday]"); if (cd) { CAL.day = cd.dataset.calday; if (CAL.day.slice(0,7) !== CAL.month) { CAL.month = CAL.day.slice(0,7); loadMonth(CAL.month); } return drawCal(); }
+  const cn = e.target.closest("[data-calnav]"); if (cn) { const d = new Date(CAL.month+"-01T12:00:00"); d.setMonth(d.getMonth()+Number(cn.dataset.calnav)); CAL.month = ymd(d).slice(0,7); CAL.day = CAL.month+"-01"; drawCal(); return loadMonth(CAL.month); }
+  if (e.target.closest("[data-caltoday]")) { CAL.day = ymd(new Date()); CAL.month = CAL.day.slice(0,7); drawCal(); return loadMonth(CAL.month); }
+  if (e.target.closest("[data-calnew]")) { CAL.form = true; drawCal(); $("#e-tit")?.focus(); return; }
+  if (e.target.closest("[data-calcancel]")) { CAL.form = false; return drawCal(); }
+  if (e.target.closest("[data-calnoattach]")) { CAL.attach = null; return drawCal(); }
+  const ca = e.target.closest("[data-calattach]"); if (ca) { ca.disabled = true; const ids = CAL.attach;
+    try { calChanged(await api("attachToEvent", ca.dataset.calattach, ids), ids, "File allegati all'evento"); } catch(err){ ca.disabled = false; fail(err); } return; }
+  if (e.target.closest("[data-calattachday]")) { const b = e.target.closest("[data-calattachday]"); b.disabled = true; const ids = CAL.attach;
+    try { calChanged(await api("attachToDay", CAL.day, ids), ids, "File allegati al giorno"); } catch(err){ b.disabled = false; fail(err); } return; }
   // Chat
   const sug = e.target.closest("[data-suggest]"); if (sug) return ask(sug.dataset.suggest);
   const src = e.target.closest("[data-src]"); if (src) { if (NOTES.some(x=>x.id===src.dataset.src)) openNote(src.dataset.src); else toast("Nota non trovata: premi Aggiorna."); return; }
@@ -979,10 +1418,16 @@ $("#layer").addEventListener("click",async e=>{
   // Nota
   const n=NOTES.find(x=>x.id===S.open); if(!n) return;
   const st=e.target.closest("[data-star]"); if(st) return toggleStar(n.id);
+  if(e.target.closest("[data-mail]")) return openMail([n.id]);
+  if(e.target.closest("[data-tocal]")) return openCal([n.id]);
+  const pv=e.target.closest("[data-preview]");
+  if(pv){ const box=$("#pv"); box.classList.add("playing");
+    box.innerHTML = `<iframe src="https://drive.google.com/file/d/${encodeURIComponent(pv.dataset.preview)}/preview" allow="autoplay; fullscreen" allowfullscreen title="Anteprima"></iframe>
+      <p class="hint" style="margin:6px 0 0">Se l'anteprima non compare, usa «Apri in Drive».</p>`; return; }
   if(e.target.closest("[data-askdel]")){ $("#delconfirm").hidden = false; return; }
   if(e.target.closest("[data-nodel]")){ $("#delconfirm").hidden = true; return; }
   if(e.target.closest("[data-del]")){
-    try { await api("deleteNote", n.id); NOTES = NOTES.filter(x=>x.id!==n.id); closeLayer(); render(); toast("Nota spostata nel cestino di Drive"); } catch(err){ fail(err); }
+    try { await api("deleteNote", n.id); NOTES = NOTES.filter(x=>x.id!==n.id); cacheNotes(); closeLayer(); render(); toast("Nota spostata nel cestino di Drive"); } catch(err){ fail(err); }
     return; }
   if(e.target.closest("[data-edit]")) return startEdit(n);
   if(e.target.closest("[data-canceledit]")) return openNote(n.id);
@@ -998,10 +1443,14 @@ $("#layer").addEventListener("click",async e=>{
   if(e.target.closest("[data-text]")){ $("#full").textContent="Caricamento…"; try { $("#full").textContent = (await api("getNoteText", n.id)) || "Nessun testo estratto."; } catch(err){ fail(err); } }
   if(e.target.closest("[data-move]")){
     const to = n.sezione==="team"?"mie":"team";
-    try { await api("moveNote", n.id, to); n.sezione=to; render(); openNote(n.id); toast(to==="team"?"Ora la vede tutto il team":"Ora la vedi solo tu"); } catch(err){ fail(err); }
+    try { await api("moveNote", n.id, to); n.sezione=to; cacheNotes(); render(); openNote(n.id); toast(to==="team"?"Ora la vede tutto il team":"Ora la vedi solo tu"); } catch(err){ fail(err); }
   }
 });
-$("#layer").addEventListener("submit",e=>{ if(e.target.id==="chatform"){ e.preventDefault(); const q=$("#chatq"); const v=q.value; q.value=""; ask(v); } });
+$("#layer").addEventListener("submit",e=>{
+  if(e.target.id==="chatform"){ e.preventDefault(); const q=$("#chatq"); const v=q.value; q.value=""; ask(v); }
+  if(e.target.id==="mailform"){ e.preventDefault(); sendMail(); }
+  if(e.target.id==="evform"){ e.preventDefault(); saveEvent(); }
+});
 $("#layer").addEventListener("change",async e=>{
   if (e.target.id==="ovunque") { S.ovunque = e.target.checked; return; }
   if (e.target.id==="repfile" && e.target.files[0]) { const f=e.target.files[0]; const n=NOTES.find(x=>x.id===S.open); if(!n) return;
@@ -1027,5 +1476,7 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape"){ if(S.sel && !S.op
 try { const saved = JSON.parse(store("nb-prefs") || "null"); if (saved) P = Object.assign({}, DEFAULTS, saved); } catch(e){}
 S.scope = P.sezione;
 applyPrefs();
+const cached = cachedNotes();
+if (cached && !window.NB_DEMO) { ME = cached.me; NOTES = cached.notes; document.body.classList.add("stale"); render(); }
 load();
 </script>

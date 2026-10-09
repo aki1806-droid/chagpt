@@ -35,6 +35,16 @@ Plaud ──► routine Claude giornaliera (connettori Plaud + Drive) ──► 
 - **Caricamento massivo**: più file caricati uno alla volta (`uploadRaw`), poi catalogati con cicli di `syncNow`.
 - **Limiti noti**: file caricati dall'app fino a 20 MB; testo indicizzato fino a 45.000 caratteri per nota; con migliaia di note la ricerca sul foglio rallenta (valutare in seguito un indice dedicato).
 
+- **Versione 2 (2026-10-09)**:
+  - Formati: video, fogli, presentazioni, CSV/JSON, archivi (`typeFor_`). Excel e PowerPoint convertiti in file Google temporanei per leggerne il testo.
+  - Foto e video: Claude riceve l'immagine (o l'anteprima di Drive a 1280 px, per i video un fotogramma).
+  - Anteprime nelle schede con `getThumbs`, a gruppi, in cache 6 ore.
+  - File oltre 20 MB caricati dal browser direttamente su Drive (caricamento resumable con il token di chi usa l'app), poi `finishUpload`.
+  - Gmail: `sendEmail` con MailApp (scope `script.send_mail`); Documenti, Fogli e Presentazioni allegati come PDF, oltre 24 MB collegamenti.
+  - Calendar: servizio avanzato Calendar v3. `listEvents`, `createEvent`, `attachToEvent`, `attachToDay` (evento di tutto il giorno "File del giorno (Notabene)"); colonna `eventi` dell'indice.
+  - Plaud: la routine scrive in `Plaud/_coda` un JSON con i link temporanei (1 ora) di audio e trascrizione; `processPlaudQueue` (ogni 10 minuti, account amministratore) scarica audio in `Plaud/Audio Plaud` e trascrizione nel Doc. Colonna `media` = ID dell'audio.
+  - Velocità: note salvate nel browser per account (chiave con l'email scritta dal server nella pagina), schede a pagine da 60, ridisegno raggruppato.
+  - Colonne dell'indice: sempre aggiunte in fondo, lette per posizione.
 - **Personalizzazione**: tema, colore principale, caratteri, sfondo, angoli, spaziatura, dimensione testo, sezioni della pagina iniziale, vista, ordine, colori delle categorie; per nota titolo, categoria, etichette, colore e stella. Le impostazioni sono salvate per utente (UserProperties).
 
 File: `app/` (codice), `INSTALLAZIONE.md` (guida), `COSTI.md` (stime), `prototipo/` (demo generata da `app/` con `prototipo/build.py` e dati di `prototipo/demo.js`).

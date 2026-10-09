@@ -35,12 +35,18 @@ const FALLBACK_MODELS = /^claude-(opus-5|sonnet-5-5|fable-5-1)/;
 
 const PERSONAL_FOLDER_NAME = 'Notabene Personale';
 const INDEX_NAME = '_Notabene Indice';
+// Le colonne nuove vanno sempre aggiunte in fondo: l'indice si legge per posizione.
 const HEADERS = ['id', 'titolo', 'tipo', 'mime', 'data', 'modificato', 'categoria', 'etichette',
-  'riassunto', 'testo', 'stato', 'url', 'autore', 'percorso', 'preferita', 'colore'];
+  'riassunto', 'testo', 'stato', 'url', 'autore', 'percorso', 'preferita', 'colore', 'media', 'eventi'];
 const MAX_TEXT = 45000;          // limite prudente per una cella di Fogli (50.000)
 const MAX_AI_CHARS = 60000;      // testo massimo inviato all'AI per nota
 const RUN_BUDGET_MS = 4.5 * 60 * 1000; // Apps Script si ferma a 6 minuti
-const MAX_UPLOAD_BYTES = 20 * 1024 * 1024;
+const MAX_UPLOAD_BYTES = 20 * 1024 * 1024;   // caricamento classico; oltre si usa il caricamento diretto su Drive
+const CHAT_EXCERPT = 300;                       // lunghezza degli estratti mostrati all'agente
+const MAX_MAIL_ATTACH = 24 * 1024 * 1024;       // Gmail accetta allegati fino a 25 MB in totale
+const AUDIO_FOLDER_NAME = 'Audio Plaud';        // registrazioni scaricate da Plaud (non catalogate a parte)
+const QUEUE_FOLDER_NAME = '_coda';              // richieste della routine Plaud in attesa
+const PENDING_PREVIEW = 'In attesa dell\'anteprima di Drive: la catalogazione riprova al prossimo aggiornamento.';
 
 // ---------- Pagina ----------
 
@@ -51,7 +57,9 @@ function doGet() {
       '<p style="font-family:sans-serif;padding:24px">L\'account ' + escapeHtml_(user.email || 'sconosciuto') +
       ' non è autorizzato. Chiedi all\'amministratore di aggiungerlo.</p>').setTitle('Notabene');
   }
-  return HtmlService.createTemplateFromFile('Index').evaluate()
+  const page = HtmlService.createTemplateFromFile('Index');
+  page.me = user.email; // per mostrare subito le note salvate nel browser di questo account
+  return page.evaluate()
     .setTitle('Notabene')
     .addMetaTag('viewport', 'width=device-width, initial-scale=1')
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.DEFAULT);
@@ -151,6 +159,8 @@ function folderFor_(scope) {
   return it.hasNext() ? it.next() : DriveApp.getRootFolder().createFolder(PERSONAL_FOLDER_NAME);
 }
 
+const HEADER_CHECKED_ = {};
+
 function indexSheet_(folder) {
   const it = folder.getFilesByName(INDEX_NAME);
   let ss;
@@ -164,7 +174,13 @@ function indexSheet_(folder) {
     sh.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]).setFontWeight('bold');
     sh.setFrozenRows(1);
   }
-  return ss.getSheetByName('note');
+  const sheet = ss.getSheetByName('note');
+  // Indici creati da versioni precedenti: aggiunge le intestazioni delle colonne nuove, i dati restano.
+  if (!HEADER_CHECKED_[ss.getId()] && sheet.getLastColumn() < HEADERS.length) {
+    sheet.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]).setFontWeight('bold');
+  }
+  HEADER_CHECKED_[ss.getId()] = true;
+  return sheet;
 }
 
 function readIndex_(sheet) {
@@ -186,13 +202,16 @@ function toRow_(o) {
 
 function getBootstrap() {
   const u = requireUser_();
+  const admin = isAdmin_(u.email);
+  const handlers = ScriptApp.getProjectTriggers().map(t => t.getHandlerFunction());
   return {
     email: u.email,
     aiEnabled: aiReady_(),
-    isAdmin: isAdmin_(u.email),
-    plaudReady: isAdmin_(u.email) && !!prop_('PLAUD_ROUTINE_TOKEN'),
+    isAdmin: admin,
+    plaudReady: admin && !!prop_('PLAUD_ROUTINE_TOKEN'),
     prefs: getPrefs(),
-    syncInstalled: ScriptApp.getProjectTriggers().some(t => t.getHandlerFunction() === 'syncAll'),
+    // L'amministratore (proprietario della cartella Plaud) ha anche il controllo della coda ogni 10 minuti.
+    syncInstalled: handlers.indexOf('syncAll') !== -1 && (!admin || handlers.indexOf('processPlaudQueue') !== -1),
     personal: listNotes('mie'),
     team: listNotes('team')
   };
@@ -273,7 +292,7 @@ function uploadNote(name, mimeType, base64, scope) {
   const folder = folderFor_(scope);
   const file = folder.createFile(Utilities.newBlob(bytes, mimeType || 'application/octet-stream', name));
   const sheet = indexSheet_(folder);
-  const note = processFile_(file, folder.getName());
+  const note = processFile_(file, folder.getName() + '/' + name);
   sheet.appendRow(toRow_(note));
   return clientNote_(note, scope);
 }
@@ -379,6 +398,7 @@ function clientNote_(o, scope) {
     etichette: String(o.etichette || '').split(',').map(s => s.trim()).filter(Boolean),
     riassunto: o.riassunto, stato: o.stato, url: o.url, autore: o.autore, percorso: o.percorso,
     preferita: o.preferita === true || o.preferita === 'TRUE', colore: o.colore === '' || o.colore == null ? '' : Number(o.colore),
+    media: o.media || '', eventi: parseEvents_(o.eventi),
     sezione: scope
   };
 }
@@ -579,15 +599,6 @@ function toolReadFile_(n, from, ctx) {
 
 /** Testo di qualsiasi file leggibile: Docs, testi, PDF/foto/Word con OCR, Fogli, Presentazioni. */
 function readAnyText_(file) {
-  const mime = file.getMimeType();
-  if (mime === MimeType.GOOGLE_SHEETS) {
-    return SpreadsheetApp.openById(file.getId()).getSheets().map(sh =>
-      '## ' + sh.getName() + '\n' + sh.getDataRange().getDisplayValues().map(r => r.join(' | ')).join('\n')).join('\n\n');
-  }
-  if (mime === MimeType.GOOGLE_SLIDES) {
-    return SlidesApp.openById(file.getId()).getSlides().map((s, i) => '## Diapositiva ' + (i + 1) + '\n' +
-      s.getShapes().map(sh => { try { return sh.getText().asString(); } catch (e) { return ''; } }).join('\n')).join('\n\n');
-  }
   return extractText_(file, typeOf_(file));
 }
 
@@ -650,11 +661,16 @@ function syncNow() {
   return syncAll();
 }
 
-/** Attiva la sincronizzazione automatica ogni ora per l'utente corrente. */
+/**
+ * Attiva la sincronizzazione automatica ogni ora per l'utente corrente.
+ * Per l'amministratore aggiunge il controllo ogni 10 minuti delle registrazioni Plaud in arrivo.
+ */
 function installSync() {
-  requireUser_();
-  ScriptApp.getProjectTriggers().filter(t => t.getHandlerFunction() === 'syncAll').forEach(t => ScriptApp.deleteTrigger(t));
+  const u = requireUser_();
+  const mine = ['syncAll', 'processPlaudQueue'];
+  ScriptApp.getProjectTriggers().filter(t => mine.indexOf(t.getHandlerFunction()) !== -1).forEach(t => ScriptApp.deleteTrigger(t));
   ScriptApp.newTrigger('syncAll').timeBased().everyHours(1).create();
+  if (isAdmin_(u.email)) ScriptApp.newTrigger('processPlaudQueue').timeBased().everyMinutes(10).create();
   return true;
 }
 
@@ -682,6 +698,379 @@ function findNote_(id) {
   return null;
 }
 
+// ---------- Anteprime ----------
+
+/**
+ * Anteprime di foto, video, PDF e documenti per le schede, come immagini incorporate.
+ * Restano in cache 6 ore; "none" significa che Drive non ha (ancora) un'anteprima.
+ */
+function getThumbs(ids) {
+  requireUser_();
+  ids = (ids || []).slice(0, 12).map(String);
+  const cache = CacheService.getUserCache();
+  const hit = cache.getAll(ids.map(id => 'th_' + id));
+  const out = {};
+  ids.forEach(id => {
+    const k = 'th_' + id;
+    if (hit[k]) { out[id] = hit[k] === 'none' ? '' : hit[k]; return; }
+    let uri = '';
+    try {
+      let blob = null;
+      try { blob = driveThumbnail_(id, 480); } catch (e) {}
+      if (!blob) blob = DriveApp.getFileById(id).getThumbnail();
+      if (blob) uri = 'data:' + (blob.getContentType() || 'image/png') + ';base64,' + Utilities.base64Encode(blob.getBytes());
+    } catch (e) {
+      console.warn('Anteprima non disponibile per ' + id + ': ' + e);
+    }
+    out[id] = uri;
+    try { cache.put(k, uri && uri.length < 95000 ? uri : 'none', uri ? 21600 : 1800); } catch (e) {}
+  });
+  return out;
+}
+
+// ---------- Caricamento di file grandi (video) ----------
+
+/**
+ * I file oltre 20 MB (per esempio i video) vanno direttamente dal browser a Drive con il caricamento
+ * "resumable" di Google: la pagina riceve il token di accesso di chi sta usando l'app, valido un'ora,
+ * e lo usa solo per inviare il file alla cartella scelta.
+ */
+function getUploadTarget(scope) {
+  requireUser_();
+  return { token: ScriptApp.getOAuthToken(), folderId: folderFor_(scope).getId() };
+}
+
+/** Dopo il caricamento diretto: cataloga subito il file (un solo file) oppure lascia fare alla sincronizzazione. */
+function finishUpload(id, scope, catalog) {
+  requireUser_();
+  const folder = folderFor_(scope);
+  const file = DriveApp.getFileById(id);
+  if (!catalog) return true;
+  const note = processFile_(file, folder.getName() + '/' + file.getName());
+  indexSheet_(folder).appendRow(toRow_(note));
+  return clientNote_(note, scope);
+}
+
+// ---------- Email con Gmail ----------
+
+const EMAIL_RE = /^[^\s@,;<>]+@[^\s@,;<>]+\.[^\s@,;<>]+$/;
+
+function emailList_(s) {
+  const list = String(s || '').split(/[,;\s]+/).map(x => x.trim()).filter(Boolean);
+  list.forEach(x => { if (!EMAIL_RE.test(x)) throw new Error('Indirizzo email non valido: ' + x); });
+  return list;
+}
+
+/**
+ * Invia un'email dal Gmail di chi usa l'app con i file come allegati.
+ * I file Google (Documenti, Fogli, Presentazioni) diventano PDF. Se gli allegati superano 24 MB,
+ * i file restanti vanno nel messaggio come collegamenti a Drive (ed eventualmente condivisi in lettura).
+ */
+function sendEmail(o) {
+  requireUser_();
+  o = o || {};
+  const to = emailList_(o.a);
+  const cc = emailList_(o.cc);
+  if (!to.length) throw new Error('Scrivi almeno un destinatario.');
+  if (MailApp.getRemainingDailyQuota() < to.length + cc.length) throw new Error('Hai raggiunto il limite giornaliero di Gmail per gli invii da app: riprova domani.');
+  const subject = String(o.oggetto || '').trim() || 'File da Notabene';
+  const attachments = [], links = [];
+  let total = 0;
+  (o.fileIds || []).slice(0, 20).forEach(id => {
+    const file = DriveApp.getFileById(id);
+    const mime = file.getMimeType();
+    let blob = null, size = 0;
+    if (o.allega !== false) {
+      if (mime === MimeType.GOOGLE_DOCS || mime === MimeType.GOOGLE_SHEETS || mime === MimeType.GOOGLE_SLIDES) {
+        blob = file.getAs(MimeType.PDF).setName(file.getName().replace(/^\[Plaud\]\s*/i, '') + '.pdf');
+        size = blob.getBytes().length;
+      } else if (mime.indexOf('application/vnd.google-apps') !== 0 && file.getSize() + total < MAX_MAIL_ATTACH) {
+        blob = file.getBlob();
+        size = file.getSize();
+      }
+    }
+    if (blob && total + size < MAX_MAIL_ATTACH) {
+      attachments.push(blob);
+      total += size;
+    } else {
+      links.push(file);
+    }
+  });
+  if (o.condividi) {
+    links.forEach(f => to.concat(cc).forEach(e => { try { f.addViewer(e); } catch (err) { console.warn('Condivisione non riuscita: ' + err); } }));
+  }
+  let body = String(o.messaggio || '').trim();
+  if (links.length) {
+    body += (body ? '\n\n' : '') + 'File su Google Drive:\n' + links.map(f => '- ' + f.getName() + ': ' + f.getUrl()).join('\n');
+  }
+  const html = escapeHtml_(body).replace(/(https:\/\/[^\s<]+)/g, '<a href="$1">$1</a>').replace(/\n/g, '<br>');
+  const msg = { to: to.join(','), subject: subject, body: body || ' ', htmlBody: '<div style="font-family:sans-serif;font-size:14px">' + (html || '&nbsp;') + '</div>' };
+  if (cc.length) msg.cc = cc.join(',');
+  if (attachments.length) msg.attachments = attachments;
+  MailApp.sendEmail(msg);
+  return { allegati: attachments.length, collegamenti: links.length, restanti: MailApp.getRemainingDailyQuota() };
+}
+
+// ---------- Google Calendar ----------
+
+const DAY_EVENT_TITLE = 'File del giorno (Notabene)';
+
+function evOut_(e) {
+  return {
+    id: e.id, titolo: e.summary || '(senza titolo)', inizio: e.start.dateTime || e.start.date, fine: e.end.dateTime || e.end.date,
+    giorno: !e.start.dateTime, luogo: e.location || '', descrizione: String(e.description || '').substr(0, 600), link: e.htmlLink,
+    allegati: (e.attachments || []).map(a => ({ titolo: a.title, url: a.fileUrl, id: a.fileId || '' }))
+  };
+}
+
+/** Eventi del calendario principale tra due date (YYYY-MM-DD, fine esclusa). */
+function listEvents(from, to) {
+  requireUser_();
+  const res = Calendar.Events.list('primary', {
+    timeMin: romeDate_(from, '00:00').toISOString(), timeMax: romeDate_(to, '00:00').toISOString(),
+    singleEvents: true, orderBy: 'startTime', maxResults: 250
+  });
+  return (res.items || []).filter(e => e.status !== 'cancelled').map(evOut_);
+}
+
+/** Data e ora italiane → Date (tiene conto dell'ora legale). */
+function romeDate_(day, time) {
+  const guess = new Date(day + 'T' + time + ':00Z');
+  const offset = Utilities.formatDate(guess, 'Europe/Rome', 'Z'); // per esempio +0200
+  return new Date(day + 'T' + time + ':00' + offset.slice(0, 3) + ':' + offset.slice(3));
+}
+
+function addDays_(day, n) {
+  const d = new Date(day + 'T12:00:00Z');
+  d.setUTCDate(d.getUTCDate() + n);
+  return d.toISOString().slice(0, 10);
+}
+
+function driveAttachments_(fileIds) {
+  return (fileIds || []).slice(0, 25).map(id => {
+    const f = DriveApp.getFileById(id);
+    return { fileUrl: 'https://drive.google.com/open?id=' + id, fileId: id, title: f.getName(), mimeType: f.getMimeType() };
+  });
+}
+
+/**
+ * Crea un evento dall'app. o: titolo, data (YYYY-MM-DD), ora (HH:MM, vuota = tutto il giorno), durata (minuti),
+ * luogo, descrizione, promemoria (minuti prima, 0 = nessuno), invitati (email separate da virgola), fileIds.
+ */
+function createEvent(o) {
+  requireUser_();
+  o = o || {};
+  const title = String(o.titolo || '').trim();
+  if (!title) throw new Error('Scrivi il titolo dell\'evento.');
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(o.data || '')) throw new Error('Data non valida.');
+  const ev = { summary: title, location: String(o.luogo || ''), description: String(o.descrizione || '') };
+  if (o.ora) {
+    if (!/^\d{2}:\d{2}$/.test(o.ora)) throw new Error('Ora non valida.');
+    const start = romeDate_(o.data, o.ora);
+    const end = new Date(start.getTime() + Math.max(5, Number(o.durata) || 60) * 60000);
+    ev.start = { dateTime: start.toISOString(), timeZone: 'Europe/Rome' };
+    ev.end = { dateTime: end.toISOString(), timeZone: 'Europe/Rome' };
+  } else {
+    ev.start = { date: o.data };
+    ev.end = { date: addDays_(o.data, 1) };
+  }
+  const guests = emailList_(o.invitati);
+  if (guests.length) ev.attendees = guests.map(e => ({ email: e }));
+  const rem = Number(o.promemoria);
+  // Senza promemoria scelto: quelli predefiniti del calendario per gli eventi con orario, nessuno per i giorni interi.
+  ev.reminders = rem > 0 ? { useDefault: false, overrides: [{ method: 'popup', minutes: rem }] } : { useDefault: !!o.ora };
+  if (o.fileIds && o.fileIds.length) ev.attachments = driveAttachments_(o.fileIds);
+  const created = Calendar.Events.insert(ev, 'primary', { supportsAttachments: true, sendUpdates: guests.length ? 'all' : 'none' });
+  linkNotesToEvent_(o.fileIds, created);
+  return evOut_(created);
+}
+
+/** Allega file a un evento esistente. */
+function attachToEvent(eventId, fileIds) {
+  requireUser_();
+  const ev = Calendar.Events.get('primary', eventId);
+  const have = {};
+  (ev.attachments || []).forEach(a => have[a.fileId || a.fileUrl] = true);
+  const add = driveAttachments_(fileIds).filter(a => !have[a.fileId]);
+  const all = (ev.attachments || []).concat(add);
+  if (all.length > 25) throw new Error('Google Calendar accetta al massimo 25 allegati per evento.');
+  const updated = Calendar.Events.patch({ attachments: all }, 'primary', eventId, { supportsAttachments: true });
+  linkNotesToEvent_(fileIds, updated);
+  return evOut_(updated);
+}
+
+/** Allega file a un giorno: usa (o crea) l'evento di tutto il giorno "File del giorno (Notabene)". */
+function attachToDay(day, fileIds) {
+  requireUser_();
+  const existing = listEvents(day, addDays_(day, 1)).find(e => e.giorno && e.titolo === DAY_EVENT_TITLE);
+  if (existing) return attachToEvent(existing.id, fileIds);
+  return createEvent({ titolo: DAY_EVENT_TITLE, data: day, fileIds: fileIds, descrizione: 'File allegati da Notabene.' });
+}
+
+/** Ricorda nella nota a quali eventi è allegata (colonna "eventi" dell'indice). */
+function linkNotesToEvent_(fileIds, ev) {
+  if (!fileIds || !fileIds.length) return;
+  const item = { id: ev.id, titolo: ev.summary || '', data: String((ev.start && (ev.start.dateTime || ev.start.date)) || '').slice(0, 10), link: ev.htmlLink || '' };
+  const lock = LockService.getScriptLock();
+  lock.waitLock(30000);
+  try {
+    fileIds.forEach(id => {
+      const found = findNote_(id);
+      if (!found) return;
+      const list = parseEvents_(found.note.eventi).filter(x => x.id !== item.id);
+      list.unshift(item);
+      found.note.eventi = JSON.stringify(list.slice(0, 20));
+      found.sheet.getRange(found.note._row, 1, 1, HEADERS.length).setValues([toRow_(found.note)]);
+    });
+  } finally { lock.releaseLock(); }
+}
+
+function parseEvents_(s) {
+  if (!s) return [];
+  try { const v = JSON.parse(s); return Array.isArray(v) ? v : []; } catch (e) { return []; }
+}
+
+// ---------- Registrazioni e trascrizioni Plaud ----------
+
+/*
+ * La routine Plaud crea il documento con il riassunto e, nella sottocartella Plaud/_coda, un piccolo
+ * file JSON con i collegamenti temporanei (validi circa un'ora) all'audio e alla trascrizione:
+ *   {"id":"of_…","doc":"<id del documento Drive>","audio":"https://…","trascrizione":"https://…"}
+ * Ogni 10 minuti processPlaudQueue scarica l'audio in Plaud/Audio Plaud, aggiunge la trascrizione
+ * completa al documento e cancella la richiesta. La nota poi si ricataloga con la trascrizione.
+ */
+const PLAUD_URL_RE = /^https:\/\/[a-z0-9.-]*plaud[a-z0-9.-]*\.amazonaws\.com\//i;
+const PLAUD_PENDING_RE = /^(SOLO RIASSUNTO|TRASCRIZIONE E AUDIO IN ARRIVO).*$/m;
+
+function plaudFolder_() {
+  const it = folderFor_('mie').getFoldersByName('Plaud');
+  return it.hasNext() ? it.next() : null;
+}
+
+function subFolder_(parent, name) {
+  const it = parent.getFoldersByName(name);
+  return it.hasNext() ? it.next() : parent.createFolder(name);
+}
+
+function processPlaudQueue() {
+  const start = Date.now();
+  const lock = LockService.getUserLock();
+  if (!lock.tryLock(1000)) return { fatti: 0, errori: ['Elaborazione già in corso.'] };
+  let done = 0;
+  const errors = [];
+  try {
+    const plaud = plaudFolder_();
+    if (!plaud) return { fatti: 0, errori: [] };
+    const qit = plaud.getFoldersByName(QUEUE_FOLDER_NAME);
+    if (!qit.hasNext()) return { fatti: 0, errori: [] };
+    const files = qit.next().getFiles();
+    while (files.hasNext() && Date.now() - start < RUN_BUDGET_MS - 60000) {
+      const qf = files.next();
+      if (qf.isTrashed()) continue;
+      try {
+        completePlaudDoc_(readQueueItem_(qf), plaud);
+        done++;
+      } catch (e) {
+        errors.push(qf.getName() + ': ' + (e.message || e));
+        console.warn('Coda Plaud, ' + qf.getName() + ': ' + e);
+      }
+      // Anche in caso di errore la richiesta si toglie: i collegamenti scadono e la routine la ripropone.
+      qf.setTrashed(true);
+    }
+  } finally { lock.releaseLock(); }
+  return { fatti: done, errori: errors };
+}
+
+function readQueueItem_(qf) {
+  const text = qf.getMimeType() === MimeType.GOOGLE_DOCS
+    ? DocumentApp.openById(qf.getId()).getBody().getText() : qf.getBlob().getDataAsString('UTF-8');
+  const item = JSON.parse(text.trim());
+  if (!/^of_[A-Za-z0-9]+$/.test(item.id || '') || !item.doc) throw new Error('richiesta incompleta');
+  return item;
+}
+
+function completePlaudDoc_(item, plaud) {
+  const docFile = DriveApp.getFileById(item.doc);
+  let inside = false;
+  const parents = docFile.getParents();
+  while (parents.hasNext()) if (parents.next().getId() === plaud.getId()) inside = true;
+  if (!inside) throw new Error('il documento non è nella cartella Plaud');
+  const doc = DocumentApp.openById(item.doc);
+  const body = doc.getBody();
+  const text = body.getText();
+  if (text.indexOf('ID Plaud: ' + item.id) === -1) throw new Error('il documento non corrisponde alla registrazione');
+  if (/^TRASCRIZIONE COMPLETA/m.test(text)) return; // già completo
+
+  const transcript = item.trascrizione ? fetchPlaudTranscript_(item.trascrizione) : '';
+  const audioLine = item.audio ? savePlaudAudio_(item, plaud, docFile.getName()) : '';
+  const block = (audioLine ? 'REGISTRAZIONE AUDIO\n' + audioLine + '\n\n' : '') + 'TRASCRIZIONE COMPLETA\n' +
+    (transcript || '(Plaud non ha una trascrizione per questa registrazione.)');
+  body.setText(PLAUD_PENDING_RE.test(text) ? text.replace(PLAUD_PENDING_RE, () => block) : text.replace(/\s*$/, '') + '\n\n' + block);
+  doc.saveAndClose();
+}
+
+function plaudFetch_(url) {
+  if (!PLAUD_URL_RE.test(url || '')) throw new Error('collegamento Plaud non valido');
+  const res = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
+  const code = res.getResponseCode();
+  if (code === 403) throw new Error('collegamento scaduto: la routine lo ripropone alla prossima esecuzione');
+  if (code !== 200) throw new Error('download non riuscito (errore ' + code + ')');
+  return res;
+}
+
+function fetchPlaudTranscript_(url) {
+  const res = plaudFetch_(url);
+  let raw;
+  try {
+    raw = Utilities.ungzip(res.getBlob().setContentType('application/x-gzip')).getDataAsString('UTF-8');
+  } catch (e) {
+    raw = res.getContentText('UTF-8'); // non compresso
+  }
+  let data = JSON.parse(raw);
+  if (!Array.isArray(data)) data = data.trans_result || data.segments || data.data || [];
+  return data.filter(s => s && s.content).map(s =>
+    '[' + clock_(Number(s.start_time) || 0) + '] ' + (s.speaker || s.original_speaker || 'Voce') + ': ' + String(s.content).trim()).join('\n');
+}
+
+function clock_(ms) {
+  const t = Math.floor(ms / 1000), h = Math.floor(t / 3600), m = Math.floor(t / 60) % 60, s = t % 60;
+  const p = n => (n < 10 ? '0' : '') + n;
+  return (h ? h + ':' + p(m) : p(m)) + ':' + p(s);
+}
+
+/** Copia l'audio in Plaud/Audio Plaud e restituisce la riga con il collegamento. */
+function savePlaudAudio_(item, plaud, docName) {
+  const folder = subFolder_(plaud, AUDIO_FOLDER_NAME);
+  const base = docName.replace(/^\[Plaud\]\s*/i, '').replace(/[\\/]/g, '-');
+  const same = folder.searchFiles("title contains '" + item.id + "'");
+  if (same.hasNext()) return 'Registrazione audio: ' + same.next().getUrl();
+  let res;
+  try {
+    res = plaudFetch_(item.audio);
+  } catch (e) {
+    if (/scaduto/.test(e.message)) throw e;
+    return 'Registrazione non copiata (' + e.message + '): ascoltala nell\'app Plaud.';
+  }
+  const blob = res.getBlob();
+  const type = blob.getContentType() || 'audio/ogg';
+  const ext = /mpeg|mp3/.test(type) ? '.mp3' : /mp4|m4a|aac/.test(type) ? '.m4a' : /wav/.test(type) ? '.wav' : '.ogg';
+  const file = folder.createFile(blob.setName(base + ' (' + item.id + ')' + ext));
+  file.setDescription('Registrazione Plaud ' + item.id);
+  return 'Registrazione audio: ' + file.getUrl();
+}
+
+function audioIdFromText_(text) {
+  const m = String(text || '').match(/Registrazione audio: https:\/\/drive\.google\.com\/file\/d\/([\w-]+)/);
+  return m ? m[1] : '';
+}
+
+/** Pulsante dell'amministratore: elabora subito la coda Plaud. */
+function runPlaudQueue() {
+  const u = requireUser_();
+  if (!isAdmin_(u.email)) throw new Error('Solo l\'amministratore può elaborare la coda Plaud.');
+  return processPlaudQueue();
+}
+
 // ---------- Sincronizzazione ----------
 
 /** Cerca file nuovi o modificati nelle due sezioni e li cataloga. Rispetta il limite di tempo. */
@@ -704,7 +1093,8 @@ function syncAll() {
         seen[id] = true;
         const old = known[id];
         const mod = f.file.getLastUpdated().getTime();
-        if (old && new Date(old.modificato).getTime() >= mod) continue;
+        const retry = old && old.riassunto === PENDING_PREVIEW && Date.now() - new Date(old.data).getTime() < 3 * 864e5;
+        if (old && new Date(old.modificato).getTime() >= mod && !retry) continue;
         if (Date.now() - start > RUN_BUDGET_MS) { pending++; continue; }
         const note = processFile_(f.file, f.path, old);
         if (old) sheet.getRange(old._row, 1, 1, HEADERS.length).setValues([toRow_(note)]);
@@ -730,6 +1120,8 @@ function collectFiles_(folder, path, out) {
   const sub = folder.getFolders();
   while (sub.hasNext()) {
     const s = sub.next();
+    // Le registrazioni Plaud si aprono dalla loro nota; le cartelle che iniziano con "_" sono di servizio.
+    if (s.getName() === AUDIO_FOLDER_NAME || s.getName().charAt(0) === '_') continue;
     collectFiles_(s, path + '/' + s.getName(), out);
   }
 }
@@ -737,15 +1129,28 @@ function collectFiles_(folder, path, out) {
 // ---------- Estrazione del testo ----------
 
 function typeOf_(file) {
-  const name = file.getName();
-  const mime = file.getMimeType();
+  return typeFor_(file.getName(), file.getMimeType());
+}
+
+const SHEET_MIMES = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel',
+  'application/vnd.oasis.opendocument.spreadsheet', 'text/csv', 'text/tab-separated-values'];
+const SLIDE_MIMES = ['application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/vnd.ms-powerpoint',
+  'application/vnd.oasis.opendocument.presentation'];
+const DOC_MIMES = ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/msword',
+  'application/vnd.oasis.opendocument.text', 'application/rtf', 'text/rtf'];
+const TEXT_MIMES = ['application/json', 'application/xml', 'application/x-yaml', 'application/javascript', 'message/rfc822'];
+
+function typeFor_(name, mime) {
   if (/^\[Plaud\]/i.test(name)) return 'plaud';
-  if (mime === MimeType.GOOGLE_DOCS) return 'doc';
+  if (mime === MimeType.GOOGLE_DOCS || DOC_MIMES.indexOf(mime) !== -1) return 'doc';
+  if (mime === MimeType.GOOGLE_SHEETS || SHEET_MIMES.indexOf(mime) !== -1) return 'foglio';
+  if (mime === MimeType.GOOGLE_SLIDES || SLIDE_MIMES.indexOf(mime) !== -1) return 'slide';
   if (mime === MimeType.PDF) return 'pdf';
   if (mime.indexOf('image/') === 0) return 'img';
+  if (mime.indexOf('video/') === 0) return 'video';
   if (mime.indexOf('audio/') === 0) return 'audio';
-  if (mime.indexOf('text/') === 0) return 'txt';
-  if (mime.indexOf('officedocument') !== -1 || mime === MimeType.MICROSOFT_WORD) return 'doc';
+  if (mime.indexOf('text/') === 0 || TEXT_MIMES.indexOf(mime) !== -1) return 'txt';
+  if (/zip|rar|7z|tar|gzip/.test(mime)) return 'archivio';
   return 'altro';
 }
 
@@ -753,7 +1158,13 @@ function extractText_(file, type) {
   const mime = file.getMimeType();
   try {
     if (mime === MimeType.GOOGLE_DOCS) return DocumentApp.openById(file.getId()).getBody().getText();
-    if (type === 'txt') return file.getBlob().getDataAsString('UTF-8');
+    if (mime === MimeType.GOOGLE_SHEETS) return sheetText_(file.getId());
+    if (mime === MimeType.GOOGLE_SLIDES) return slidesText_(file.getId());
+    if (type === 'txt' || mime === 'text/csv' || mime === 'text/tab-separated-values') {
+      return file.getSize() < 5 * 1024 * 1024 ? file.getBlob().getDataAsString('UTF-8') : '';
+    }
+    if (type === 'foglio') return convertAndRead_(file, MimeType.GOOGLE_SHEETS, sheetText_);
+    if (type === 'slide') return convertAndRead_(file, MimeType.GOOGLE_SLIDES, slidesText_);
     if (type === 'pdf' || type === 'img' || type === 'doc') return convertWithOcr_(file);
   } catch (e) {
     console.warn('Estrazione non riuscita per ' + file.getName() + ': ' + e);
@@ -761,8 +1172,30 @@ function extractText_(file, type) {
   return '';
 }
 
+function sheetText_(id) {
+  return SpreadsheetApp.openById(id).getSheets().map(sh =>
+    '## ' + sh.getName() + '\n' + sh.getDataRange().getDisplayValues().slice(0, 2000).map(r => r.join(' | ')).join('\n')).join('\n\n');
+}
+
+function slidesText_(id) {
+  return SlidesApp.openById(id).getSlides().map((s, i) => '## Diapositiva ' + (i + 1) + '\n' +
+    s.getShapes().map(sh => { try { return sh.getText().asString(); } catch (e) { return ''; } }).join('\n')).join('\n\n');
+}
+
+/** Converte Excel, PowerPoint e simili in un file Google temporaneo per leggerne il testo. */
+function convertAndRead_(file, googleMime, reader) {
+  if (file.getSize() > MAX_UPLOAD_BYTES) return '';
+  const tmp = Drive.Files.create({ name: 'tmp-conv-' + file.getId(), mimeType: googleMime }, file.getBlob());
+  try {
+    return reader(tmp.id);
+  } finally {
+    Drive.Files.remove(tmp.id);
+  }
+}
+
 /** Converte PDF, immagini e Word in un Google Doc temporaneo (con OCR) per leggerne il testo. */
 function convertWithOcr_(file) {
+  if (file.getSize() > MAX_UPLOAD_BYTES) return ''; // file molto grandi: si cataloga dal nome
   const tmp = Drive.Files.create(
     { name: 'tmp-ocr-' + file.getId(), mimeType: MimeType.GOOGLE_DOCS },
     file.getBlob(),
@@ -789,8 +1222,10 @@ const AI_SCHEMA = {
   additionalProperties: false
 };
 
-function aiPrompt_(name, type, text, categories) {
+function aiPrompt_(name, type, text, categories, hasImage) {
   return 'Cataloga questa nota per un archivio personale e di team. Scrivi in italiano.\n' +
+    (hasImage ? (type === 'video' ? 'L\'immagine allegata è un fotogramma del video: descrivi cosa mostra.\n' :
+      'Guarda l\'immagine allegata: descrivi cosa mostra e riporta le scritte importanti.\n') : '') +
     '- titolo: breve e descrittivo (massimo 80 caratteri).\n' +
     '- riassunto: 2-4 frasi con i fatti utili per ritrovarla (decisioni, scadenze, persone, numeri).\n' +
     '- categoria: una sola. Riusa una di queste se adatta: ' + (categories.join(', ') || 'nessuna ancora') + '.\n' +
@@ -803,10 +1238,13 @@ function classify_(name, type, text, file) {
   const provider = prop_('AI_PROVIDER').toLowerCase();
   if (!provider || !aiReady_()) return null;
   const cats = knownCategories_();
-  const body = String(text || '').substr(0, MAX_AI_CHARS);
+  let body = String(text || '').substr(0, MAX_AI_CHARS);
   if (provider === 'claude') {
-    if (!body.trim()) return null; // Claude non riceve audio: serve prima una trascrizione
-    return callClaude_(aiPrompt_(name, type, body, cats));
+    // Foto e video: Claude guarda l'immagine (per i video un fotogramma scelto da Drive).
+    const image = (type === 'img' || type === 'video') ? imageForAi_(file) : null;
+    if (type === 'video') body = videoInfo_(file) + (body ? '\n' + body : '');
+    if (!body.trim() && !image) return null; // Claude non ascolta l'audio: serve una trascrizione
+    return callClaude_(aiPrompt_(name, type, body || '(nessun testo: vedi immagine)', cats, !!image), image);
   }
   if (provider === 'gemini') {
     // Gemini può ascoltare direttamente l'audio se manca il testo.
@@ -817,11 +1255,13 @@ function classify_(name, type, text, file) {
   throw new Error('AI_PROVIDER non valido: usa "claude" oppure "gemini".');
 }
 
-function callClaude_(prompt) {
+function callClaude_(prompt, image) {
+  const content = image ? [{ type: 'image', source: { type: 'base64', media_type: image.mime, data: image.data } },
+    { type: 'text', text: prompt }] : prompt;
   const data = claudeRequest_({
     max_tokens: 4000,
     output_config: { effort: 'low', format: { type: 'json_schema', schema: AI_SCHEMA } },
-    messages: [{ role: 'user', content: prompt }]
+    messages: [{ role: 'user', content: content }]
   }, 'catalogo');
   const text = claudeText_(data);
   return text ? JSON.parse(text) : null;
@@ -885,6 +1325,46 @@ function callGemini_(prompt, mediaBlob) {
   return text ? JSON.parse(text) : null;
 }
 
+const AI_IMAGE_MIMES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+
+/**
+ * Immagine da mostrare a Claude: la foto stessa se è leggera, altrimenti l'anteprima grande di Drive
+ * (che esiste anche per HEIC, video e PDF). Restituisce null se Drive non ha ancora un'anteprima.
+ */
+function imageForAi_(file) {
+  try {
+    if (AI_IMAGE_MIMES.indexOf(file.getMimeType()) !== -1 && file.getSize() < 3.5 * 1024 * 1024) {
+      return { mime: file.getMimeType(), data: Utilities.base64Encode(file.getBlob().getBytes()) };
+    }
+    const blob = driveThumbnail_(file.getId(), 1280);
+    if (blob && blob.getBytes().length < 3.5 * 1024 * 1024) {
+      const mime = AI_IMAGE_MIMES.indexOf(blob.getContentType()) !== -1 ? blob.getContentType() : 'image/jpeg';
+      return { mime: mime, data: Utilities.base64Encode(blob.getBytes()) };
+    }
+  } catch (e) {
+    console.warn('Immagine per l\'AI non disponibile: ' + e);
+  }
+  return null;
+}
+
+/** Anteprima di Drive alla dimensione richiesta (lato lungo in pixel), oppure null. */
+function driveThumbnail_(id, size) {
+  const meta = Drive.Files.get(id, { fields: 'thumbnailLink' });
+  if (!meta.thumbnailLink) return null;
+  const url = meta.thumbnailLink.replace(/=s\d+$/, '=s' + size);
+  const res = UrlFetchApp.fetch(url, { headers: { Authorization: 'Bearer ' + ScriptApp.getOAuthToken() }, muteHttpExceptions: true });
+  const blob = res.getResponseCode() === 200 ? res.getBlob() : null;
+  return blob && /^image\//.test(blob.getContentType() || '') ? blob : null;
+}
+
+function videoInfo_(file) {
+  try {
+    const m = Drive.Files.get(file.getId(), { fields: 'videoMediaMetadata' }).videoMediaMetadata;
+    if (m) return 'Video di ' + Math.round((Number(m.durationMillis) || 0) / 60000) + ' minuti, ' + m.width + '×' + m.height + '.';
+  } catch (e) {}
+  return 'Video.';
+}
+
 function knownCategories_() {
   const cache = CacheService.getUserCache();
   const hit = cache.get('cats');
@@ -903,6 +1383,8 @@ function processFile_(file, path, old) {
   let ai = null, error = '';
   try { ai = classify_(file.getName(), type, text, file); } catch (e) { error = String(e.message || e); console.warn(error); }
   const confirmed = old && old.stato === 'confermata';
+  // Foto e video appena caricati: Drive prepara l'anteprima dopo qualche minuto, poi si riprova.
+  const waiting = !ai && !error && !text && (type === 'img' || type === 'video') && aiReady_();
   return {
     id: file.getId(),
     titolo: (ai && ai.titolo) || (old && old.titolo) || file.getName().replace(/\.[^.]+$/, '').replace(/^\[Plaud\]\s*/i, ''),
@@ -912,14 +1394,17 @@ function processFile_(file, path, old) {
     modificato: file.getLastUpdated(),
     categoria: (confirmed && old.categoria) || (ai && ai.categoria) || (old && old.categoria) || 'Da classificare',
     etichette: (confirmed && old.etichette) || (ai && ai.etichette.map(s => s.toLowerCase()).join(', ')) || (old && old.etichette) || '',
-    riassunto: (ai && ai.riassunto) || (error ? 'Catalogazione AI non riuscita: ' + error : (text ? text.substr(0, 300) : 'Nessun testo estratto.')),
+    riassunto: (ai && ai.riassunto) || (error ? 'Catalogazione AI non riuscita: ' + error :
+      waiting ? PENDING_PREVIEW : (text ? text.substr(0, 300) : 'Nessun testo estratto.')),
     testo: String(text || '').substr(0, MAX_TEXT),
     stato: confirmed ? 'confermata' : (ai && ai.sicura ? 'ai' : 'da rivedere'),
     url: file.getUrl(),
     autore: ownerEmail_(file),
     percorso: path,
     preferita: old ? old.preferita : false,
-    colore: old ? old.colore : ''
+    colore: old ? old.colore : '',
+    media: type === 'plaud' ? audioIdFromText_(text) : '',
+    eventi: old ? old.eventi : ''
   };
 }
 

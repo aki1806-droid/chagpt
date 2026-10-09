@@ -1,5 +1,13 @@
 # Ultimo passaggio di consegne
 
+## Notabene versione 2 (Claude, 2026-10-09)
+
+Richiesta: più formati e video, Gmail con allegati, trascrizioni e audio da Plaud, app più veloce, anteprime, Google Calendar (eventi, allegati, programmazione), grafica più accattivante, 4 proposte di funzioni.
+Modifiche in `notabene/app/`: `Code.gs` (typeFor_, conversione Excel/PowerPoint, immagini per Claude, getThumbs, getUploadTarget/finishUpload, sendEmail, listEvents/createEvent/attachToEvent/attachToDay, processPlaudQueue/runPlaudQueue, colonne `media` e `eventi`, CHAT_EXCERPT), `appsscript.json` (Calendar v3, scope calendar e script.send_mail), `Index.html` e `Styles.html` (schede con anteprime, pannello con anteprima/email/calendario, calendario mensile, cache nel browser, paginazione, nuovi colori e logo). Guida `INSTALLAZIONE.md` (sezione "Aggiornare alla versione 2"), `COSTI.md`, `ARCHITETTURA.md`. Routine Plaud aggiornata (prompt in claude.ai).
+Verifiche: vedi STATUS. Rischi da controllare sul reale: CORS del caricamento resumable da googleusercontent; thumbnailLink con token (c'è il ripiego `getThumbnail`); iframe di anteprima Drive su Safari (c'è "Apri in Drive"); consenso per i nuovi scope.
+Prossima azione: l'utente aggiorna l'app; revisione Codex di `Code.gs` (coda Plaud e sicurezza dei link) e del prompt della routine.
+
+
 ## Notabene, importazione Plaud dall'app (Claude, 2026-10-06)
 
 Pulsante "Importa ora" (solo amministratore) che chiama l'API trigger delle routine (`POST https://api.anthropic.com/v1/claude_code/routines/{id}/fire`, header beta `experimental-cc-routine-2026-04-01`, fonte: code.claude.com/docs/en/routines.md) per trig_01JadYR5ovSYPuzcvBgdHzLw; token salvato come PLAUD_ROUTINE_TOKEN da Personalizza. Il token va generato dall'utente in claude.ai/code/routines. Provato solo nel prototipo; chiamata reale non verificata.
