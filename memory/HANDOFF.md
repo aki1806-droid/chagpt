@@ -2,7 +2,7 @@
 
 ## Notabene: pagina bloccata su "Caricamento" (Claude, 2026-10-09)
 
-Sintomo sull'app reale: SyntaxError "Unexpected identifier 'Registrazione'" alla riga del template literal della registrazione vocale; nessuna chiamata getBootstrap nel registro. Causa probabile: lo scriptlet `<?!= JSON.stringify(me) ?>` dentro `<script>` fa analizzare lo script al motore dei modelli di Apps Script, che non gestisce i template literal. Correzione: email in `<body data-me="<?= me ?>">`, letta con `document.body.dataset.me`. Regola: niente scriptlet dentro `<script>`. Da confermare sull'app reale.
+Sintomo sull'app reale: SyntaxError "Unexpected identifier 'Registrazione'" alla riga del template literal della registrazione vocale; nessuna chiamata getBootstrap nel registro. Prima ipotesi (scriptlet dentro lo script) non risolutiva: l'errore è rimasto. Causa trovata: Apps Script toglie i commenti dagli script con un analizzatore che non riconosce i template literal; `accept="audio/*"` dentro un template veniva preso per l'inizio di un commento e il codice fino al successivo `*/` (riga 570) veniva cancellato. Correzione: `&#42;` al posto di `*` negli attributi, niente `//` in indirizzi e regex, regex `**` riscritta; `prototipo/build.py` ora blocca la generazione se nel codice di Index.html compaiono `/*`, `*/` o `//` fuori dai commenti. L'email resta in `data-me` sul body. Da confermare sull'app reale.
 
 
 ## Notabene: le 4 funzioni proposte (Claude, 2026-10-09)

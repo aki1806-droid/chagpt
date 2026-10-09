@@ -623,6 +623,9 @@ body.stale .toolbar .sub::after{content:" · aggiornamento…";color:var(--accen
 
 </script>
 <script>
+/* Nota: Apps Script toglie i commenti dal codice con uno strumento che non riconosce le stringhe tra apici inversi.
+   Nel codice, fuori dai commenti, non scrivere mai barra-asterisco, asterisco-barra o doppia barra (anche negli indirizzi):
+   usare &#42; nelle pagine e una barra preceduta da backslash negli indirizzi. prototipo/build.py lo controlla. */
 /* Qualsiasi errore della pagina compare sullo schermo invece di lasciarla ferma su "Caricamento". */
 window.addEventListener("error", e => showFatal("Errore nella pagina: " + (e.message || e)));
 window.addEventListener("unhandledrejection", e => showFatal("Errore: " + ((e.reason && e.reason.message) || e.reason)));
@@ -935,7 +938,7 @@ function previewBox(n){
   return `<div class="pv ${!pic?"pv-audio":""}" id="pv">${pic}
     <button class="btn ${pic?"pv-btn":""}" data-preview="${esc(target)}">${icon("i-play")}${label}</button></div>`;
 }
-function editable(n){ return n.mime ? (n.mime === "application/vnd.google-apps.document" || /^text\//.test(n.mime)) : ["txt","plaud"].includes(n.tipo); }
+function editable(n){ return n.mime ? (n.mime === "application/vnd.google-apps.document" || String(n.mime).indexOf("text/") === 0) : ["txt","plaud"].includes(n.tipo); }
 function replaceNote(updated){
   const i = NOTES.findIndex(x=>x.id===updated.id);
   if (i !== -1) NOTES[i] = Object.assign({}, NOTES[i], updated);
@@ -1027,12 +1030,12 @@ function upload(){
       <audio id="recplay" controls hidden></audio>
       <div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn ghost" id="recagain" hidden>Ricomincia</button><button class="btn primary" id="recsave" disabled>Salva nota vocale</button></div>
       <p class="hint" id="rechint" style="margin:0"></p>
-      <input type="file" id="recfile" accept="audio/*" capture hidden></div>
+      <input type="file" id="recfile" accept="audio/&#42;" capture hidden></div>
     <div id="m-foto" hidden class="drop">
       <div>Fotografa un foglio, una lavagna o un documento: l'AI legge il testo e descrive l'immagine.</div>
       <button class="btn primary" id="shoot">${icon("i-camera")}Scatta una foto</button>
       <button class="btn" id="shootmany">Scegli più foto</button>
-      <input type="file" id="cam" accept="image/*" capture="environment" hidden><input type="file" id="cams" accept="image/*" multiple hidden></div>
+      <input type="file" id="cam" accept="image/&#42;" capture="environment" hidden><input type="file" id="cams" accept="image/&#42;" multiple hidden></div>
     <div class="radio">
       <label><input type="radio" name="v" value="mie" ${S.scope!=="team"?"checked":""}> <span>Personale<small>La vedi solo tu</small></span></label>
       <label><input type="radio" name="v" value="team" ${S.scope==="team"?"checked":""}> <span>Condivisa<small>La vede tutto il team</small></span></label>
@@ -1198,7 +1201,7 @@ function chatLog(){
     `<div class="msg ai">${fmtAnswer(m.testo, m.fonti)}${m.fonti && m.fonti.length ? `<div class="sources">${m.fonti.filter(f=>f.citata).concat(m.fonti.filter(f=>!f.citata)).slice(0,8).map(f=>NOTES.some(x=>x.id===f.id) ? `<button class="src ${f.citata?"cited":""}" data-src="${esc(f.id)}"><b>${f.n}</b>${esc(f.titolo)}</button>` : `<a class="src ${f.citata?"cited":""}" href="${esc(f.url)}" target="_blank" rel="noopener"><b>${f.n}</b>${esc(f.titolo)} ↗</a>`).join("")}</div>` : ""}</div>`).join("");
 }
 function fmtAnswer(t, fonti){
-  let s = esc(t).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/\n/g, "<br>");
+  let s = esc(t).replace(new RegExp("[*][*](.+?)[*][*]", "g"), "<b>$1</b>").replace(/\n/g, "<br>");
   return s.replace(/\[(\d+)\]/g, (m, n) => { const f = (fonti||[]).find(x=>x.n===Number(n)); if (!f) return m; return NOTES.some(x=>x.id===f.id) ? `<button class="cite" data-src="${esc(f.id)}" title="${esc(f.titolo)}">${n}</button>` : `<a class="cite" href="${esc(f.url)}" target="_blank" rel="noopener" title="${esc(f.titolo)}">${n}</a>`; });
 }
 async function ask(question){
@@ -1365,7 +1368,7 @@ async function saveEvent(){
 async function uploadBig(file, scope, onProgress){
   if (window.NB_DEMO) { for (let p = 0; p <= 100; p += 25) { onProgress(p); await new Promise(r=>setTimeout(r,150)); } return api("demoUpload", file.name, file.type, scope); }
   const t = await api("getUploadTarget", scope);
-  const start = await fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable&fields=id", {
+  const start = await fetch("https:\/\/www.googleapis.com/upload/drive/v3/files?uploadType=resumable&fields=id", {
     method:"POST",
     headers:{ "Authorization":"Bearer " + t.token, "Content-Type":"application/json; charset=UTF-8",
       "X-Upload-Content-Type": file.type || "application/octet-stream", "X-Upload-Content-Length": String(file.size) },
@@ -1591,7 +1594,7 @@ $("#layer").addEventListener("click",async e=>{
   if(e.target.closest("[data-tocal]")) return openCal([n.id]);
   const pv=e.target.closest("[data-preview]");
   if(pv){ const box=$("#pv"); box.classList.add("playing");
-    box.innerHTML = `<iframe src="https://drive.google.com/file/d/${encodeURIComponent(pv.dataset.preview)}/preview" allow="autoplay; fullscreen" allowfullscreen title="Anteprima"></iframe>
+    box.innerHTML = `<iframe src="https:\/\/drive.google.com/file/d/${encodeURIComponent(pv.dataset.preview)}/preview" allow="autoplay; fullscreen" allowfullscreen title="Anteprima"></iframe>
       <p class="hint" style="margin:6px 0 0">Se l'anteprima non compare, usa «Apri in Drive».</p>`; return; }
   if(e.target.closest("[data-askdel]")){ $("#delconfirm").hidden = false; return; }
   if(e.target.closest("[data-nodel]")){ $("#delconfirm").hidden = true; return; }

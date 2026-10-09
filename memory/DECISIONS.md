@@ -44,7 +44,7 @@
 - Scelta (2026-10-09): invio con MailApp (scope `script.send_mail`, non l'accesso completo a Gmail); Calendar con il servizio avanzato v3 per poter allegare file di Drive agli eventi.
 - Motivo: richiesta dell'utente; permessi minimi necessari.
 
-## Notabene: niente scriptlet dentro gli script
+## Notabene: regole per il codice della pagina
 
-- Scelta (2026-10-09): i dati del server vanno nella pagina come attributi HTML (`<?= … ?>`), mai dentro `<script>`.
-- Motivo: uno scriptlet dentro lo script ha rotto la pagina reale (template literal non riconosciuti da Apps Script), mentre prototipo e test passavano.
+- Scelta (2026-10-09): nel codice JavaScript di Index.html, fuori dai commenti, mai `/*`, `*/` o `//` (anche in stringhe, template, indirizzi e regex): `&#42;` negli attributi, `https:\/\/` negli indirizzi. I dati del server vanno come attributi HTML, non dentro `<script>`. `prototipo/build.py` controlla la prima regola.
+- Motivo: Apps Script toglie i commenti con un analizzatore che non riconosce i template literal; `accept="audio/*"` ha cancellato un pezzo di codice e bloccato la pagina reale, mentre prototipo e test passavano.
