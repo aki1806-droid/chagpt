@@ -623,6 +623,13 @@ body.stale .toolbar .sub::after{content:" · aggiornamento…";color:var(--accen
 
 </script>
 <script>
+/* Qualsiasi errore della pagina compare sullo schermo invece di lasciarla ferma su "Caricamento". */
+window.addEventListener("error", e => showFatal("Errore nella pagina: " + (e.message || e)));
+window.addEventListener("unhandledrejection", e => showFatal("Errore: " + ((e.reason && e.reason.message) || e.reason)));
+function showFatal(msg){
+  const g = document.getElementById("grid");
+  if (g && /Caricamento/.test(g.textContent)) g.innerHTML = `<div class="empty"><b>Qualcosa non va</b>${String(msg).replace(/[<>&]/g, "")}</div>`;
+}
 /* ---------- Dati e impostazioni ---------- */
 const SERVER_ME = "";
 const TYPES = {
@@ -1440,8 +1447,12 @@ function cachedNotes(){
   try { const me = SERVER_ME; const v = me && localStorage.getItem("nb-notes-" + me); return v ? {me, notes:JSON.parse(v)} : null; } catch(e){ return null; }
 }
 async function load(){
+  // Se il server non risponde entro 90 secondi, lo diciamo invece di restare in attesa.
+  const slow = setTimeout(() => showFatal("Il server non risponde. Apri script.google.com → progetto Notabene → Esecuzioni (icona con le righe a sinistra) e guarda l'errore di getBootstrap."), 90000);
   try {
     BOOT = await api("getBootstrap");
+    clearTimeout(slow);
+    if (!BOOT) throw new Error("Risposta vuota dal server (getBootstrap).");
     ME = BOOT.email;
     if (BOOT.prefs) { P = Object.assign({}, DEFAULTS, BOOT.prefs); store("nb-prefs", JSON.stringify(P)); applyPrefs(); }
     NOTES = [...BOOT.personal, ...BOOT.team];
@@ -1451,6 +1462,7 @@ async function load(){
     banner(); render();
     if (!S.agenda) loadAgenda();
   } catch(e){
+    clearTimeout(slow);
     document.body.classList.remove("stale");
     if (NOTES.length) return toast("Non riesco ad aggiornare le note: " + (e.message || e));
     $("#grid").innerHTML = `<div class="empty"><b>Non riesco a leggere le cartelle</b>${esc(e.message||e)}</div>`;
