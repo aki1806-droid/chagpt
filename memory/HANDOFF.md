@@ -56,3 +56,12 @@ Su richiesta «Crea le immagini», generati tutti i 50 prompt LPG_210–259 con 
 ## PNG tolti da main (Claude, 2026-10-08)
 
 Su richiesta dell'utente, dopo che l'app di Codex ha cominciato a riavviarsi e chiudersi, i 50 PNG di `robin/immagini/` sono stati rimossi da `main` con un commit normale. Restano `robin/immagini/manifest.json` e il README. Recupero: da Robin o con `git checkout f158b70 -- robin/immagini/`. Storia non riscritta: un clone completo resta di circa 95 MB. Aggiunta in `AGENTS.md` la regola di togliere i file pesanti dopo la consegna e di non superare circa 20 MB di immagini per commit. Non è dimostrato che le immagini fossero la causa delle chiusure.
+
+## Video lezione 4.2 per Codex (Claude, 2026-10-14)
+
+Ricevuto dall'utente lo ZIP del pacchetto video «IA per chi fa sindacato · 4.2 Dare esempi», con l'indicazione che il video lo crea e lo monta Codex, non Claude.
+
+- Su `main` (commit `d961fd1`): `video/ia-sindacato-4-2/` con LEGGIMI, script per scena, script continuo, scaletta, prompt b-roll, copione delle registrazioni schermo, dispensa, `manifest.json` (SHA-256 di tutti i 54 file) e `README_CODEX.md`. `.gitignore` esclude `video/*/scene/`.
+- Scene (45 PNG 1920×1080, 2 MP4, 2 anteprime; circa 20 MB): branch `claude/stoic-dijkstra-fkoox8`, commit `e0321563a6e15990e61d2f91f104de019cc511c2`. Recupero e verifica in `README_CODEX.md`, provati in un clone nuovo: 54/54.
+- Controlli: script, scaletta e file allineati (45); parlato di 12.272 caratteri; durata stimata 12:35; MP4 a 30 fps, 18,4 s; nessun segreto nei testi.
+- Da fare (Codex): montaggio HeyGen senza avatar, voce «Achille nuovo 1 v4» a 1,12×, b-roll di 5 scene, 7 registrazioni schermo solo con dati finti. Spese e accessi solo con l'autorizzazione dell'utente; nessun file pesante su `main`.

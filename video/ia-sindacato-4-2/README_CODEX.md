@@ -16,15 +16,17 @@ Pacchetto fornito dall'utente il 2026-10-14 (ZIP `IA_Sindacato_4-2_dare-esempi-i
 | 7 registrazioni schermo (scene 13, 15, 17, 19, 27, 33, 42) | [`05_copione_registrazione_schermo.txt`](05_copione_registrazione_schermo.txt) |
 | dispensa | [`Dispensa_4.2.pdf`](Dispensa_4.2.pdf) |
 | impronte di tutti i 54 file | [`manifest.json`](manifest.json) (`su_main: false` = file in `scene/`) |
-| **scene/** (45 PNG 1920×1080 + 2 MP4 + 2 anteprime PNG, circa 20 MB) | **non su `main`**: branch `claude/stoic-dijkstra-fkoox8`, commit indicato in `memory/HANDOFF.md` |
+| **scene/** (45 PNG 1920×1080 + 2 MP4 + 2 anteprime PNG, circa 20 MB) | **non su `main`**: branch `claude/stoic-dijkstra-fkoox8`, commit `e032156` |
 
 Recupero delle scene, dalla radice del repository aggiornato a `main`:
 
 ```bash
 git fetch origin claude/stoic-dijkstra-fkoox8
-git checkout <COMMIT_SCENE> -- video/ia-sindacato-4-2/scene/
+git checkout e0321563a6e15990e61d2f91f104de019cc511c2 -- video/ia-sindacato-4-2/scene/
 git restore --staged video/ia-sindacato-4-2/scene/   # restano locali, non vanno in commit su main
 ```
+
+Verificato da Claude in un clone nuovo `--depth 1`: 54/54 file con impronta corretta, `git status` pulito (le scene sono escluse da `.gitignore`).
 
 Poi si verificano le impronte:
 
