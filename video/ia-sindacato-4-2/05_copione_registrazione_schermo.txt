@@ -1,0 +1,47 @@
+Copione registrazioni schermo · Lezione 4.2
+Registra a 1080p, cursore evidenziato, solo dati finti (caso Valcorta), mai nomi o documenti reali. Sostituisci la slide segnaposto della scena indicata con la registrazione.
+
+SCENA 13 · ChatGPT · durata circa 18 s
+Azione: Si apre una nuova conversazione vuota in ChatGPT.
+Zoom / evidenziare: Pulsante nuova chat e campo di scrittura
+Parlato che accompagna: Ora andiamo a schermo. Apri una nuova conversazione nello strumento che usi di più. Per questa dimostrazione usiamo ChatGPT, ma il prompt funziona identico in Claude e in Gemini. Prima di incollare qualsiasi cosa, prepara due materiali: il comunicato modello e tre righe sul tema nuovo.
+
+SCENA 15 · ChatGPT · durata circa 17 s
+Azione: Nel comunicato si sostituiscono nomi, reparti e date con segnaposto.
+Da digitare:
+[LAVORATORE] [REPARTO] [DATA]
+Zoom / evidenziare: I segnaposto evidenziati in giallo nel testo
+Parlato che accompagna: Prima di incollarlo, lo ripulisci. Rileggi il testo e sostituisci ogni nome di lavoratore, ogni reparto riconoscibile, ogni data che identifica qualcuno con un segnaposto tra parentesi quadre: lavoratore, reparto, data. Allo stile quei dati non servono, e il modello è pronto.
+
+SCENA 17 · ChatGPT · durata circa 16 s
+Azione: Si incolla il comunicato tra le etichette e si scrive il tema nuovo.
+Da digitare:
+Tema: ritardi nel pagamento delle ore aggiuntive, da [MESI] mesi, circa [NUMERO] colleghi coinvolti.
+Zoom / evidenziare: Le etichette <esempio> e la riga del tema
+Parlato che accompagna: Incolli il comunicato dentro le etichette, poi scrivi il tema nuovo in due o tre righe. Ritardi nel pagamento delle ore aggiuntive, da quanti mesi, quante persone coinvolte, che cosa chiedete. Bastano i fatti essenziali: il modo di raccontarli lo prende dall'esempio.
+
+SCENA 19 · ChatGPT · durata circa 15 s
+Azione: Si invia il prompt e si scorre la risposta.
+Zoom / evidenziare: Apertura e chiusura del nuovo comunicato
+Parlato che accompagna: Invii e leggi con calma. Non chiederti solo se il testo è scritto bene: chiediti se sembra vostro. Apre con un dato, come il modello? Ha la stessa richiesta secca? Chiude con la convocazione? Se la risposta è sì, l'esempio ha fatto il suo lavoro.
+
+SCENA 27 · Claude · durata circa 16 s
+Azione: Si incollano tre testi ripuliti, ciascuno nella sua etichetta.
+Da digitare:
+<esempi>
+<esempio>[TESTO 1]</esempio>
+<esempio>[TESTO 2]</esempio>
+<esempio>[TESTO 3]</esempio>
+</esempi>
+Zoom / evidenziare: La struttura delle etichette annidate
+Parlato che accompagna: Proviamo in Claude, che gestisce bene più testi lunghi incollati insieme. Prepari tre testi della sede, già ripuliti, e li incolli uno dopo l'altro, ciascuno dentro la sua etichetta. Le tre etichette stanno a loro volta dentro un contenitore unico, chiamato esempi.
+
+SCENA 33 · Gemini · durata circa 16 s
+Azione: Si incolla il prompt con il formato e si legge la scheda prodotta.
+Zoom / evidenziare: La voce SCADENZE con la scritta non indicato
+Parlato che accompagna: In Gemini il risultato si vede subito. Ogni voce del formato è al suo posto, nello stesso ordine e con la lunghezza giusta. Non devi spostare nulla, né aggiungere titoli. È una scheda che puoi girare ai colleghi dopo una rilettura, senza doverla riformattare.
+
+SCENA 42 · ChatGPT · durata circa 16 s
+Azione: Comunicato originale e nuovo testo affiancati sullo schermo.
+Zoom / evidenziare: Le frasi da confrontare tra i due testi
+Parlato che accompagna: Usa il prompt per imitare lo stile in ChatGPT, Claude o Gemini, quello che preferisci. Poi metti il risultato accanto all'originale. Tono e struttura sono simili? Ha copiato qualche frase? Se sì, rilancia chiedendo di non farlo, come hai visto poco fa.

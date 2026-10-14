@@ -1,0 +1,326 @@
+[
+ {
+  "file": "00_LEGGIMI.txt",
+  "bytes": 2094,
+  "sha256": "4086773d84c6f1a898c1272d098d39a4e0d811536bfab5c8d347274b0697b8e6",
+  "su_main": true
+ },
+ {
+  "file": "01_script_per_scena.txt",
+  "bytes": 14922,
+  "sha256": "c79f98aa04332dfea939ded5e6d709497623c074e75b4cb51914591818779814",
+  "su_main": true
+ },
+ {
+  "file": "02_script_continuo.txt",
+  "bytes": 12439,
+  "sha256": "c0bb83e227fb1887e008694e949ebd075e03d51a4c8c7187a8ac0a9e477ae5de",
+  "su_main": true
+ },
+ {
+  "file": "03_scaletta.csv",
+  "bytes": 16816,
+  "sha256": "9ec8d661d279167522e65d884197ce23eaaaa3fa8af53029c119eecd5d453764",
+  "su_main": true
+ },
+ {
+  "file": "04_prompt_broll.txt",
+  "bytes": 2036,
+  "sha256": "e02675ebc78738b0115d390fd36271f4a3727360cf447690416fbc9ab159289a",
+  "su_main": true
+ },
+ {
+  "file": "05_copione_registrazione_schermo.txt",
+  "bytes": 3736,
+  "sha256": "708da78c3a6c5ecb9cb664ca628851a47d49bcee297cd7fa44d0b0d3f0b7e6ae",
+  "su_main": true
+ },
+ {
+  "file": "Dispensa_4.2.pdf",
+  "bytes": 714355,
+  "sha256": "bac28ffb3ae54e257112fd569c71c6c37361c671ed211cc4249c5069c58abccf",
+  "su_main": true
+ },
+ {
+  "file": "scene/01_copertina.png",
+  "bytes": 842767,
+  "sha256": "a6936330f0b4eaadd85aee37567c36ba45d850556c4bcfc4816223887340b2b5",
+  "su_main": false
+ },
+ {
+  "file": "scene/02_b-roll.png",
+  "bytes": 907524,
+  "sha256": "5a9ba2f60abec073ef3ace23265ace38e41069c51f4541e9df39b6d57885bb67",
+  "su_main": false
+ },
+ {
+  "file": "scene/03_caso.png",
+  "bytes": 62510,
+  "sha256": "34afac7cd81c53bd0434b598126ea2b5880ed3eb16263063e4482b1271ff2f4e",
+  "su_main": false
+ },
+ {
+  "file": "scene/04_parola-chiave.png",
+  "bytes": 958474,
+  "sha256": "76d15d2eef10be3cf71a304ee51937364a187c219fa6c1b8d21b204f2f01976e",
+  "su_main": false
+ },
+ {
+  "file": "scene/05_confronto.png",
+  "bytes": 100519,
+  "sha256": "5535a99ae9d4b4fc6df3e1940c1a3f2acd3ccf0d3f02035648d5002a2efe510c",
+  "su_main": false
+ },
+ {
+  "file": "scene/06_b-roll.png",
+  "bytes": 892959,
+  "sha256": "6b40b4dd83e7162b1a8e0d1d37dca27374fc137452162d1d475ee5299a6eacf0",
+  "su_main": false
+ },
+ {
+  "file": "scene/07_animazione.mp4",
+  "bytes": 413759,
+  "sha256": "5be95f53b29b6d5af738c7af7328855d570b58b45e5d46e88ca753070de23496",
+  "su_main": false
+ },
+ {
+  "file": "scene/07_animazione.png",
+  "bytes": 800860,
+  "sha256": "fcaa58e6a89b72dc81f9656f55b8a5db2e85f79e0e77d646aa05f5b872b5c764",
+  "su_main": false
+ },
+ {
+  "file": "scene/08_elenco.png",
+  "bytes": 84540,
+  "sha256": "16361f23d7f43716b9b40dd166dc8e7786ed469a6010230720c8eae971f5f017",
+  "su_main": false
+ },
+ {
+  "file": "scene/09_parola-chiave.png",
+  "bytes": 962263,
+  "sha256": "a3cec5eb740d8071c0a4ac11a9bd15dcd7600892e638d87b98af99c5886f0e50",
+  "su_main": false
+ },
+ {
+  "file": "scene/10_numero.png",
+  "bytes": 927510,
+  "sha256": "90c564cdceb499d9d1c73e48b4ae30fda74014a5c75f765ee69ae40abe0cb8bc",
+  "su_main": false
+ },
+ {
+  "file": "scene/11_animazione.mp4",
+  "bytes": 384421,
+  "sha256": "67b7f3d760c99586864792ccc05d675655f8a987e4488e3480a8d048e4761f56",
+  "su_main": false
+ },
+ {
+  "file": "scene/11_animazione.png",
+  "bytes": 911765,
+  "sha256": "b426afc1e9cd4d782e34ef9425ca3d0ff54733c15ce3e8373465b9da80aea4d2",
+  "su_main": false
+ },
+ {
+  "file": "scene/12_confronto.png",
+  "bytes": 79697,
+  "sha256": "07bbde530ed8c424f8957bf4c913355063a53eb8bd1c58b056178bdf84c12caf",
+  "su_main": false
+ },
+ {
+  "file": "scene/13_registrazione-schermo.png",
+  "bytes": 90986,
+  "sha256": "baa62222952b1e13b6c5f5abb0233d6bda08afae00c86c0a0241978bf50fd95e",
+  "su_main": false
+ },
+ {
+  "file": "scene/14_caso.png",
+  "bytes": 59768,
+  "sha256": "1cde26f38a200741dd79edb8c9ed014a4f9f4daa94d5e5f6902178defedef40d",
+  "su_main": false
+ },
+ {
+  "file": "scene/15_registrazione-schermo.png",
+  "bytes": 98583,
+  "sha256": "395453da99cf7f395471a3fd3419c8a5b83a623761b8d07f92c13d0d17dcc88a",
+  "su_main": false
+ },
+ {
+  "file": "scene/16_prompt.png",
+  "bytes": 611459,
+  "sha256": "77c0dbc3936d68c93f9109b8fe1ed00ef28e42283e075c77ab6d462072ab5a29",
+  "su_main": false
+ },
+ {
+  "file": "scene/17_registrazione-schermo.png",
+  "bytes": 109121,
+  "sha256": "b6dd87c8fd4d546ee66cdf2dfc77e8518e98ab7d30b556fc3ee2b03a1ee77808",
+  "su_main": false
+ },
+ {
+  "file": "scene/18_confronto.png",
+  "bytes": 71902,
+  "sha256": "b35952cb472836e34677aff23f563fcdccad4a70055af269dd41d71a82a4f5ff",
+  "su_main": false
+ },
+ {
+  "file": "scene/19_registrazione-schermo.png",
+  "bytes": 87091,
+  "sha256": "a5f7a42a364ffe9cb2b09845081fc16d6b062a80eae7ddb155c8b331a2f52429",
+  "su_main": false
+ },
+ {
+  "file": "scene/20_risposta-ia.png",
+  "bytes": 129950,
+  "sha256": "06f538bc66e7c08e2fbfe72d3a179f3cc46d407f51ab65fb95554af4d08fc43f",
+  "su_main": false
+ },
+ {
+  "file": "scene/21_errore-tipico.png",
+  "bytes": 64150,
+  "sha256": "f2e0835a839dd452785dfd345cf7650714ef41cea252125f82ad3c45c4524f78",
+  "su_main": false
+ },
+ {
+  "file": "scene/22_prompt.png",
+  "bytes": 733457,
+  "sha256": "27a1d0e5e22c57a6ab71b8eb319c125534ed22a380c7a91c19813fcc013de013",
+  "su_main": false
+ },
+ {
+  "file": "scene/23_b-roll.png",
+  "bytes": 909626,
+  "sha256": "a988c2ea619ebfb64b7cb5e557b556f210365e412cff3d70cfa301e7dc79d834",
+  "su_main": false
+ },
+ {
+  "file": "scene/24_tabella.png",
+  "bytes": 84032,
+  "sha256": "d5ace72d13c57b4e67f0c66dbeb70ea22c272ff27f005ae01436bc26390cd8c1",
+  "su_main": false
+ },
+ {
+  "file": "scene/25_caso.png",
+  "bytes": 64153,
+  "sha256": "ac88b63a4dc09c6a8c1adffa7a4bf218013c87f33b33cc13ee38cdb2449f2e13",
+  "su_main": false
+ },
+ {
+  "file": "scene/26_parola-chiave.png",
+  "bytes": 948710,
+  "sha256": "9e5b80cb4feb709f1a524aea2d96e3f5bcdc756a1517a4f1a3bae2d9071d4aca",
+  "su_main": false
+ },
+ {
+  "file": "scene/27_registrazione-schermo.png",
+  "bytes": 111932,
+  "sha256": "929aada5de96e2c523217c765d207d97652570b682a2bc8dd432e58e015494fd",
+  "su_main": false
+ },
+ {
+  "file": "scene/28_prompt.png",
+  "bytes": 605292,
+  "sha256": "75e78f05072cea9150c2237627b45b54eb82f2030716a9f136f5694bdf030164",
+  "su_main": false
+ },
+ {
+  "file": "scene/29_risposta-ia.png",
+  "bytes": 121434,
+  "sha256": "2acfc612efd8268c752486b43407f5a8fc5ae24627222741a1f622871f47b87b",
+  "su_main": false
+ },
+ {
+  "file": "scene/30_numero.png",
+  "bytes": 925699,
+  "sha256": "d7d577913b9e4eb78f5051ce948db337a6458acf1fab2d32278a144b4567e0f8",
+  "su_main": false
+ },
+ {
+  "file": "scene/31_elenco.png",
+  "bytes": 79099,
+  "sha256": "f7973449180418fff99828f51b8701fee94cec88cad22e07aff3cf314ab9aa6f",
+  "su_main": false
+ },
+ {
+  "file": "scene/32_prompt.png",
+  "bytes": 610251,
+  "sha256": "3636742302077c470ee67ea0b7cc9667df1e27d1d1cec6304768c3d0e3a07d34",
+  "su_main": false
+ },
+ {
+  "file": "scene/33_registrazione-schermo.png",
+  "bytes": 95660,
+  "sha256": "8b975c484821f03a32d42a02db59fb548a329450cecd4e02eb470c985e5a580f",
+  "su_main": false
+ },
+ {
+  "file": "scene/34_risposta-ia.png",
+  "bytes": 131760,
+  "sha256": "a3245eb74f8015c33f35e2bc6a581f8ac9ff012002a7d4fc26039b99363f3f4d",
+  "su_main": false
+ },
+ {
+  "file": "scene/35_errore-tipico.png",
+  "bytes": 70285,
+  "sha256": "205b5b7c05745a869599f4c05cf3dd530d4edece89b545f982110ce15950c7df",
+  "su_main": false
+ },
+ {
+  "file": "scene/36_norma.png",
+  "bytes": 77128,
+  "sha256": "eeb70370f3b42e835e334ecdedcd8a4aadf37405ab825d9b51e7171bb6f07a98",
+  "su_main": false
+ },
+ {
+  "file": "scene/37_b-roll.png",
+  "bytes": 894420,
+  "sha256": "f3261a4bce236a56d0cf02340274ba940a6a4b530868894fa2f667840275419b",
+  "su_main": false
+ },
+ {
+  "file": "scene/38_errore-tipico.png",
+  "bytes": 61385,
+  "sha256": "d318745e98c4c46e82f74419e3e8b5779cfc62047ab78a8954e840553a6199e4",
+  "su_main": false
+ },
+ {
+  "file": "scene/39_memo.png",
+  "bytes": 974361,
+  "sha256": "ff6571f853920c676342fc344a99a3f05c9b7f33c904a69d9492e2825b28108f",
+  "su_main": false
+ },
+ {
+  "file": "scene/40_la-pratica.png",
+  "bytes": 88484,
+  "sha256": "2244090cd551d1d8f88a4461ec19e292601e4d989a521fa2ca21072b88cae060",
+  "su_main": false
+ },
+ {
+  "file": "scene/41_caso.png",
+  "bytes": 57960,
+  "sha256": "0d333ede3cf538ab18167dde830fa41e89461947b79868dba6fa7f0e25d43065",
+  "su_main": false
+ },
+ {
+  "file": "scene/42_registrazione-schermo.png",
+  "bytes": 91188,
+  "sha256": "d755a4fcafbc45995db4addd2e210bd022f90af627430d640f3c9ee23bc452c6",
+  "su_main": false
+ },
+ {
+  "file": "scene/43_numero.png",
+  "bytes": 935034,
+  "sha256": "63020379b6092fd64bdaf088cfced6a822531ed954f1e49ce34b0f350e67e73c",
+  "su_main": false
+ },
+ {
+  "file": "scene/44_b-roll.png",
+  "bytes": 900453,
+  "sha256": "187a21335c4728490f12ee3bbfb701a496edf958613d00d77afbbec2afad62c0",
+  "su_main": false
+ },
+ {
+  "file": "scene/45_chiusura.png",
+  "bytes": 995546,
+  "sha256": "3221be76c22b83aa03a67e122ac5505a05d2b6ed7f5a43cfeaf6f9fcac4f9ec8",
+  "su_main": false
+ }
+]

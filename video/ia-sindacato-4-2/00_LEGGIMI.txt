@@ -1,0 +1,24 @@
+PACCHETTO VIDEO · Lezione 4.2 – Dare esempi: il testo che ti piace come modello
+Corso «L'IA per chi fa sindacato» · CISL FP Padova Rovigo
+
+Contenuto
+- scene/                         45 file, uno per scena, numerati nell'ordine del video (PNG 1920x1080; le animazioni sono MP4)
+- 01_script_per_scena.txt        il parlato diviso per scena, da incollare scena per scena in HeyGen
+- 02_script_continuo.txt         lo stesso parlato tutto di seguito (per generare l'audio in un colpo solo)
+- 03_scaletta.csv                scaletta: scena, inizio, durata stimata, tipo, testo a schermo, file, parlato (si apre con Excel)
+- 04_prompt_broll.txt            5 prompt per le clip e le immagini di repertorio
+- 05_copione_registrazione_schermo.txt   7 registrazioni schermo da fare
+- Dispensa_4.2.pdf               la dispensa della lezione
+
+Dati: 45 scene · 12272 caratteri di parlato · durata stimata 12:35 con la voce a 1,12x · 2 animazioni
+
+Come montarlo in HeyGen (Studio, senza avatar)
+1. Nuovo video 16:9, 1920x1080, nessun avatar.
+2. Carica tutti i file della cartella scene/ negli asset.
+3. Crea una scena HeyGen per ogni file, nello stesso ordine: sfondo = il file della scena, script = il blocco con lo stesso numero in 01_script_per_scena.txt.
+4. Voce «Achille nuovo 1 v4» per tutte le scene; velocità 1,12x.
+5. Registrazione schermo: le slide con la fascia rossa SEGNAPOSTO vanno sostituite con la registrazione fatta seguendo 05_copione_registrazione_schermo.txt (la slide mostra già cosa fare e cosa digitare).
+   B-roll: le scene «b-roll» hanno una grafica d'attesa senza testo, nello stile del corso; sostituiscila con la clip o l'immagine generata dal prompt in 04_prompt_broll.txt. Se non la generi, la grafica può restare nel video.
+6. Sottotitoli in italiano attivi. Transizione consigliata tra le scene: dissolvenza breve.
+7. Musica di sottofondo almeno 20 dB sotto la voce, abbassata nelle registrazioni schermo.
+Le scene durano 12-25 secondi: se vuoi un cambio d'immagine più frequente, dividi una scena in due e metti nella seconda metà una clip di repertorio.
