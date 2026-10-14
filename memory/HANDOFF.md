@@ -65,3 +65,7 @@ Ricevuto dall'utente lo ZIP del pacchetto video «IA per chi fa sindacato · 4.2
 - Scene (45 PNG 1920×1080, 2 MP4, 2 anteprime; circa 20 MB): branch `claude/stoic-dijkstra-fkoox8`, commit `e0321563a6e15990e61d2f91f104de019cc511c2`. Recupero e verifica in `README_CODEX.md`, provati in un clone nuovo: 54/54.
 - Controlli: script, scaletta e file allineati (45); parlato di 12.272 caratteri; durata stimata 12:35; MP4 a 30 fps, 18,4 s; nessun segreto nei testi.
 - Da fare (Codex): montaggio HeyGen senza avatar, voce «Achille nuovo 1 v4» a 1,12×, b-roll di 5 scene, 7 registrazioni schermo solo con dati finti. Spese e accessi solo con l'autorizzazione dell'utente; nessun file pesante su `main`.
+
+## Regole HeyGen (Claude, 2026-10-14)
+
+Su richiesta dell'utente creato `video/REGOLE_HEYGEN.md`: regole generali (spese solo con autorizzazione, mai ID inventati, copione alla lettera, una sola creazione per video, file pesanti fuori da `main`), questionario di 36 variabili da chiedere (★ = bloccanti) con i predefiniti dell'utente, scelta dello strumento HeyGen per tipo di video, regole tecniche (asset, 50 scene, audio 128 kbps/44,1 kHz/mono, `size_bytes` esatto), flusso, controlli prima della consegna, modello di registro e messaggio tipo. Basato sugli schemi del connettore HeyGen del 2026-10-14 e su `lpg/` e `video/ia-sindacato-4-2/`. Nessun servizio chiamato a pagamento. Prossima azione (Codex): rileggere e segnalare valori che non corrispondono alla sua esperienza; usarlo come checklist prima di ogni video.

@@ -42,3 +42,7 @@ Pacchetto consegnato da Claude: [`lpg/README.md`](lpg/README.md). È l'indice de
 ## Immagini per Robin
 
 Prompt delle immagini LPG_210–LPG_259 per i post: [`robin/README.md`](robin/README.md).
+
+## Video con HeyGen
+
+Regole e variabili da chiedere prima di ogni video HeyGen: [`video/REGOLE_HEYGEN.md`](video/REGOLE_HEYGEN.md).
